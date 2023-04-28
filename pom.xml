@@ -121,15 +121,15 @@
 			</dependency>
 
 			<!--
-					QA libs
-					make qa libs optional, 0-dependency and smaller deployment
+				QA libs
+				make qa libs optional, 0-dependency and smaller deployment
 			-->
 			<dependency>
 				<!--
-						JSR305 is already Dormant status, so SpotBugs does not release jsr305 jar file.
-						Please continue using findbugs’ one.
-						depend on spotbugs-annotations instead.
-						https://spotbugs.readthedocs.io/en/stable/migration.html
+					JSR305 is already Dormant status, so SpotBugs does not release jsr305 jar file.
+					Please continue using findbugs’ one.
+					depend on spotbugs-annotations instead.
+					https://spotbugs.readthedocs.io/en/stable/migration.html
 				-->
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-annotations</artifactId>
@@ -151,7 +151,7 @@
 			</dependency>
 
 			<!--
-					testing libs
+				testing libs
 			-->
 			<!-- https://github.com/kotlintest/kotlintest -->
 			<dependency>
@@ -186,9 +186,9 @@
 		<plugins>
 			<plugin>
 				<!--
-						Compiling Kotlin and Java sources - Using Maven - Kotlin Programming Language
-								https://kotlinlang.org/docs/maven.html#compile-kotlin-and-java-sources
-						Making sure that the kotlin plugin is above the maven-compiler-plugin in your pom.xml file!
+					Compiling Kotlin and Java sources - Using Maven - Kotlin Programming Language
+						https://kotlinlang.org/docs/maven.html#compile-kotlin-and-java-sources
+					Making sure that the kotlin plugin is above the maven-compiler-plugin in your pom.xml file!
 				-->
 				<groupId>org.jetbrains.kotlin</groupId>
 				<artifactId>kotlin-maven-plugin</artifactId>
@@ -238,9 +238,9 @@
 				</executions>
 			</plugin>
 			<!--
-					official docs: https://maven.apache.org/enforcer/enforcer-rules/requireMavenVersion.html
-					add maven-enforce-plugin to make sure the right jdk is used
-							https://stackoverflow.com/a/18420462/922688
+				official docs: https://maven.apache.org/enforcer/enforcer-rules/requireMavenVersion.html
+				add maven-enforce-plugin to make sure the right jdk is used
+					https://stackoverflow.com/a/18420462/922688
 			-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -406,20 +406,20 @@
 					*.internal:*.internal.*:*.internal.*.*:*.internal.*.*.*:*.internal.*.*.*.*
 				</javadoc.default.exclude.packages>
 				<!--
-						Apache Maven Javadoc Plugin – Configuring links and offlineLinks Parameters
-								https://maven.apache.org/plugins/maven-javadoc-plugin/examples/links-configuration.html
-						more infos about link setting:
-								Links to JSR 305 in Javadoc are broken https://github.com/google/guava/issues/2479
-								Fix links to javadoc.io for Maven Javadoc Plugin #2628 https://github.com/google/guava/pull/2628
-								Can't link to JDK10 in Javadoc comments https://stackoverflow.com/questions/49457896
-						About package-list vs.element-list
-								Can't link to JDK10 in Javadoc comments
-										https://stackoverflow.com/a/49498219/922688
-								Missing javadoc/package-list for release 5.1
-										https://github.com/gradle/gradle/issues/8183
-										https://github.com/gradle/gradle/commit/5e88351dd456a5252d21f3a7ad25bff1b62a2fd2
-						Using the linkoffline Option
-								https://docs.oracle.com/en/java/javase/11/javadoc/javadoc-command.html#GUID-51213F2C-6E01-4A03-A82A-17428A258A0F
+					Apache Maven Javadoc Plugin – Configuring links and offlineLinks Parameters
+						https://maven.apache.org/plugins/maven-javadoc-plugin/examples/links-configuration.html
+					more infos about link setting:
+						Links to JSR 305 in Javadoc are broken https://github.com/google/guava/issues/2479
+						Fix links to javadoc.io for Maven Javadoc Plugin #2628 https://github.com/google/guava/pull/2628
+						Can't link to JDK10 in Javadoc comments https://stackoverflow.com/questions/49457896
+					About package-list vs.element-list
+						Can't link to JDK10 in Javadoc comments
+							https://stackoverflow.com/a/49498219/922688
+						Missing javadoc/package-list for release 5.1
+							https://github.com/gradle/gradle/issues/8183
+							https://github.com/gradle/gradle/commit/5e88351dd456a5252d21f3a7ad25bff1b62a2fd2
+					Using the linkoffline Option
+						https://docs.oracle.com/en/java/javase/11/javadoc/javadoc-command.html#GUID-51213F2C-6E01-4A03-A82A-17428A258A0F
 				-->
 				<javadoc.package.list.dir>${project.basedir}/src/package-list</javadoc.package.list.dir>
 			</properties>
@@ -427,21 +427,21 @@
 				<plugins>
 					<plugin>
 						<!--
-								https://maven.apache.org/plugins/maven-javadoc-plugin/javadoc-mojo.html
-								https://docs.oracle.com/en/java/javase/11/javadoc/javadoc-command.html
+							https://maven.apache.org/plugins/maven-javadoc-plugin/javadoc-mojo.html
+							https://docs.oracle.com/en/java/javase/11/javadoc/javadoc-command.html
 						-->
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
 						<configuration>
-							<source>19</source>
+							<source>8</source>
 							<show>protected</show>
 							<charset>UTF-8</charset>
 							<encoding>UTF-8</encoding>
 							<docencoding>UTF-8</docencoding>
 							<quiet>true</quiet>
 							<!--
-									How to disable Javadoc warnings in Maven Javadoc Plugin? - Stack Overflow
-									https://stackoverflow.com/questions/39616344
+								How to disable Javadoc warnings in Maven Javadoc Plugin? - Stack Overflow
+								https://stackoverflow.com/questions/39616344
 							-->
 							<doclint>all,-missing</doclint>
 							<!-- https://maven.apache.org/plugins/maven-javadoc-plugin/examples/exclude-package-names.html -->
@@ -449,6 +449,10 @@
 							<!-- https://maven.apache.org/plugins/maven-javadoc-plugin/javadoc-mojo.html#detectOfflineLinks -->
 							<detectOfflineLinks>false</detectOfflineLinks>
 							<offlineLinks>
+								<offlineLink>
+									<url>https://www.javadoc.io/doc/com.google.code.findbugs/jsr305/${jsr305.version}/</url>
+									<location>${javadoc.package.list.dir}/jsr305/</location>
+								</offlineLink>
 								<offlineLink>
 									<url>
 										https://www.javadoc.io/doc/com.github.spotbugs/spotbugs-annotations/${spotbugs.annotations.version}/
@@ -460,18 +464,14 @@
 									<location>${javadoc.package.list.dir}/jetbrains-annotations/</location>
 								</offlineLink>
 								<offlineLink>
-									<url>https://www.javadoc.io/doc/com.google.code.findbugs/jsr305/${jsr305.version}/</url>
-									<location>${javadoc.package.list.dir}/jsr305/</location>
-								</offlineLink>
-								<offlineLink>
-									<url>https://docs.oracle.com/en/java/javase/19/docs/api/java.base/</url>
+									<url>https://docs.oracle.com/en/java/javase/17/docs/api/java.base/</url>
 									<location>${javadoc.package.list.dir}/java/</location>
 								</offlineLink>
 							</offlineLinks>
 							<additionalOptions>
 								<!--
-										Maven javadoc Search redirects to "/undefined/.." url - Stack Overflow
-										https://stackoverflow.com/questions/52326318
+									Maven javadoc Search redirects to "/undefined/.." url - Stack Overflow
+									https://stackoverflow.com/questions/52326318
 								-->
 								<additionalOption>-html5</additionalOption>
 							</additionalOptions>
@@ -522,15 +522,15 @@
 				<plugins>
 					<plugin>
 						<!--
-								https://spotbugs.github.io/
-								https://spotbugs.readthedocs.io/en/latest/introduction.html
-								https://spotbugs.readthedocs.io/en/latest/maven.html
-								https://spotbugs.github.io/spotbugs-maven-plugin/check-mojo.html
-										Binds by default to the lifecycle phase: verify.
-								Spotbugs support @SuppressWarnings
-										https://github.com/spotbugs/spotbugs/issues/737#issuecomment-416118033
-								Is it possible for spotbugs to skip kotlin files from pure maven configuration?
-										https://stackoverflow.com/questions/55060459
+							https://spotbugs.github.io/
+							https://spotbugs.readthedocs.io/en/latest/introduction.html
+							https://spotbugs.readthedocs.io/en/latest/maven.html
+							https://spotbugs.github.io/spotbugs-maven-plugin/check-mojo.html
+								Binds by default to the lifecycle phase: verify.
+							Spotbugs support @SuppressWarnings
+								https://github.com/spotbugs/spotbugs/issues/737#issuecomment-416118033
+							Is it possible for spotbugs to skip kotlin files from pure maven configuration?
+								https://stackoverflow.com/questions/55060459
 						-->
 						<groupId>com.github.spotbugs</groupId>
 						<artifactId>spotbugs-maven-plugin</artifactId>
@@ -560,9 +560,9 @@
 			<build>
 				<plugins>
 					<!--
-							Maven plugin which includes build-time git repository information into an POJO / *.properties).
-							Make your apps tell you which version exactly they were built from! Priceless in large distributed deployments.
-									https://github.com/git-commit-id/git-commit-id-maven-plugin
+						Maven plugin which includes build-time git repository information into an POJO / *.properties).
+						Make your apps tell you which version exactly they were built from! Priceless in large distributed deployments.
+							https://github.com/git-commit-id/git-commit-id-maven-plugin
 					-->
 					<plugin>
 						<groupId>io.github.git-commit-id</groupId>
@@ -612,9 +612,9 @@
 				<plugins>
 					<plugin>
 						<!--
-								for codecov.io
-								config example: https://github.com/codecov/example-java
-								plugin docs: https://eclemma.org/jacoco/trunk/doc/
+							for codecov.io
+							config example: https://github.com/codecov/example-java
+							plugin docs: https://eclemma.org/jacoco/trunk/doc/
 						-->
 						<groupId>org.jacoco</groupId>
 						<artifactId>jacoco-maven-plugin</artifactId>
@@ -641,6 +641,41 @@
 			</build>
 		</profile>
 		<profile>
+			<id>force-jdk11-when-release</id>
+			<activation>
+				<property>
+					<name>performRelease</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<!--
+						add maven-enforce-plugin to make sure the right jdk is used
+						https://stackoverflow.com/a/18420462/922688
+					-->
+					<plugin>
+						<artifactId>maven-enforcer-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>enforce-jdk-versions</id>
+								<goals>
+									<goal>enforce</goal>
+								</goals>
+								<configuration>
+									<rules>
+										<requireJavaVersion>
+											<version>11</version>
+										</requireJavaVersion>
+									</rules>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
 			<id>deploy-settings</id>
 			<activation>
 				<property>
@@ -656,24 +691,24 @@
 						<version>1.6.13</version>
 						<extensions>true</extensions>
 						<!--
-								In multiply module builds using the deploy-at-end feature,
-								the deployment of all components is performed in the last module based on the reactor order.
-								If this property is set to true in the last module,
-								all staging deployment for all modules will be skipped.
-								so, we'll config nexus deploy after every moudle's `deploy` phase
-								see: https://github.com/sonatype/nexus-maven-plugins/tree/master/staging/maven-plugin#configuring-the-plugin
+							In multiply module builds using the deploy-at-end feature,
+							the deployment of all components is performed in the last module based on the reactor order.
+							If this property is set to true in the last module,
+							all staging deployment for all modules will be skipped.
+							so, we'll config nexus deploy after every moudle's `deploy` phase
+							see: https://github.com/sonatype/nexus-maven-plugins/tree/master/staging/maven-plugin#configuring-the-plugin
 						-->
 						<configuration>
 							<serverId>ossrh</serverId>
 							<nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
 							<autoReleaseAfterClose>true</autoReleaseAfterClose>
 							<!--
-									If you are deploying to Maven Central, it is the Nexus Staging Plugin that is
-									doing the deployment instead of the `deploy` plugin,
-									so the configuration of the `deploy` plugin has no effect.
-									To make the Nexus deploy plugin skip, set skipNexusStagingDeployMojo
-									in its configuration to true.
-									see: https://stackoverflow.com/questions/59552549/preventing-maven-modules-from-being-deployed
+								If you are deploying to Maven Central, it is the Nexus Staging Plugin that is
+								doing the deployment instead of the `deploy` plugin,
+								so the configuration of the `deploy` plugin has no effect.
+								To make the Nexus deploy plugin skip, set skipNexusStagingDeployMojo
+								in its configuration to true.
+								see: https://stackoverflow.com/questions/59552549/preventing-maven-modules-from-being-deployed
 							-->
 							<skipNexusStagingDeployMojo>${maven.deploy.skip}</skipNexusStagingDeployMojo>
 						</configuration>
