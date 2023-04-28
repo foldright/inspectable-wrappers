@@ -1,0 +1,1 @@
+## [`inspectable-wrappers API` docs: ![](https://img.shields.io/github/release/foldright/inspectable-wrappers?label=javadoc&color=339933&logo=microsoft-academic&logoColor=white)](https://foldright.io/api-docs/inspectable-wrappers/)
