@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>io.foldright</groupId>
-	<artifactId>wract</artifactId>
+	<artifactId>inspectable-wrapper-chain</artifactId>
 	<version>0.1.0-SNAPSTHO</version>
-	<name>Wract(Wrapper Context)</name>
+	<name>Wrain(Inspectable Wrapper Chain)</name>
 	<description>🪐 ${project.name}</description>
-	<url>https://github.com/foldright/wract</url>
+	<url>https://github.com/foldright/wrain</url>
 	<inceptionYear>2023</inceptionYear>
 
 	<licenses>
@@ -19,12 +19,12 @@
 		</license>
 	</licenses>
 	<scm>
-		<connection>scm:git:git@github.com:foldright/wract.git</connection>
-		<developerConnection>scm:git:git@github.com:foldright/wract.git</developerConnection>
-		<url>https://github.com/foldright/wract</url>
+		<connection>scm:git:git@github.com:foldright/wrain.git</connection>
+		<developerConnection>scm:git:git@github.com:foldright/wrain.git</developerConnection>
+		<url>https://github.com/foldright/wrain</url>
 	</scm>
 	<issueManagement>
-		<url>https://github.com/foldright/wract/issues</url>
+		<url>https://github.com/foldright/wrain/issues</url>
 		<system>GitHub Issues</system>
 	</issueManagement>
 	<organization>

@@ -1,6 +1,6 @@
 package io.foldright.demo;
 
-import io.foldright.wract.Wrapper;
+import io.foldright.wrain.Wrapper;
 
 import java.util.concurrent.Executor;
 
@@ -14,7 +14,7 @@ public class Demo {
         final Executor executor = Runnable::run;
 
         final LazyExecutorWrapper lazy = new LazyExecutorWrapper(executor);
-        lazy.wractSetAttachment("busy", "very very busy!");
+        lazy.wrainSetAttachment("busy", "very very busy!");
 
         final Executor chatty = new ChattyExecutorWrapper(lazy);
 

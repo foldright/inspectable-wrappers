@@ -1,4 +1,4 @@
-package io.foldright.wract;
+package io.foldright.wrain;
 
 import org.junit.jupiter.api.Test;
 

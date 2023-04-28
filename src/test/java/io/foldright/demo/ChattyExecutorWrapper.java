@@ -1,7 +1,7 @@
 package io.foldright.demo;
 
 import edu.umd.cs.findbugs.annotations.ReturnValuesAreNonnullByDefault;
-import io.foldright.wract.Wrapper;
+import io.foldright.wrain.Wrapper;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.concurrent.Executor;
@@ -23,7 +23,7 @@ public class ChattyExecutorWrapper implements Executor, Wrapper<Executor> {
     }
 
     @Override
-    public Executor wractUnwrap() {
+    public Executor wrainUnwrap() {
         return executor;
     }
 }
