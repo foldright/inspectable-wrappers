@@ -13,10 +13,11 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * All instance method names prefix "{@code wrain}" to avoid potential name conflict with subclass method names.
  * <p>
  * Retrieve the attachment from wrapper chain(wrapper instances implement interface {@link Wrapper})
- * by {@link Wrapper#getAttachment(Object, String)} static method.
+ * by static method {@link Wrapper#getAttachment(Object, String)}.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @see Wrapper#getAttachment(Object, String)
+ * @see io.foldright.wrain.utils.AttachableDelegate
  */
 @ParametersAreNonnullByDefault
 @ReturnValuesAreNonnullByDefault

@@ -1,13 +1,12 @@
 package io.foldright.demo;
 
+import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.ReturnValuesAreNonnullByDefault;
 import io.foldright.wrain.Attachable;
 import io.foldright.wrain.Wrapper;
-import org.jetbrains.annotations.Nullable;
+import io.foldright.wrain.utils.AttachableDelegate;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Executor;
 
 
@@ -41,17 +40,16 @@ public class LazyExecutorWrapper implements Executor, Wrapper<Executor>, Attacha
         return executor;
     }
 
-    private final ConcurrentMap<String, Object> attachments = new ConcurrentHashMap<>();
+    private final Attachable attachable = new AttachableDelegate();
 
     @Override
     public void wrainSet(String key, Object value) {
-        attachments.put(key, value);
+        attachable.wrainSet(key, value);
     }
 
     @Nullable
     @Override
-    @SuppressWarnings("unchecked")
     public <V> V wrainGet(String key) {
-        return (V) attachments.get(key);
+        return attachable.wrainGet(key);
     }
 }

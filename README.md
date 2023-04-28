@@ -91,16 +91,16 @@ public class LazyExecutorWrapper implements Executor, Wrapper<Executor>, Attacha
     return executor;
   }
 
-  private final ConcurrentMap<String, Object> attachments = new ConcurrentHashMap<>();
+  private final Attachable attachable = new AttachableDelegate();
 
   @Override
   public void wrainSet(String key, Object value) {
-    attachments.put(key, value);
+    attachable.wrainSet(key, value);
   }
 
   @Override
   public <V> V wrainGet(String key) {
-    return (V) attachments.get(key);
+    return attachable.wrainGet(key);
   }
 }
 ```

@@ -1,20 +1,17 @@
 package io.foldright.wrain
 
+import io.foldright.wrain.utils.AttachableDelegate
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
-import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.ConcurrentMap
 import java.util.concurrent.Executor
 import java.util.concurrent.ExecutorService
 
 class WrapperTest : FunSpec({
-
     // prepare executor instance and wrappers
-
-    val executor = Executor { it.run() }
+    val executor = Executor { runnable -> runnable.run() }
     val lazy: Executor = LazyExecutorWrapper(executor).apply { wrainSet("busy", "very very busy!") }
     val chatty: Executor = ChattyExecutorWrapper(lazy)
 
@@ -35,32 +32,18 @@ class ChattyExecutorWrapper(private val executor: Executor) : Executor, Wrapper<
         executor.execute(command)
     }
 
-    override fun wrainUnwrap(): Executor {
-        return executor
-    }
+    override fun wrainUnwrap(): Executor = executor
 }
 
-class LazyExecutorWrapper(private val executor: Executor) : Executor, Wrapper<Executor>, Attachable {
+class LazyExecutorWrapper(private val executor: Executor) :
+        Executor, Wrapper<Executor>, Attachable by AttachableDelegate() {
     override fun execute(command: Runnable) {
         println("I'm lazy, sleep before work")
         sleep()
         executor.execute(command)
     }
 
-    override fun wrainUnwrap(): Executor {
-        return executor
-    }
-
-    private val attachments: ConcurrentMap<String, Any> = ConcurrentHashMap()
-
-    override fun wrainSet(key: String, value: Any) {
-        attachments[key] = value
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    override fun <V> wrainGet(key: String): V {
-        return attachments[key] as V
-    }
+    override fun wrainUnwrap(): Executor = executor
 
     private fun sleep() {
         Thread.sleep(100)
