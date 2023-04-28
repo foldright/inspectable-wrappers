@@ -14,7 +14,7 @@ public class Demo {
         final Executor executor = Runnable::run;
 
         final LazyExecutorWrapper lazy = new LazyExecutorWrapper(executor);
-        lazy.wrainSetAttachment("busy", "very very busy!");
+        lazy.wrainSet("busy", "very very busy!");
 
         final Executor chatty = new ChattyExecutorWrapper(lazy);
 

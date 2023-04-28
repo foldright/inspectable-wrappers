@@ -19,7 +19,7 @@ class WrapperTest : FunSpec({
     val executor = Runnable::run
 
     val lazy = LazyExecutorWrapper(executor)
-    lazy.wrainSetAttachment("busy", "very very busy!")
+    lazy.wrainSet("busy", "very very busy!")
 
     val chatty: Executor = ChattyExecutorWrapper(lazy)
 

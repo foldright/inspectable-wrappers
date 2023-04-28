@@ -44,14 +44,14 @@ public class LazyExecutorWrapper implements Executor, Wrapper<Executor>, Attacha
     private final ConcurrentMap<String, Object> attachments = new ConcurrentHashMap<>();
 
     @Override
-    public void wrainSetAttachment(String key, Object value) {
+    public void wrainSet(String key, Object value) {
         attachments.put(key, value);
     }
 
     @Nullable
     @Override
     @SuppressWarnings("unchecked")
-    public <V> V wrainGetAttachment(String key) {
+    public <V> V wrainGet(String key) {
         return (V) attachments.get(key);
     }
 }

@@ -8,7 +8,8 @@ import java.util.function.Predicate;
 
 
 /**
- * This Wrapper interface is used to be implemented by wrapper classes.
+ * This {@code Wrapper} interface is used to be implemented by wrapper classes,
+ * make the wrapper instances as a wrapper chain(linked list).
  * <p>
  * All instance method names prefix "{@code wrain}" to avoid potential name conflict with subclass method names.
  *
@@ -28,8 +29,8 @@ public interface Wrapper<T> {
     /**
      * Reports whether any wrapper on the wrapper chain matches the given type.
      * <p>
-     * The wrapper chain consists of wrapper itself, followed by the wrappers obtained
-     * by repeatedly calling {@link #wrainUnwrap()}.
+     * The wrapper chain consists of wrapper itself, followed by the wrappers
+     * obtained by repeatedly calling {@link #wrainUnwrap()}.
      *
      * @param wrapper wrapper instance/wrapper chain
      * @param clazz   target type
@@ -44,8 +45,8 @@ public interface Wrapper<T> {
     /**
      * Reports whether any wrapper on the wrapper chain satisfy {@code predicate}.
      * <p>
-     * The wrapper chain consists of wrapper itself, followed by the wrappers obtained
-     * by repeatedly calling {@link #wrainUnwrap()}.
+     * The wrapper chain consists of wrapper itself, followed by the wrappers
+     * obtained by repeatedly calling {@link #wrainUnwrap()}.
      *
      * @param wrapper   wrapper instance/wrapper chain
      * @param predicate check logic
@@ -62,11 +63,11 @@ public interface Wrapper<T> {
     }
 
     /**
-     * Retrieves the attachment of wrapper on the wrapper chain
-     * by calling {@link Attachable#wrainGetAttachment(String)}.
+     * Retrieves the attachment of wrapper of given key on the wrapper chain
+     * by calling {@link Attachable#wrainGet(String)}.
      * <p>
-     * The wrapper chain consists of wrapper itself, followed by the wrappers obtained
-     * by repeatedly calling {@link #wrainUnwrap()}.
+     * The wrapper chain consists of wrapper itself, followed by the wrappers
+     * obtained by repeatedly calling {@link #wrainUnwrap()}.
      * <p>
      * If the key exists in multiple wrappers, outer wrapper win.
      *
@@ -80,7 +81,7 @@ public interface Wrapper<T> {
         for (Object w = wrapper; w instanceof Wrapper; w = ((Wrapper<W>) w).wrainUnwrap()) {
             if (!(w instanceof Attachable)) continue;
 
-            V value = ((Attachable) w).wrainGetAttachment(key);
+            V value = ((Attachable) w).wrainGet(key);
             if (value != null) return value;
         }
         return null;
