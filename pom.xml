@@ -4,7 +4,7 @@
 
 	<groupId>io.foldright</groupId>
 	<artifactId>inspectable-wrapper-chain</artifactId>
-	<version>0.1.0-SNAPSTHO</version>
+	<version>0.1.0</version>
 	<name>Wrain(Inspectable Wrapper Chain)</name>
 	<description>🪐 ${project.name}</description>
 	<url>https://github.com/foldright/wrain</url>
