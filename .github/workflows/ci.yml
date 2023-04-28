@@ -24,6 +24,9 @@ jobs:
           java-version: ${{ matrix.java }}
           cache: maven
       - run: ./mvnw -V --no-transfer-progress clean package
+        if: matrix.java < 11
+      - run: ./mvnw -V --no-transfer-progress clean package spotbugs:check git-commit-id:validateRevision -DperformRelease
+        if: matrix.java >= 11
       # https://github.com/marketplace/actions/codecov
       - uses: codecov/codecov-action@v3
         with:
