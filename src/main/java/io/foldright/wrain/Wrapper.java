@@ -9,7 +9,7 @@ import java.util.function.Predicate;
 
 /**
  * This {@code Wrapper} interface is used to be implemented by wrapper classes,
- * make the wrapper instances as a wrapper chain(linked list).
+ * make {@code wrapper instances} as an <b>inspectable wrapper chain</b>(linked list).
  * <p>
  * All instance method names prefix "{@code wrain}" to avoid potential name conflict with subclass method names.
  *

@@ -6,7 +6,10 @@
 	<artifactId>inspectable-wrapper-chain</artifactId>
 	<version>0.x-SNAPSTHO</version>
 	<name>Wrain(Inspectable Wrapper Chain)</name>
-	<description>🪐 ${project.name}</description>
+	<description>
+		🪐 Wrain(Inspectable Wrapper Chain), a nano Java library provides the interfaces
+		to make wrapper instances as an inspectable wrapper chain.
+	</description>
 	<url>https://github.com/foldright/wrain</url>
 	<inceptionYear>2023</inceptionYear>
 
@@ -51,6 +54,7 @@
 		<maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.deploy.skip>false</maven.deploy.skip>
+		<perform.release.jdk.version>17</perform.release.jdk.version>
 
 		<spotbugs.annotations.version>4.7.3</spotbugs.annotations.version>
 		<jsr305.version>3.0.2</jsr305.version>
@@ -433,7 +437,7 @@
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
 						<configuration>
-							<source>8</source>
+							<source>${perform.release.jdk.version}</source>
 							<show>protected</show>
 							<charset>UTF-8</charset>
 							<encoding>UTF-8</encoding>
@@ -464,7 +468,7 @@
 									<location>${javadoc.package.list.dir}/jetbrains-annotations/</location>
 								</offlineLink>
 								<offlineLink>
-									<url>https://docs.oracle.com/en/java/javase/17/docs/api/java.base/</url>
+									<url>https://docs.oracle.com/en/java/javase/${perform.release.jdk.version}/docs/api/java.base/</url>
 									<location>${javadoc.package.list.dir}/java/</location>
 								</offlineLink>
 							</offlineLinks>
@@ -665,7 +669,7 @@
 								<configuration>
 									<rules>
 										<requireJavaVersion>
-											<version>11</version>
+											<version>${perform.release.jdk.version}</version>
 										</requireJavaVersion>
 									</rules>
 								</configuration>

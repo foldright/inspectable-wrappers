@@ -14,6 +14,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * <p>
  * Retrieve the attachment from wrapper chain(wrapper instances implement interface {@link Wrapper})
  * by static method {@link Wrapper#getAttachment(Object, String)}.
+ * <p>
+ * Provide {@link io.foldright.wrain.utils.AttachableDelegate AttachableDelegate} as a simple delegate implementation.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @see Wrapper#getAttachment(Object, String)

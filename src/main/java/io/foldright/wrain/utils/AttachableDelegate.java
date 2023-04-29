@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentMap;
 
 
 /**
- * {@link Attachable} delegate/implementation.
+ * A simple {@link Attachable} delegate implementation.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @author Attachable
