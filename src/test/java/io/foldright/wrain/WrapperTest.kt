@@ -11,9 +11,9 @@ import java.util.concurrent.ExecutorService
 
 class WrapperTest : FunSpec({
     // prepare executor instance and wrappers
-    val executor = Executor { runnable -> runnable.run() }
-    val lazy: Executor = LazyExecutorWrapper(executor).apply { setAttachment("busy", "very very busy!") }
-    val chatty: Executor = ChattyExecutorWrapper(lazy)
+    val chatty: Executor = Executor { runnable -> runnable.run() }.let {
+        LazyExecutorWrapper(it).apply { setAttachment("busy", "very very busy!") }
+    }.let(::ChattyExecutorWrapper)
 
     test("wrapper") {
         Wrapper.isInstanceOf(chatty, LazyExecutorWrapper::class.java).shouldBeTrue()
