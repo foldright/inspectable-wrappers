@@ -14,7 +14,7 @@ public class Demo {
         final Executor executor = Runnable::run;
 
         final LazyExecutorWrapper lazy = new LazyExecutorWrapper(executor);
-        lazy.wrainSet("busy", "very very busy!");
+        lazy.setAttachment("busy", "very, very busy!");
 
         final Executor chatty = new ChattyExecutorWrapper(lazy);
 
@@ -22,13 +22,13 @@ public class Demo {
         // inspect the wrapper chain
         ////////////////////////////////////////
 
-        System.out.printf("chatty executor is LazyExecutor? %s\n",
+        System.out.println("Is chatty executor LazyExecutor? " +
                 Wrapper.isInstanceOf(chatty, LazyExecutorWrapper.class));
         // print true
 
         String busy = Wrapper.getAttachment(chatty, "busy");
-        System.out.printf("chatty executor is busy? %s\n", busy);
-        // print true
+        System.out.println("Is chatty executor busy? " + busy);
+        // print "very, very busy!"
 
         ////////////////////////////////////////
         // call executor

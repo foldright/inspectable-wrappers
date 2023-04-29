@@ -12,7 +12,7 @@ import java.util.concurrent.ExecutorService
 class WrapperTest : FunSpec({
     // prepare executor instance and wrappers
     val executor = Executor { runnable -> runnable.run() }
-    val lazy: Executor = LazyExecutorWrapper(executor).apply { wrainSet("busy", "very very busy!") }
+    val lazy: Executor = LazyExecutorWrapper(executor).apply { setAttachment("busy", "very very busy!") }
     val chatty: Executor = ChattyExecutorWrapper(lazy)
 
     test("wrapper") {
@@ -32,7 +32,7 @@ class ChattyExecutorWrapper(private val executor: Executor) : Executor, Wrapper<
         executor.execute(command)
     }
 
-    override fun wrainUnwrap(): Executor = executor
+    override fun unwrap(): Executor = executor
 }
 
 class LazyExecutorWrapper(private val executor: Executor) :
@@ -43,7 +43,7 @@ class LazyExecutorWrapper(private val executor: Executor) :
         executor.execute(command)
     }
 
-    override fun wrainUnwrap(): Executor = executor
+    override fun unwrap(): Executor = executor
 
     private fun sleep() {
         Thread.sleep(100)

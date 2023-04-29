@@ -10,8 +10,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * This {@code Attachable} interface is used to be implemented by wrapper classes,
  * provide the attachment storage ability.
  * <p>
- * All instance method names prefix "{@code wrain}" to avoid potential name conflict with subclass method names.
- * <p>
  * Retrieve the attachment from wrapper chain(wrapper instances implement interface {@link Wrapper})
  * by static method {@link Wrapper#getAttachment(Object, String)}.
  * <p>
@@ -27,18 +25,18 @@ public interface Attachable {
     /**
      * Sets an attachment.
      *
-     * @param key   attachment key
-     * @param value attachment value
+     * @param key   the attachment key
+     * @param value the attachment value
      */
-    void wrainSet(String key, Object value);
+    void setAttachment(String key, Object value);
 
     /**
      * Get the attachment of the given key.
      *
-     * @param key attachment key
-     * @param <V> attachment value type
-     * @return return attachment value, or {@code null} if contains no attachment for the key
+     * @param key the attachment key
+     * @param <V> the attachment value type
+     * @return return the attachment value, or {@code null} if contains no attachment for the key
      */
     @Nullable
-    <V> V wrainGet(String key);
+    <V> V getAttachment(String key);
 }

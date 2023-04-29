@@ -66,7 +66,7 @@ public class ChattyExecutorWrapper implements Executor, Wrapper<Executor> {
   }
 
   @Override
-  public Executor wrainUnwrap() {
+  public Executor unwrap() {
     return executor;
   }
 }
@@ -88,20 +88,20 @@ public class LazyExecutorWrapper implements Executor, Wrapper<Executor>, Attacha
   }
 
   @Override
-  public Executor wrainUnwrap() {
+  public Executor unwrap() {
     return executor;
   }
 
   private final Attachable attachable = new AttachableDelegate();
 
   @Override
-  public void wrainSet(String key, Object value) {
-    attachable.wrainSet(key, value);
+  public void setAttachment(String key, Object value) {
+    attachable.setAttachment(key, value);
   }
 
   @Override
-  public <V> V wrainGet(String key) {
-    return attachable.wrainGet(key);
+  public <V> V getAttachment(String key) {
+    return attachable.getAttachment(key);
   }
 }
 ```
@@ -118,7 +118,7 @@ public class Demo {
     final Executor executor = Runnable::run;
 
     final LazyExecutorWrapper lazy = new LazyExecutorWrapper(executor);
-    lazy.wrainSet("busy", "very very busy!");
+    lazy.setAttachment("busy", "very, very busy!");
 
     final Executor chatty = new ChattyExecutorWrapper(lazy);
 
@@ -126,13 +126,13 @@ public class Demo {
     // inspect the wrapper chain
     ////////////////////////////////////////
 
-    System.out.printf("chatty executor is LazyExecutor? %s\n",
+    System.out.println("Is chatty executor LazyExecutor? " +
         Wrapper.isInstanceOf(chatty, LazyExecutorWrapper.class));
     // print true
 
     String busy = Wrapper.getAttachment(chatty, "busy");
-    System.out.printf("chatty executor is busy? %s\n", busy);
-    // print true
+    System.out.println("Is chatty executor busy? " + busy);
+    // print "very, very busy!"
 
     ////////////////////////////////////////
     // call executor

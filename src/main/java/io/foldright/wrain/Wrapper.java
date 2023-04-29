@@ -10,8 +10,6 @@ import java.util.function.Predicate;
 /**
  * This {@code Wrapper} interface is used to be implemented by wrapper classes,
  * make {@code wrapper instances} as an <b>inspectable wrapper chain</b>(linked list).
- * <p>
- * All instance method names prefix "{@code wrain}" to avoid potential name conflict with subclass method names.
  *
  * @param <T> the type of instances that be wrapped
  * @author Jerry Lee (oldratlee at gmail dot com)
@@ -24,13 +22,13 @@ public interface Wrapper<T> {
      * <p>
      * this method also make the wrapper instances as a wrapper chain(linked list).
      */
-    T wrainUnwrap();
+    T unwrap();
 
     /**
      * Reports whether any wrapper on the wrapper chain matches the given type.
      * <p>
      * The wrapper chain consists of wrapper itself, followed by the wrappers
-     * obtained by repeatedly calling {@link #wrainUnwrap()}.
+     * obtained by repeatedly calling {@link #unwrap()}.
      *
      * @param wrapper wrapper instance/wrapper chain
      * @param clazz   target type
@@ -46,7 +44,7 @@ public interface Wrapper<T> {
      * Reports whether any wrapper on the wrapper chain satisfy {@code predicate}.
      * <p>
      * The wrapper chain consists of wrapper itself, followed by the wrappers
-     * obtained by repeatedly calling {@link #wrainUnwrap()}.
+     * obtained by repeatedly calling {@link #unwrap()}.
      *
      * @param wrapper   wrapper instance/wrapper chain
      * @param predicate check logic
@@ -56,7 +54,7 @@ public interface Wrapper<T> {
      */
     @SuppressWarnings("unchecked")
     static <W> boolean check(final W wrapper, final Predicate<? super W> predicate) {
-        for (Object w = wrapper; w instanceof Wrapper; w = ((Wrapper<?>) w).wrainUnwrap()) {
+        for (Object w = wrapper; w instanceof Wrapper; w = ((Wrapper<?>) w).unwrap()) {
             if (predicate.test((W) w)) return true;
         }
         return false;
@@ -64,24 +62,24 @@ public interface Wrapper<T> {
 
     /**
      * Retrieves the attachment of wrapper of given key on the wrapper chain
-     * by calling {@link Attachable#wrainGet(String)}.
+     * by calling {@link Attachable#getAttachment(String)}.
      * <p>
      * The wrapper chain consists of wrapper itself, followed by the wrappers
-     * obtained by repeatedly calling {@link #wrainUnwrap()}.
+     * obtained by repeatedly calling {@link #unwrap()}.
      * <p>
      * If the key exists in multiple wrappers, outer wrapper win.
      *
      * @param wrapper wrapper instance
-     * @param key     attachment key
+     * @param key     the attachment key
      * @param <W>     the type of instances that be wrapped
      */
     @Nullable
     @SuppressWarnings("unchecked")
     static <W, V> V getAttachment(final W wrapper, final String key) {
-        for (Object w = wrapper; w instanceof Wrapper; w = ((Wrapper<W>) w).wrainUnwrap()) {
+        for (Object w = wrapper; w instanceof Wrapper; w = ((Wrapper<W>) w).unwrap()) {
             if (!(w instanceof Attachable)) continue;
 
-            V value = ((Attachable) w).wrainGet(key);
+            V value = ((Attachable) w).getAttachment(key);
             if (value != null) return value;
         }
         return null;

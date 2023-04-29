@@ -21,14 +21,14 @@ public class AttachableDelegate implements Attachable {
     private final ConcurrentMap<String, Object> attachments = new ConcurrentHashMap<>();
 
     @Override
-    public void wrainSet(String key, Object value) {
+    public void setAttachment(String key, Object value) {
         attachments.put(key, value);
     }
 
     @Override
     @Nullable
     @SuppressWarnings("unchecked")
-    public <T> T wrainGet(String key) {
+    public <T> T getAttachment(String key) {
         return (T) attachments.get(key);
     }
 }

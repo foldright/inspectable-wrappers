@@ -36,20 +36,20 @@ public class LazyExecutorWrapper implements Executor, Wrapper<Executor>, Attacha
     }
 
     @Override
-    public Executor wrainUnwrap() {
+    public Executor unwrap() {
         return executor;
     }
 
     private final Attachable attachable = new AttachableDelegate();
 
     @Override
-    public void wrainSet(String key, Object value) {
-        attachable.wrainSet(key, value);
+    public void setAttachment(String key, Object value) {
+        attachable.setAttachment(key, value);
     }
 
     @Nullable
     @Override
-    public <V> V wrainGet(String key) {
-        return attachable.wrainGet(key);
+    public <V> V getAttachment(String key) {
+        return attachable.getAttachment(key);
     }
 }
