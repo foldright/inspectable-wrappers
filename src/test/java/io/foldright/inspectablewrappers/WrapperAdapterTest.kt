@@ -3,6 +3,7 @@ package io.foldright.inspectablewrappers
 import io.foldright.inspectablewrappers.Inspector.containsInstanceOnWrapperChain
 import io.foldright.inspectablewrappers.Inspector.getAttachmentFromWrapperChain
 import io.foldright.inspectablewrappers.utils.AttachableDelegate
+import io.foldright.inspectablewrappers.utils.WrapperAdapterUtils.createWrapperAdapter
 import io.kotest.assertions.fail
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
@@ -34,6 +35,58 @@ class WrapperAdapterTest : FunSpec({
         value shouldBe ADAPTED_MSG_VALUE
 
         getAttachmentFromWrapperChain<Executor, String, String?>(executorChain, "not existed").shouldBeNull()
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    test("WrapperAdapter - createWrapperAdapter with Attachable") {
+        val chain: Executor = Executor { runnable -> runnable.run() }
+            .let {
+                val existed = ExistedExecutorWrapper(it)
+                val adapter = createWrapperAdapter(
+                    Executor::class.java,
+                    it,
+                    existed,
+                    AttachableDelegate<String, String>(),
+                )
+                val attachable = adapter as Attachable<String, String>
+                attachable.setAttachment(ADAPTED_MSG_KEY, ADAPTED_MSG_VALUE)
+                attachable.getAttachment(ADAPTED_MSG_KEY) shouldBe ADAPTED_MSG_VALUE
+                adapter
+            }
+            .let(::ChattyExecutorWrapper)
+
+        containsInstanceOnWrapperChain(chain, ExistedExecutorWrapper::class.java).shouldBeTrue()
+        containsInstanceOnWrapperChain(chain, ChattyExecutorWrapper::class.java).shouldBeTrue()
+        containsInstanceOnWrapperChain(chain, ExecutorService::class.java).shouldBeFalse()
+
+        val value: String? = getAttachmentFromWrapperChain(chain, ADAPTED_MSG_KEY)
+        value shouldBe ADAPTED_MSG_VALUE
+
+        getAttachmentFromWrapperChain<Executor, String, String?>(chain, "not existed").shouldBeNull()
+
+        // testing the proxy invocation
+        chain.execute { println("I'm working.") }
+    }
+
+    test("WrapperAdapter - createWrapperAdapter without Attachable") {
+        val chain: Executor = Executor { runnable -> runnable.run() }
+            .let {
+                createWrapperAdapter(
+                    Executor::class.java,
+                    it,
+                    ExistedExecutorWrapper(it),
+                )
+            }
+            .let(::ChattyExecutorWrapper)
+
+        containsInstanceOnWrapperChain(chain, ExistedExecutorWrapper::class.java).shouldBeTrue()
+        containsInstanceOnWrapperChain(chain, ChattyExecutorWrapper::class.java).shouldBeTrue()
+        containsInstanceOnWrapperChain(chain, ExecutorService::class.java).shouldBeFalse()
+
+        getAttachmentFromWrapperChain<Executor, String, String?>(chain, "not existed").shouldBeNull()
+
+        // testing the proxy invocation
+        chain.execute { println("I'm working.") }
     }
 
     test("ClassCastException") {

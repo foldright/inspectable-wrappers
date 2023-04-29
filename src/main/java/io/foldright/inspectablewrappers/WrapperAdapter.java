@@ -14,11 +14,16 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * <p>
  * <img src="https://github.com/foldright/inspectable-wrappers/assets/1063891/31f9e604-5864-4312-b280-cc732e84df07"
  * width="400" alt="Wrapper Chain contains WrapperAdapter">
+ * <p>
+ * Provided {@link io.foldright.inspectablewrappers.utils.WrapperAdapterUtils WrapperAdapterUtils}
+ * to create {@link WrapperAdapter} instances of the given biz interface type
+ * by the adaptee and underlying instance without writing boilerplate code of creating a new adapter class.
  *
  * @param <T> the type of instances that be wrapped
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @author Zava Xu (zava dot kid at gmail dot com)
  * @see Wrapper
+ * @see io.foldright.inspectablewrappers.utils.WrapperAdapterUtils
  */
 public interface WrapperAdapter<T> extends Wrapper<T> {
     /**
