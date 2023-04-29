@@ -4,7 +4,7 @@
 
 	<groupId>io.foldright</groupId>
 	<artifactId>inspectable-wrapper-chain</artifactId>
-	<version>0.x-SNAPSTHO</version>
+	<version>0.2.0</version>
 	<name>Wrain(Inspectable Wrapper Chain)</name>
 	<description>
 		🪐 Wrain(Inspectable Wrapper Chain), a nano Java library provides the interfaces
