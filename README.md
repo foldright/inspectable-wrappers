@@ -157,7 +157,7 @@ For `Maven` projects:
 <dependency>
   <groupId>io.foldright</groupId>
   <artifactId>inspectable-wrapper-chain</artifactId>
-  <version>0.1.0</version>
+  <version>0.1.1</version>
 </dependency>
 ```
 
@@ -165,10 +165,10 @@ For `Gradle` projects:
 
 ```groovy
 // Gradle Kotlin DSL
-implementation("io.foldright:inspectable-wrapper-chain:0.1.0")
+implementation("io.foldright:inspectable-wrapper-chain:0.1.1")
 
 // Gradle Groovy DSL
-implementation 'io.foldright:inspectable-wrapper-chain:0.1.0'
+implementation 'io.foldright:inspectable-wrapper-chain:0.1.1'
 ```
 
 `wrain` has published to maven central, find the latest version at [central.sonatype.com](https://central.sonatype.com/artifact/io.foldright/inspectable-wrapper-chain/0.1.0/versions).
