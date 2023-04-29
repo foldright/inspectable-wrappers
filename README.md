@@ -16,6 +16,8 @@
 <a href="https://gitpod.io/#https://github.com/foldright/wrain"><img src="https://img.shields.io/badge/Gitpod-ready to code-339933?label=gitpod&logo=gitpod&logoColor=white" alt="gitpod: Ready to Code"></a>
 </p>
 
+<a href="#dummy"><img src="https://user-images.githubusercontent.com/1063891/235301326-fd1c5da3-269a-4741-9851-88d57dc9034b.png" width="30%" align="right" alt="wrain" /></a>
+
 **Wrain**(Inspectable Wrapper Chain), a nano library provides the interfaces
 to make wrapper instances as an **inspectable wrapper chain**.
 
@@ -157,7 +159,7 @@ For `Maven` projects:
 <dependency>
   <groupId>io.foldright</groupId>
   <artifactId>inspectable-wrapper-chain</artifactId>
-  <version>0.1.1</version>
+  <version>0.2.0</version>
 </dependency>
 ```
 
@@ -165,10 +167,10 @@ For `Gradle` projects:
 
 ```groovy
 // Gradle Kotlin DSL
-implementation("io.foldright:inspectable-wrapper-chain:0.1.1")
+implementation("io.foldright:inspectable-wrapper-chain:0.2.0")
 
 // Gradle Groovy DSL
-implementation 'io.foldright:inspectable-wrapper-chain:0.1.1'
+implementation 'io.foldright:inspectable-wrapper-chain:0.2.0'
 ```
 
 `wrain` has published to maven central, find the latest version at [central.sonatype.com](https://central.sonatype.com/artifact/io.foldright/inspectable-wrapper-chain/0.1.0/versions).

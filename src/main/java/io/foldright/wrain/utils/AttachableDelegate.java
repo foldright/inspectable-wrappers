@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentMap;
  * A simple {@link Attachable} delegate implementation.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
- * @author Attachable
+ * @see Attachable
  */
 @ParametersAreNonnullByDefault
 @ReturnValuesAreNonnullByDefault
