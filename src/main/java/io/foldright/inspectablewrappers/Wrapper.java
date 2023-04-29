@@ -2,8 +2,10 @@ package io.foldright.inspectablewrappers;
 
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.ReturnValuesAreNonnullByDefault;
+import io.foldright.wrain.utils.AttachableDelegate;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.lang.reflect.Proxy;
 import java.util.function.Predicate;
 
 import static io.foldright.inspectablewrappers.InternalUtils.unwrapNonNull;
@@ -21,6 +23,7 @@ import static java.util.Objects.requireNonNull;
  */
 @ParametersAreNonnullByDefault
 @ReturnValuesAreNonnullByDefault
+@FunctionalInterface
 public interface Wrapper<T> {
     /**
      * Returns the underlying instance that be wrapped.
@@ -110,5 +113,52 @@ public interface Wrapper<T> {
             if (value != null) return value;
         }
         return null;
+    }
+
+    /**
+     * Adapt an existed wrapper with {@link Wrapper} interface.
+     *
+     * @param instance         the adapted existed wrapper
+     * @param underlying       the underlying wrapper of the adapted existed wrapper
+     * @param wrapperInterface the interface type of wrapper
+     * @param <T>              the type of instances that be wrapped
+     * @return adapted wrapper
+     * @see #dynamicAdaptWithAttachable(Object, Object, Class)
+     */
+    @SuppressWarnings("unchecked")
+    static <T> T dynamicAdapt(T instance, T underlying, Class<T> wrapperInterface) {
+        Attachable attachable = new AttachableDelegate();
+        return (T) Proxy.newProxyInstance(instance.getClass().getClassLoader(), new Class[]{wrapperInterface, Wrapper.class},
+                (proxy, method, args) -> {
+                    final Class<?> declaringClass = method.getDeclaringClass();
+                    // contains only one method wrainUnwrap
+                    if (declaringClass == Attachable.class) return method.invoke(attachable, args);
+                    method.invoke(instance, args);
+                });
+    }
+
+    /**
+     * Adapt an existed wrapper with {@link Wrapper} interface with the {@link Attachable} ability.
+     *
+     * @param instance         the adapted existed wrapper
+     * @param underlying       the underlying wrapper of the adapted existed wrapper
+     * @param wrapperInterface the interface type of wrapper
+     * @param <T>              the type of instances that be wrapped
+     * @return adapted wrapper
+     * @see #dynamicAdapt(Object, Object, Class)
+     */
+    @SuppressWarnings("unchecked")
+    static <T> T dynamicAdaptWithAttachable(T instance, T underlying, Class<T> wrapperInterface) {
+        Attachable attachable = new AttachableDelegate();
+        return (T) Proxy.newProxyInstance(
+                instance.getClass().getClassLoader(),
+                new Class[]{wrapperInterface, Wrapper.class, Attachable.class},
+                (proxy, method, args) -> {
+                    final Class<?> declaringClass = method.getDeclaringClass();
+                    // contains only one method wrainUnwrap
+                    if (declaringClass == Wrapper.class) return underlying;
+                    if (declaringClass == Attachable.class) return method.invoke(attachable, args);
+                    return method.invoke(instance, args);
+                });
     }
 }
