@@ -1,4 +1,4 @@
-package io.foldright.wrain;
+package io.foldright.inspectablewrappers;
 
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.ReturnValuesAreNonnullByDefault;

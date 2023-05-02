@@ -1,25 +1,24 @@
-# 🪐 Wrain: Inspectable Wrapper Chain
+# 🪐 Inspectable Wrappers #
 
 <p align="center">
-<a href="https://github.com/foldright/wrain/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/foldright/wrain/ci.yml?branch=main&logo=github&logoColor=white" alt="Github Workflow Build Status"></a>
-<a href="https://app.codecov.io/gh/foldright/wrain/tree/main"><img src="https://img.shields.io/codecov/c/github/foldright/wrain/main?logo=codecov&logoColor=white" alt="Codecov"></a>
+<a href="https://github.com/foldright/inspectable-wrappers/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/foldright/inspectable-wrappers/ci.yml?branch=main&logo=github&logoColor=white" alt="Github Workflow Build Status"></a>
+<a href="https://app.codecov.io/gh/foldright/inspectable-wrappers/tree/main"><img src="https://img.shields.io/codecov/c/github/foldright/inspectable-wrappers/main?logo=codecov&logoColor=white" alt="Codecov"></a>
 <a href="https://openjdk.java.net/"><img src="https://img.shields.io/badge/Java-8+-339933?logo=openjdk&logoColor=white" alt="Java support"></a>
-<a href="https://www.apache.org/licenses/LICENSE-2.0.html"><img src="https://img.shields.io/github/license/foldright/wrain?color=4D7A97&logo=apache" alt="License"></a>
-<a href="https://foldright.io/wrain/apidocs/"><img src="https://img.shields.io/github/release/foldright/wrain?label=javadoc&color=339933&logo=microsoft-academic&logoColor=white" alt="Javadocs"></a>
-<a href="https://central.sonatype.com/artifact/io.foldright/inspectable-wrapper-chain/0.1.0/versions"><img src="https://img.shields.io/maven-central/v/io.foldright/inspectable-wrapper-chain?logo=apache-maven&logoColor=white" alt="Maven Central"></a>
-<a href="https://github.com/foldright/wrain/releases"><img src="https://img.shields.io/github/release/foldright/wrain.svg" alt="GitHub Releases"></a>
-<a href="https://github.com/foldright/wrain/stargazers"><img src="https://img.shields.io/github/stars/foldright/wrain" alt="GitHub Stars"></a>
-<a href="https://github.com/foldright/wrain/fork"><img src="https://img.shields.io/github/forks/foldright/wrain" alt="GitHub Forks"></a>
-<a href="https://github.com/foldright/wrain/issues"><img src="https://img.shields.io/github/issues/foldright/wrain" alt="GitHub Issues"></a>
-<a href="https://github.com/foldright/cffu/wrain/contributors"><img src="https://img.shields.io/github/contributors/foldright/wrain" alt="GitHub Contributors"></a>
-<a href="https://github.com/foldright/wrain"><img src="https://img.shields.io/github/repo-size/foldright/wrain" alt="GitHub repo size"></a>
-<a href="https://gitpod.io/#https://github.com/foldright/wrain"><img src="https://img.shields.io/badge/Gitpod-ready to code-339933?label=gitpod&logo=gitpod&logoColor=white" alt="gitpod: Ready to Code"></a>
+<a href="https://www.apache.org/licenses/LICENSE-2.0.html"><img src="https://img.shields.io/github/license/foldright/inspectable-wrappers?color=4D7A97&logo=apache" alt="License"></a>
+<a href="https://foldright.io/inspectable-wrappers/apidocs/"><img src="https://img.shields.io/github/release/foldright/inspectable-wrappers?label=javadoc&color=339933&logo=microsoft-academic&logoColor=white" alt="Javadocs"></a>
+<a href="https://central.sonatype.com/artifact/io.foldright/inspectable-wrappers/0.3.0/versions"><img src="https://img.shields.io/maven-central/v/io.foldright/inspectable-wrappers?logo=apache-maven&logoColor=white" alt="Maven Central"></a>
+<a href="https://github.com/foldright/inspectable-wrappers/releases"><img src="https://img.shields.io/github/release/foldright/inspectable-wrappers.svg" alt="GitHub Releases"></a>
+<a href="https://github.com/foldright/inspectable-wrappers/stargazers"><img src="https://img.shields.io/github/stars/foldright/inspectable-wrappers" alt="GitHub Stars"></a>
+<a href="https://github.com/foldright/inspectable-wrappers/fork"><img src="https://img.shields.io/github/forks/foldright/inspectable-wrappers" alt="GitHub Forks"></a>
+<a href="https://github.com/foldright/inspectable-wrappers/issues"><img src="https://img.shields.io/github/issues/foldright/inspectable-wrappers" alt="GitHub Issues"></a>
+<a href="https://github.com/foldright/cffu/inspectable-wrappers/contributors"><img src="https://img.shields.io/github/contributors/foldright/inspectable-wrappers" alt="GitHub Contributors"></a>
+<a href="https://github.com/foldright/inspectable-wrappers"><img src="https://img.shields.io/github/repo-size/foldright/inspectable-wrappers" alt="GitHub repo size"></a>
+<a href="https://gitpod.io/#https://github.com/foldright/inspectable-wrappers"><img src="https://img.shields.io/badge/Gitpod-ready to code-339933?label=gitpod&logo=gitpod&logoColor=white" alt="gitpod: Ready to Code"></a>
 </p>
 
-<a href="#dummy"><img src="https://user-images.githubusercontent.com/1063891/235301326-fd1c5da3-269a-4741-9851-88d57dc9034b.png" width="30%" align="right" alt="wrain" /></a>
+<a href="#dummy"><img src="https://user-images.githubusercontent.com/1063891/235301326-fd1c5da3-269a-4741-9851-88d57dc9034b.png" width="30%" align="right" alt="inspectable-wrappers" /></a>
 
-**Wrain**(Inspectable Wrapper Chain), a nano library provides the interfaces
-to make wrapper instances as an **inspectable wrapper chain**.
+The purpose of **Inspectable Wrappers** is to provide a standard for wrapper chain with inspection ability.
 
 --------------------------------------------------------------------------------
 
@@ -39,15 +38,15 @@ to make wrapper instances as an **inspectable wrapper chain**.
 
 ## 🥑 Core Classes
 
-- [`Wrapper`](src/main/java/io/foldright/wrain/Wrapper.java) is core interface, used to
-  - enhance the wrapper instances as a wrapper chain
-  - provides methods to inspect the wrapper chain.
-- [`Attachable`](src/main/java/io/foldright/wrain/Attachable.java) interface is used to
-  enhance the wrapper instances with the attachment storage ability.
+- [`Wrapper`](src/main/java/io/foldright/inspectablewrappers/Wrapper.java) is core interface, used to
+  - identifies the wrapper instances as a wrapper chain
+  - provides static entry methods to inspect the wrapper chain
+- [`Attachable`](src/main/java/io/foldright/inspectablewrappers/Attachable.java) interface is used to
+  enhance the wrapper instances with the attachment storage ability
 
 ## 🌰 Demo
 
-Below use the `Executor Wrapper` to demonstrate the usage of `wrain` lib.  
+Below use the `Executor Wrapper` to demonstrate the usage.
 (Runnable demo codes in project: [`Demo.java`](src/test/java/io/foldright/demo/Demo.java))
 
 ### wrapper implementations in your application code
@@ -148,7 +147,7 @@ public class Demo {
 
 ## 🍼 Java API Docs
 
-The current version Java API documentation: <https://foldright.io/wrain/apidocs/>
+The current version Java API documentation: <https://foldright.io/inspectable-wrappers/apidocs/>
 
 ## 🍪 Dependency
 
@@ -158,8 +157,8 @@ For `Maven` projects:
 
 <dependency>
   <groupId>io.foldright</groupId>
-  <artifactId>inspectable-wrapper-chain</artifactId>
-  <version>0.2.0</version>
+  <artifactId>inspectable-wrappers</artifactId>
+  <version>0.3.0</version>
 </dependency>
 ```
 
@@ -167,10 +166,10 @@ For `Gradle` projects:
 
 ```groovy
 // Gradle Kotlin DSL
-implementation("io.foldright:inspectable-wrapper-chain:0.2.0")
+implementation("io.foldright:inspectable-wrappers:0.3.0")
 
 // Gradle Groovy DSL
-implementation 'io.foldright:inspectable-wrapper-chain:0.2.0'
+implementation 'io.foldright:inspectable-wrappers:0.3.0'
 ```
 
-`wrain` has published to maven central, find the latest version at [central.sonatype.com](https://central.sonatype.com/artifact/io.foldright/inspectable-wrapper-chain/0.1.0/versions).
+`inspectable-wrappers` has published to maven central, find the latest version at [central.sonatype.com](https://central.sonatype.com/artifact/io.foldright/inspectable-wrappers/0.3.0/versions).

@@ -1,8 +1,8 @@
-package io.foldright.wrain.utils;
+package io.foldright.inspectablewrappers.utils;
 
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.ReturnValuesAreNonnullByDefault;
-import io.foldright.wrain.Attachable;
+import io.foldright.inspectablewrappers.Attachable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.concurrent.ConcurrentHashMap;

@@ -1,7 +1,7 @@
 package io.foldright.demo;
 
 import edu.umd.cs.findbugs.annotations.ReturnValuesAreNonnullByDefault;
-import io.foldright.wrain.Wrapper;
+import io.foldright.inspectablewrappers.Wrapper;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.concurrent.Executor;

@@ -3,14 +3,13 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>io.foldright</groupId>
-	<artifactId>inspectable-wrapper-chain</artifactId>
-	<version>0.x-SNAPSTHO</version>
-	<name>Wrain(Inspectable Wrapper Chain)</name>
+	<artifactId>inspectable-wrappers</artifactId>
+	<version>0.x-SNAPSHOT</version>
+	<name>Inspectable Wrappers</name>
 	<description>
-		🪐 Wrain(Inspectable Wrapper Chain), a nano Java library provides the interfaces
-		to make wrapper instances as an inspectable wrapper chain.
+		🪐 Inspectable Wrappers Specification, provides a standard for wrapper chain with inspection ability.
 	</description>
-	<url>https://github.com/foldright/wrain</url>
+	<url>https://github.com/foldright/inspectable-wrappers</url>
 	<inceptionYear>2023</inceptionYear>
 
 	<licenses>
@@ -22,12 +21,12 @@
 		</license>
 	</licenses>
 	<scm>
-		<connection>scm:git:git@github.com:foldright/wrain.git</connection>
-		<developerConnection>scm:git:git@github.com:foldright/wrain.git</developerConnection>
-		<url>https://github.com/foldright/wrain</url>
+		<connection>scm:git:git@github.com:foldright/inspectable-wrappers.git</connection>
+		<developerConnection>scm:git:git@github.com:foldright/inspectable-wrappers.git</developerConnection>
+		<url>https://github.com/foldright/inspectable-wrappers</url>
 	</scm>
 	<issueManagement>
-		<url>https://github.com/foldright/wrain/issues</url>
+		<url>https://github.com/foldright/inspectable-wrappers/issues</url>
 		<system>GitHub Issues</system>
 	</issueManagement>
 	<organization>

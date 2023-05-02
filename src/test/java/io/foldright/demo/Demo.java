@@ -1,6 +1,6 @@
 package io.foldright.demo;
 
-import io.foldright.wrain.Wrapper;
+import io.foldright.inspectablewrappers.Wrapper;
 
 import java.util.concurrent.Executor;
 

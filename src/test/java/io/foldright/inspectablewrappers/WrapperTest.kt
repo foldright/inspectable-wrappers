@@ -1,6 +1,6 @@
-package io.foldright.wrain
+package io.foldright.inspectablewrappers
 
-import io.foldright.wrain.utils.AttachableDelegate
+import io.foldright.inspectablewrappers.utils.AttachableDelegate
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue

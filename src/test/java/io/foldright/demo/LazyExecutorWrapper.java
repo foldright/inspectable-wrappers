@@ -2,9 +2,9 @@ package io.foldright.demo;
 
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.ReturnValuesAreNonnullByDefault;
-import io.foldright.wrain.Attachable;
-import io.foldright.wrain.Wrapper;
-import io.foldright.wrain.utils.AttachableDelegate;
+import io.foldright.inspectablewrappers.Attachable;
+import io.foldright.inspectablewrappers.Wrapper;
+import io.foldright.inspectablewrappers.utils.AttachableDelegate;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.concurrent.Executor;

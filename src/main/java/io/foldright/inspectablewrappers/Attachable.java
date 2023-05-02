@@ -1,4 +1,4 @@
-package io.foldright.wrain;
+package io.foldright.inspectablewrappers;
 
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.ReturnValuesAreNonnullByDefault;
@@ -13,11 +13,11 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * Retrieve the attachment from wrapper chain(wrapper instances implement interface {@link Wrapper})
  * by static method {@link Wrapper#getAttachment(Object, String)}.
  * <p>
- * Provide {@link io.foldright.wrain.utils.AttachableDelegate AttachableDelegate} as a simple delegate implementation.
+ * Provide {@link io.foldright.inspectablewrappers.utils.AttachableDelegate AttachableDelegate} as a simple delegate implementation.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @see Wrapper#getAttachment(Object, String)
- * @see io.foldright.wrain.utils.AttachableDelegate
+ * @see io.foldright.inspectablewrappers.utils.AttachableDelegate
  */
 @ParametersAreNonnullByDefault
 @ReturnValuesAreNonnullByDefault
