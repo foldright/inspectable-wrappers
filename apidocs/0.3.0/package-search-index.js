@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"io.foldright.inspectablewrappers"},{"l":"io.foldright.inspectablewrappers.utils"}];updateSearchResults();
