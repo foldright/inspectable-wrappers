@@ -11,13 +11,11 @@ import java.util.concurrent.ConcurrentMap;
 
 /**
  * A simple {@link Attachable} delegate implementation.
- *
  * <p>
- * <strong>Note:</strong>
- * </p>
- * As we store the attachments in hash map. The implementation of the key type
- * must meet the requirements of the hash map, which means that a stable hash
- * code and the ability to compare equality using equals() must be implemented.
+ * <strong>Note:</strong><br>
+ * As the attachments are stored in {@code hash map}(threadsafe {@link ConcurrentHashMap}), the implementation of
+ * the key type must meet the requirements of the {@code hash map}, which means that
+ * a stable {@code hash code} and the ability to compare equality using {@code equals()} must be implemented.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @author Yang Fang (snoop dot fy at gmail dot com)
