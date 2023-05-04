@@ -62,7 +62,7 @@ public interface Wrapper<T> {
 
     /**
      * Retrieves the attachment of wrapper of given key on the wrapper chain
-     * by calling {@link Attachable#getAttachment(String)}.
+     * by calling {@link Attachable#getAttachment(Object)}.
      * <p>
      * The wrapper chain consists of wrapper itself, followed by the wrappers
      * obtained by repeatedly calling {@link #unwrap()}.
@@ -72,14 +72,16 @@ public interface Wrapper<T> {
      * @param wrapper wrapper instance
      * @param key     the attachment key
      * @param <W>     the type of instances that be wrapped
+     * @param <K>     the type of attachment key
+     * @param <V>     the type of attachment value
      */
     @Nullable
     @SuppressWarnings("unchecked")
-    static <W, V> V getAttachment(final W wrapper, final String key) {
+    static <W, K, V> V getAttachment(final W wrapper, final K key) {
         for (Object w = wrapper; w instanceof Wrapper; w = ((Wrapper<W>) w).unwrap()) {
             if (!(w instanceof Attachable)) continue;
 
-            V value = ((Attachable) w).getAttachment(key);
+            V value = ((Attachable<K, V>) w).getAttachment(key);
             if (value != null) return value;
         }
         return null;

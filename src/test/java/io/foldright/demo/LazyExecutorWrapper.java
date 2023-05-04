@@ -12,7 +12,7 @@ import java.util.concurrent.Executor;
 
 @ParametersAreNonnullByDefault
 @ReturnValuesAreNonnullByDefault
-public class LazyExecutorWrapper implements Executor, Wrapper<Executor>, Attachable {
+public class LazyExecutorWrapper implements Executor, Wrapper<Executor>, Attachable<String, String> {
     private final Executor executor;
 
     public LazyExecutorWrapper(Executor executor) {
@@ -40,16 +40,16 @@ public class LazyExecutorWrapper implements Executor, Wrapper<Executor>, Attacha
         return executor;
     }
 
-    private final Attachable attachable = new AttachableDelegate();
+    private final Attachable<String, String> attachable = new AttachableDelegate<>();
 
     @Override
-    public void setAttachment(String key, Object value) {
+    public void setAttachment(String key, String value) {
         attachable.setAttachment(key, value);
     }
 
     @Nullable
     @Override
-    public <V> V getAttachment(String key) {
+    public String getAttachment(String key) {
         return attachable.getAttachment(key);
     }
 }

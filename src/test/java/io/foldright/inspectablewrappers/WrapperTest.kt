@@ -22,7 +22,7 @@ class WrapperTest : FunSpec({
         val value: String = Wrapper.getAttachment(chatty, "busy")!!
         value shouldBe "very very busy!"
 
-        Wrapper.getAttachment<Executor, String>(chatty, "not existed").shouldBeNull()
+        Wrapper.getAttachment<Executor, String, String>(chatty, "not existed").shouldBeNull()
     }
 })
 
@@ -36,7 +36,7 @@ class ChattyExecutorWrapper(private val executor: Executor) : Executor, Wrapper<
 }
 
 class LazyExecutorWrapper(private val executor: Executor) :
-        Executor, Wrapper<Executor>, Attachable by AttachableDelegate() {
+        Executor, Wrapper<Executor>, Attachable<String, String> by AttachableDelegate() {
     override fun execute(command: Runnable) {
         println("I'm lazy, sleep before work")
         sleep()
