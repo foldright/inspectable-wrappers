@@ -19,12 +19,13 @@ import java.util.concurrent.ConcurrentMap;
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @author Yang Fang (snoop dot fy at gmail dot com)
+ * @author Zava (zava dot kid at gmail dot com)
  * @see Attachable
  */
 @ParametersAreNonnullByDefault
 @ReturnValuesAreNonnullByDefault
 public class AttachableDelegate<K, V> implements Attachable<K, V> {
-    private final ConcurrentMap<Object, Object> attachments = new ConcurrentHashMap<>();
+    private final ConcurrentMap<K, V> attachments = new ConcurrentHashMap<>();
 
     @Override
     public void setAttachment(K key, V value) {
@@ -33,8 +34,7 @@ public class AttachableDelegate<K, V> implements Attachable<K, V> {
 
     @Override
     @Nullable
-    @SuppressWarnings("unchecked")
     public V getAttachment(K key) {
-        return (V) attachments.get(key);
+        return attachments.get(key);
     }
 }
