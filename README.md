@@ -1,4 +1,4 @@
-# 🪐 Inspectable Wrappers #
+# <div align="center"><a href="#dummy"><img src="https://user-images.githubusercontent.com/1063891/236442451-81509618-a741-4f8a-b958-8947c7025041.png" alt="🪐 Inspectable Wrappers"></a></div>
 
 <p align="center">
 <a href="https://github.com/foldright/inspectable-wrappers/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/foldright/inspectable-wrappers/ci.yml?branch=main&logo=github&logoColor=white" alt="Github Workflow Build Status"></a>
@@ -73,7 +73,7 @@ public class ChattyExecutorWrapper implements Executor, Wrapper<Executor> {
 }
 
 // another wrapper implementation
-public class LazyExecutorWrapper implements Executor, Wrapper<Executor>, Attachable {
+public class LazyExecutorWrapper implements Executor, Wrapper<Executor>, Attachable<String, String> {
   private final Executor executor;
 
   public LazyExecutorWrapper(Executor executor) {
@@ -93,15 +93,15 @@ public class LazyExecutorWrapper implements Executor, Wrapper<Executor>, Attacha
     return executor;
   }
 
-  private final Attachable attachable = new AttachableDelegate();
+  private final Attachable<String, String> attachable = new AttachableDelegate<>();
 
   @Override
-  public void setAttachment(String key, Object value) {
+  public void setAttachment(String key, String value) {
     attachable.setAttachment(key, value);
   }
 
   @Override
-  public <V> V getAttachment(String key) {
+  public String getAttachment(String key) {
     return attachable.getAttachment(key);
   }
 }

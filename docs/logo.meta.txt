@@ -1,0 +1,6 @@
+logo is created by https://www.logoly.pro
+
+font: Zilla Slab
+Prefix Text Color: 150, 211, 95
+Suffix Background Color: 83, 213, 253
+logo.fond-size: 65
