@@ -12,7 +12,7 @@ import java.util.concurrent.ExecutorService
 class WrapperTest : FunSpec({
     // prepare executor instance and wrappers
     val chatty: Executor = Executor { runnable -> runnable.run() }.let {
-        LazyExecutorWrapper(it).apply { setAttachment("busy", "very very busy!") }
+        LazyExecutorWrapper(it).apply { setAttachment("busy", "very, very busy!") }
     }.let(::ChattyExecutorWrapper)
 
     test("wrapper") {
@@ -20,7 +20,7 @@ class WrapperTest : FunSpec({
         Wrapper.isInstanceOf(chatty, ExecutorService::class.java).shouldBeFalse()
 
         val value: String = Wrapper.getAttachment(chatty, "busy")!!
-        value shouldBe "very very busy!"
+        value shouldBe "very, very busy!"
 
         Wrapper.getAttachment<Executor, String, String>(chatty, "not existed").shouldBeNull()
     }

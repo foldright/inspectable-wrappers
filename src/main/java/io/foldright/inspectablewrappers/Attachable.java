@@ -35,7 +35,7 @@ public interface Attachable<K, V> {
     void setAttachment(K key, V value);
 
     /**
-     * Get the attachment of the given key.
+     * Gets the attachment of the given key.
      *
      * @param key the attachment key
      * @return return the attachment value, or {@code null} if contains no attachment for the key

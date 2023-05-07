@@ -18,7 +18,7 @@
 
 <a href="#dummy"><img src="https://user-images.githubusercontent.com/1063891/235301326-fd1c5da3-269a-4741-9851-88d57dc9034b.png" width="30%" align="right" alt="inspectable-wrappers" /></a>
 
-The purpose of **Inspectable Wrappers** is to provide a standard for wrapper chain with inspection ability.
+The purpose of **Inspectable Wrappers** is to provide a standard for wrapper chain with the inspection ability.
 
 --------------------------------------------------------------------------------
 
@@ -39,8 +39,8 @@ The purpose of **Inspectable Wrappers** is to provide a standard for wrapper cha
 ## 🥑 Core Classes
 
 - [`Wrapper`](src/main/java/io/foldright/inspectablewrappers/Wrapper.java) is core interface, used to
-  - identifies the wrapper instances as a wrapper chain
-  - provides static entry methods to inspect the wrapper chain
+  - identify the wrapper instances as a wrapper chain
+  - provide static entry methods to inspect the wrapper chain
 - [`Attachable`](src/main/java/io/foldright/inspectablewrappers/Attachable.java) interface is used to
   enhance the wrapper instances with the attachment storage ability
 
@@ -167,7 +167,9 @@ For `Gradle` projects:
 ```groovy
 // Gradle Kotlin DSL
 implementation("io.foldright:inspectable-wrappers:0.3.0")
+```
 
+```groovy
 // Gradle Groovy DSL
 implementation 'io.foldright:inspectable-wrappers:0.3.0'
 ```

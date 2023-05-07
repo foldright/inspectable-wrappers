@@ -7,7 +7,7 @@
 	<version>0.x-SNAPSHOT</version>
 	<name>Inspectable Wrappers</name>
 	<description>
-		🪐 Inspectable Wrappers Specification, provides a standard for wrapper chain with inspection ability.
+		🪐 Inspectable Wrappers Specification, provides a standard for wrapper chain with the inspection ability.
 	</description>
 	<url>https://github.com/foldright/inspectable-wrappers</url>
 	<inceptionYear>2023</inceptionYear>

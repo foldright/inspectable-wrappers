@@ -27,11 +27,17 @@ import java.util.concurrent.ConcurrentMap;
 public class AttachableDelegate<K, V> implements Attachable<K, V> {
     private final ConcurrentMap<K, V> attachments = new ConcurrentHashMap<>();
 
+    /**
+     * Sets an attachment.
+     */
     @Override
     public void setAttachment(K key, V value) {
         attachments.put(key, value);
     }
 
+    /**
+     * Gets the attachment of the given key.
+     */
     @Override
     @Nullable
     public V getAttachment(K key) {
