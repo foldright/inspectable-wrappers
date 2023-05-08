@@ -8,8 +8,8 @@
 <a href="https://foldright.io/inspectable-wrappers/apidocs/"><img src="https://img.shields.io/github/release/foldright/inspectable-wrappers?label=javadoc&color=339933&logo=microsoft-academic&logoColor=white" alt="Javadocs"></a>
 <a href="https://central.sonatype.com/artifact/io.foldright/inspectable-wrappers/0.3.0/versions"><img src="https://img.shields.io/maven-central/v/io.foldright/inspectable-wrappers?logo=apache-maven&logoColor=white" alt="Maven Central"></a>
 <a href="https://github.com/foldright/inspectable-wrappers/releases"><img src="https://img.shields.io/github/release/foldright/inspectable-wrappers.svg" alt="GitHub Releases"></a>
-<a href="https://github.com/foldright/inspectable-wrappers/stargazers"><img src="https://img.shields.io/github/stars/foldright/inspectable-wrappers" alt="GitHub Stars"></a>
-<a href="https://github.com/foldright/inspectable-wrappers/fork"><img src="https://img.shields.io/github/forks/foldright/inspectable-wrappers" alt="GitHub Forks"></a>
+<a href="https://github.com/foldright/inspectable-wrappers/stargazers"><img src="https://img.shields.io/github/stars/foldright/inspectable-wrappers?style=flat" alt="GitHub Stars"></a>
+<a href="https://github.com/foldright/inspectable-wrappers/fork"><img src="https://img.shields.io/github/forks/foldright/inspectable-wrappers?style=flat" alt="GitHub Forks"></a>
 <a href="https://github.com/foldright/inspectable-wrappers/issues"><img src="https://img.shields.io/github/issues/foldright/inspectable-wrappers" alt="GitHub Issues"></a>
 <a href="https://github.com/foldright/cffu/inspectable-wrappers/contributors"><img src="https://img.shields.io/github/contributors/foldright/inspectable-wrappers" alt="GitHub Contributors"></a>
 <a href="https://github.com/foldright/inspectable-wrappers"><img src="https://img.shields.io/github/repo-size/foldright/inspectable-wrappers" alt="GitHub repo size"></a>
@@ -158,7 +158,7 @@ For `Maven` projects:
 <dependency>
   <groupId>io.foldright</groupId>
   <artifactId>inspectable-wrappers</artifactId>
-  <version>0.3.0</version>
+  <version>0.3.1</version>
 </dependency>
 ```
 
@@ -166,12 +166,12 @@ For `Gradle` projects:
 
 ```groovy
 // Gradle Kotlin DSL
-implementation("io.foldright:inspectable-wrappers:0.3.0")
+implementation("io.foldright:inspectable-wrappers:0.3.1")
 ```
 
 ```groovy
 // Gradle Groovy DSL
-implementation 'io.foldright:inspectable-wrappers:0.3.0'
+implementation 'io.foldright:inspectable-wrappers:0.3.1'
 ```
 
 `inspectable-wrappers` has published to maven central, find the latest version at [central.sonatype.com](https://central.sonatype.com/artifact/io.foldright/inspectable-wrappers/0.3.0/versions).
