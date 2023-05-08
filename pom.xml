@@ -4,7 +4,7 @@
 
 	<groupId>io.foldright</groupId>
 	<artifactId>inspectable-wrappers</artifactId>
-	<version>0.x-SNAPSHOT</version>
+	<version>0.3.1</version>
 	<name>Inspectable Wrappers</name>
 	<description>
 		🪐 Inspectable Wrappers Specification, provides a standard for wrapper chain with the inspection ability.
