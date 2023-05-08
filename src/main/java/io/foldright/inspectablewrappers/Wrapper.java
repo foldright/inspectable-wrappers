@@ -37,23 +37,23 @@ public interface Wrapper<T> {
      * otherwise return {@code true}
      */
     static <W> boolean isInstanceOf(W wrapper, Class<?> clazz) {
-        return check(wrapper, w -> clazz.isAssignableFrom(w.getClass()));
+        return inspect(wrapper, w -> clazz.isAssignableFrom(w.getClass()));
     }
 
     /**
-     * Reports whether any wrapper on the wrapper chain satisfy {@code predicate}.
+     * Reports whether any wrapper on the wrapper chain satisfy the given {@code predicate}.
      * <p>
      * The wrapper chain consists of wrapper itself, followed by the wrappers
      * obtained by repeatedly calling {@link #unwrap()}.
      *
      * @param wrapper   wrapper instance/wrapper chain
-     * @param predicate check logic
+     * @param predicate inspect logic
      * @param <W>       the type of instances that be wrapped
-     * @return return {@code false} if no wrapper on the wrapper chain satisfy {@code predicate},
+     * @return return {@code false} if no wrapper on the wrapper chain satisfy the given {@code predicate},
      * otherwise return {@code true}
      */
     @SuppressWarnings("unchecked")
-    static <W> boolean check(final W wrapper, final Predicate<? super W> predicate) {
+    static <W> boolean inspect(final W wrapper, final Predicate<? super W> predicate) {
         for (Object w = wrapper; w instanceof Wrapper; w = ((Wrapper<?>) w).unwrap()) {
             if (predicate.test((W) w)) return true;
         }
