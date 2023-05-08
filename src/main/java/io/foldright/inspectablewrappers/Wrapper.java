@@ -6,6 +6,7 @@ import edu.umd.cs.findbugs.annotations.ReturnValuesAreNonnullByDefault;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.Predicate;
 
+import static io.foldright.inspectablewrappers.InternalUtils.unwrapNonNull;
 import static java.util.Objects.requireNonNull;
 
 
@@ -62,7 +63,7 @@ public interface Wrapper<T> {
     static <W> boolean inspect(final W wrapper, final Predicate<? super W> predicate) {
         requireNonNull(wrapper, "wrapper is null");
         requireNonNull(predicate, "predicate is null");
-        for (Object w = wrapper; w instanceof Wrapper; w = ((Wrapper<?>) w).unwrap()) {
+        for (Object w = wrapper; w instanceof Wrapper; w = unwrapNonNull(w)) {
             if (predicate.test((W) w)) return true;
         }
         return false;
@@ -90,7 +91,7 @@ public interface Wrapper<T> {
     static <W, K, V> V getAttachment(final W wrapper, final K key) {
         requireNonNull(wrapper, "wrapper is null");
         requireNonNull(key, "key is null");
-        for (Object w = wrapper; w instanceof Wrapper; w = ((Wrapper<?>) w).unwrap()) {
+        for (Object w = wrapper; w instanceof Wrapper; w = unwrapNonNull(w)) {
             if (!(w instanceof Attachable)) continue;
 
             V value = ((Attachable<K, V>) w).getAttachment(key);
