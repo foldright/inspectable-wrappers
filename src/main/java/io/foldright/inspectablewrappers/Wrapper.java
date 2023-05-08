@@ -6,6 +6,8 @@ import edu.umd.cs.findbugs.annotations.ReturnValuesAreNonnullByDefault;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.Predicate;
 
+import static java.util.Objects.requireNonNull;
+
 
 /**
  * This {@code Wrapper} interface is used to be implemented by wrapper classes,
@@ -35,8 +37,11 @@ public interface Wrapper<T> {
      * @param <W>     the type of instances that be wrapped
      * @return return {@code false} if no wrapper on the wrapper chain matches the given type,
      * otherwise return {@code true}
+     * @throws NullPointerException if any arguments is null
      */
     static <W> boolean isInstanceOf(W wrapper, Class<?> clazz) {
+        requireNonNull(wrapper, "wrapper is null");
+        requireNonNull(clazz, "clazz is null");
         return inspect(wrapper, w -> clazz.isAssignableFrom(w.getClass()));
     }
 
@@ -51,9 +56,12 @@ public interface Wrapper<T> {
      * @param <W>       the type of instances that be wrapped
      * @return return {@code false} if no wrapper on the wrapper chain satisfy the given {@code predicate},
      * otherwise return {@code true}
+     * @throws NullPointerException if any arguments is null
      */
     @SuppressWarnings("unchecked")
     static <W> boolean inspect(final W wrapper, final Predicate<? super W> predicate) {
+        requireNonNull(wrapper, "wrapper is null");
+        requireNonNull(predicate, "predicate is null");
         for (Object w = wrapper; w instanceof Wrapper; w = ((Wrapper<?>) w).unwrap()) {
             if (predicate.test((W) w)) return true;
         }
@@ -74,11 +82,15 @@ public interface Wrapper<T> {
      * @param <W>     the type of instances that be wrapped
      * @param <K>     the type of attachment key
      * @param <V>     the type of attachment value
+     * @return the attachment value of wrapper of given key on the wrapper chain
+     * @throws NullPointerException if any arguments is null
      */
     @Nullable
     @SuppressWarnings("unchecked")
     static <W, K, V> V getAttachment(final W wrapper, final K key) {
-        for (Object w = wrapper; w instanceof Wrapper; w = ((Wrapper<W>) w).unwrap()) {
+        requireNonNull(wrapper, "wrapper is null");
+        requireNonNull(key, "key is null");
+        for (Object w = wrapper; w instanceof Wrapper; w = ((Wrapper<?>) w).unwrap()) {
             if (!(w instanceof Attachable)) continue;
 
             V value = ((Attachable<K, V>) w).getAttachment(key);
