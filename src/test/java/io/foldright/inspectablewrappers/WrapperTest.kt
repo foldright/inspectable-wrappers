@@ -4,16 +4,20 @@ import io.foldright.inspectablewrappers.utils.AttachableDelegate
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue
+import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeSameInstanceAs
 import java.util.concurrent.Executor
 import java.util.concurrent.ExecutorService
 
 class WrapperTest : FunSpec({
     // prepare executor instance and wrappers
-    val chatty: Executor = Executor { runnable -> runnable.run() }.let {
-        LazyExecutorWrapper(it).apply { setAttachment("busy", "very, very busy!") }
-    }.let(::ChattyExecutorWrapper)
+    val executor = Executor { runnable -> runnable.run() }
+
+    val lazy = LazyExecutorWrapper(executor).apply { setAttachment("busy", "very, very busy!") }
+
+    val chatty: Executor = lazy.let(::ChattyExecutorWrapper)
 
     test("wrapper") {
         Wrapper.isInstanceOf(chatty, LazyExecutorWrapper::class.java).shouldBeTrue()
@@ -21,8 +25,18 @@ class WrapperTest : FunSpec({
 
         val value: String = Wrapper.getAttachment(chatty, "busy")!!
         value shouldBe "very, very busy!"
+    }
 
+    test("unwrapChain") {
+        Wrapper.unwrapChain(chatty) shouldBeSameInstanceAs executor
+    }
+
+    test("getAttachment") {
         Wrapper.getAttachment<Executor, String, String>(chatty, "not existed").shouldBeNull()
+    }
+
+    test("forEach") {
+        Wrapper.chainInstanceList(chatty).shouldContainExactly(chatty, lazy, executor)
     }
 })
 
