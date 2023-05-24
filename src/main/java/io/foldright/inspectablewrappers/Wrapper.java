@@ -4,6 +4,9 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.ReturnValuesAreNonnullByDefault;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import static io.foldright.inspectablewrappers.InternalUtils.unwrapNonNull;
@@ -47,6 +50,24 @@ public interface Wrapper<T> {
     }
 
     /**
+     * Returns the underlying instance of the wrapper chain.
+     * <p>
+     * The wrapper chain consists of wrapper itself, followed by the wrappers
+     * obtained by repeatedly calling {@link #unwrap()}.
+     *
+     * @param wrapper wrapper instance/wrapper chain
+     * @param <W>     the type of instances that be wrapped
+     * @return the underlying instance that be wrapped
+     */
+    @SuppressWarnings("unchecked")
+    static <W> W unwrapChain(W wrapper) {
+        requireNonNull(wrapper, "wrapper is null");
+        Object w = wrapper;
+        while (w instanceof Wrapper) w = unwrapNonNull(w);
+        return (W) w;
+    }
+
+    /**
      * Reports whether any wrapper on the wrapper chain satisfy the given {@code predicate}.
      * <p>
      * The wrapper chain consists of wrapper itself, followed by the wrappers
@@ -67,6 +88,36 @@ public interface Wrapper<T> {
             if (predicate.test((W) w)) return true;
         }
         return false;
+    }
+
+    static <W> List<W> chainInstanceList(final W wrapper) {
+        List<W> ret = new ArrayList<>();
+        forEach(wrapper, ret::add);
+        return ret;
+    }
+
+    /**
+     * Performs the given action for each wrapper on the wrapper chain until all elements have been processed
+     * or the action throws an exception. Actions are performed in the order of wrapper chain.
+     * Exceptions thrown by the action are relayed to the caller.
+     * <p>
+     * The wrapper chain consists of wrapper itself, followed by the wrappers
+     * obtained by repeatedly calling {@link #unwrap()}.
+     *
+     * @param wrapper wrapper instance/wrapper chain
+     * @param action  The action to be performed for  wrapper on the wrapper chain
+     * @param <W>     the type of instances that be wrapped
+     */
+    @SuppressWarnings("unchecked")
+    static <W> void forEach(final W wrapper, final Consumer<? super W> action) {
+        requireNonNull(wrapper, "wrapper is null");
+        requireNonNull(action, "action is null");
+        Object w = wrapper;
+        while (w instanceof Wrapper) {
+            action.accept((W) w);
+            w = unwrapNonNull(w);
+        }
+        action.accept((W) w);
     }
 
     /**
