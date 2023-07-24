@@ -61,8 +61,6 @@
 
 		<kotlin.version>1.8.21</kotlin.version>
 		<kotlin.compiler.jvmTarget>${maven.compiler.source}</kotlin.compiler.jvmTarget>
-		<!-- https://kotlinlang.org/docs/maven.html#specifying-compiler-options -->
-		<kotlin.compiler.apiVersion>1.5</kotlin.compiler.apiVersion>
 
 		<!-- testing dependencies versions -->
 		<junit5.version>5.9.3</junit5.version>
