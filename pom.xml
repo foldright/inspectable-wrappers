@@ -65,7 +65,7 @@
 		<kotlin.compiler.apiVersion>1.5</kotlin.compiler.apiVersion>
 
 		<!-- testing dependencies versions -->
-		<junit5.version>5.9.3</junit5.version>
+		<junit5.version>5.10.0</junit5.version>
 		<kotest.version>5.6.2</kotest.version>
 	</properties>
 
