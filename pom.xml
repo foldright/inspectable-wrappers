@@ -55,7 +55,7 @@
 		<maven.deploy.skip>false</maven.deploy.skip>
 		<perform.release.jdk.version>17</perform.release.jdk.version>
 
-		<spotbugs.annotations.version>4.8.1</spotbugs.annotations.version>
+		<spotbugs.annotations.version>4.8.2</spotbugs.annotations.version>
 		<jsr305.version>3.0.2</jsr305.version>
 		<jetbrains.annotations.version>24.1.0</jetbrains.annotations.version>
 
