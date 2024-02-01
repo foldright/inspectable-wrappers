@@ -28,7 +28,7 @@ jobs:
       - run: ./mvnw -V --no-transfer-progress clean package spotbugs:check git-commit-id:validateRevision -DperformRelease
         if: matrix.java >= 17
       # https://github.com/marketplace/actions/codecov
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v4
         with:
           name: codecov-umbrella
           token: ${{ secrets.CODECOV_TOKEN }}
