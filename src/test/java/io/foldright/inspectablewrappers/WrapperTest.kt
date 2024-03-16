@@ -1,6 +1,8 @@
 package io.foldright.inspectablewrappers
 
 import io.foldright.inspectablewrappers.utils.AttachableDelegate
+import io.kotest.assertions.fail
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue
@@ -23,6 +25,25 @@ class WrapperTest : FunSpec({
         value shouldBe "very, very busy!"
 
         Wrapper.getAttachment<Executor, String, String>(chatty, "not existed").shouldBeNull()
+    }
+
+    test("ClassCastException") {
+        shouldThrow<ClassCastException> {
+            val value = Wrapper.getAttachment<Executor, String, Int?>(chatty, "busy")
+            fail(value.toString())
+        }
+    }
+
+    test("argument null") {
+        shouldThrow<NullPointerException> {
+            @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "CAST_NEVER_SUCCEEDS")
+            Wrapper.getAttachment<Executor, String, String>(null as? Executor, "busy")
+        }.message shouldBe "wrapper is null"
+
+        shouldThrow<NullPointerException> {
+            @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "CAST_NEVER_SUCCEEDS")
+            Wrapper.getAttachment<Executor, String, String>(chatty, null as? String)
+        }.message shouldBe "key is null"
     }
 })
 
