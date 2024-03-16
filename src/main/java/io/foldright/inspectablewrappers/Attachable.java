@@ -31,6 +31,7 @@ public interface Attachable<K, V> {
      *
      * @param key   the attachment key
      * @param value the attachment value
+     * @throws NullPointerException if any arguments is null
      */
     void setAttachment(K key, V value);
 
@@ -39,6 +40,9 @@ public interface Attachable<K, V> {
      *
      * @param key the attachment key
      * @return return the attachment value, or {@code null} if contains no attachment for the key
+     * @throws NullPointerException if key argument is null
+     * @throws ClassCastException   if the return value is not type {@code <V>}
+     * @see Wrapper#getAttachment(Object, Object)
      */
     @Nullable
     V getAttachment(K key);

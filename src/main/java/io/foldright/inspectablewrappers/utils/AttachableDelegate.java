@@ -8,6 +8,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import static java.util.Objects.requireNonNull;
+
 
 /**
  * A simple {@link Attachable} delegate implementation.
@@ -32,15 +34,18 @@ public class AttachableDelegate<K, V> implements Attachable<K, V> {
      */
     @Override
     public void setAttachment(K key, V value) {
+        requireNonNull(key, "key is null");
+        requireNonNull(value, "value is null");
         attachments.put(key, value);
     }
 
     /**
      * Gets the attachment of the given key.
      */
-    @Override
     @Nullable
+    @Override
     public V getAttachment(K key) {
-        return attachments.get(key);
+        requireNonNull(key, "key is null");
+        return (V) attachments.get(key);
     }
 }

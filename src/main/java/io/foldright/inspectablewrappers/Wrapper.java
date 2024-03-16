@@ -16,6 +16,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @param <T> the type of instances that be wrapped
  * @author Jerry Lee (oldratlee at gmail dot com)
+ * @see Attachable
  */
 @ParametersAreNonnullByDefault
 @ReturnValuesAreNonnullByDefault
@@ -83,8 +84,11 @@ public interface Wrapper<T> {
      * @param <W>     the type of instances that be wrapped
      * @param <K>     the type of attachment key
      * @param <V>     the type of attachment value
-     * @return the attachment value of wrapper of given key on the wrapper chain
+     * @return the attachment value of wrapper of given key on the wrapper chain,
+     * or null if the attachment is absent
      * @throws NullPointerException if any arguments is null
+     * @throws ClassCastException   if the return value is not type {@code <V>}
+     * @see Attachable#getAttachment(Object)
      */
     @Nullable
     @SuppressWarnings("unchecked")
