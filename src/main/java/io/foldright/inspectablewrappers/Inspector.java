@@ -17,24 +17,24 @@ import static java.util.Objects.requireNonNull;
  *
  * <h2>Common simple usages</h2>
  * <ul>
- *   <li>Reports whether any instance on the wrapper chain matches the given type
- *       by static method {@link #isInstanceOf(Object, Class)}
- *   <li>Retrieve the attachment from wrapper chain(wrapper instances implement interface {@link Wrapper})
- *       by static method {@link #getAttachment(Object, Object)}
+ * <li>Reports whether any instance on the wrapper chain matches the given type
+ *     by static method {@link #isInstanceOf(Object, Class)}
+ * <li>Retrieves the attachment of instance on the wrapper chain
+ *     by static method {@link #getAttachment(Object, Object)}
  * </ul>
  *
  * <h2>Advanced usages</h2>
  * <ul>
- *   <li>Reports whether any instance on the wrapper chain satisfy the given {@link Predicate}
- *       by static method {@link #inspect(Object, Predicate)}
- *   <li>Traverses the wrapper chain, and applies the given {@link Function} to each instance on the wrapper chain,
- *       by static method {@link #travel(Object, Function)}
+ * <li>Reports whether any instance on the wrapper chain satisfy the given {@link Predicate}
+ *     by static method {@link #inspect(Object, Predicate)}
+ * <li>Traverses the wrapper chain and applies the given {@link Function} to each instance on the wrapper chain
+ *     by static method {@link #travel(Object, Function)}
  * </ul>
  * <p>
  * You can implement your own inspection logic using above advanced methods.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
- * @author Zava (zava dot kid at gmail dot com)
+ * @author Zava Xu (zava dot kid at gmail dot com)
  * @see Wrapper
  * @see Attachable
  * @see WrapperAdapter
@@ -52,7 +52,7 @@ public final class Inspector {
      * @param <W>     the type of instances that be wrapped
      * @return return {@code false} if no wrapper on the wrapper chain matches the given type,
      * otherwise return {@code true}
-     * @throws NullPointerException  if any arguments is null or any wrapper {{@link Wrapper#unwrap()}} returns null
+     * @throws NullPointerException  if any arguments is null or any wrapper {@link Wrapper#unwrap()} returns null
      * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is type {@link Wrapper}
      * @see WrapperAdapter#adaptee()
      */
@@ -69,16 +69,16 @@ public final class Inspector {
      * The wrapper chain consists of wrapper itself, followed by the wrappers
      * obtained by repeatedly calling {@link Wrapper#unwrap()}.
      * <p>
-     * If the key exists in multiple wrappers, outer wrapper win.
+     * If the same key exists in multiple wrappers, outer wrapper win.
      *
      * @param wrapper wrapper instance
      * @param key     the attachment key
      * @param <W>     the type of instances that be wrapped
      * @param <K>     the type of attachment key
      * @param <V>     the type of attachment value
-     * @return the attachment value of wrapper of given key on the wrapper chain,
+     * @return the attachment value of wrapper for given key on the wrapper chain,
      * or null if the attachment is absent
-     * @throws NullPointerException  if any arguments is null or any wrapper {{@link Wrapper#unwrap()}} returns null
+     * @throws NullPointerException  if any arguments is null or any wrapper {@link Wrapper#unwrap()} returns null
      * @throws ClassCastException    if the return value is not type {@code <V>}
      * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is type {@link Wrapper}
      * @see Attachable#getAttachment(Object)
@@ -99,7 +99,7 @@ public final class Inspector {
     }
 
     /**
-     * Reports whether any instance on the wrapper chain satisfy the given {@code predicate}.
+     * Reports whether any instance on the wrapper chain satisfies the given {@code predicate}.
      * <p>
      * The wrapper chain consists of wrapper itself, followed by the wrappers
      * obtained by repeatedly calling {@link Wrapper#unwrap()}.
@@ -109,7 +109,7 @@ public final class Inspector {
      * @param <W>       the type of instances that be wrapped
      * @return return {@code false} if no wrapper on the wrapper chain satisfy the given {@code predicate},
      * otherwise return {@code true}
-     * @throws NullPointerException  if any arguments is null or any wrapper {{@link Wrapper#unwrap()}} returns null
+     * @throws NullPointerException  if any arguments is null or any wrapper {@link Wrapper#unwrap()} returns null
      * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is type {@link Wrapper}
      */
     public static <W> boolean inspect(final W wrapper, final Predicate<? super W> predicate) {
@@ -122,8 +122,8 @@ public final class Inspector {
     }
 
     /**
-     * Traverses the wrapper chain, and applies the given {@code process} function to
-     * each instance on the wrapper chain, and returns the first non-empty({@link Optional#empty()}) result
+     * Traverses the wrapper chain and applies the given {@code process} function to
+     * each instance on the wrapper chain, returns the first non-empty({@link Optional#empty()}) result
      * of the process function, otherwise returns {@link Optional#empty()}.
      * <p>
      * The wrapper chain consists of wrapper itself, followed by the wrappers
@@ -134,8 +134,8 @@ public final class Inspector {
      * @param <W>     the type of instances that be wrapped
      * @param <T>     the return data type of process function
      * @return the first non-empty({@link Optional#empty()}) result of the process function,
-     * otherwise returns {@link Optional#empty()}.
-     * @throws NullPointerException  if any arguments is null or any wrapper {{@link Wrapper#unwrap()}} returns null
+     * otherwise returns {@link Optional#empty()}
+     * @throws NullPointerException  if any arguments is null or any wrapper {@link Wrapper#unwrap()} returns null
      * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is type {@link Wrapper}
      */
     @NonNull
@@ -150,7 +150,7 @@ public final class Inspector {
             Optional<T> result = process.apply((W) w);
             if (result.isPresent()) return result;
 
-            // also process the adaptee if it's a WrapperAdapter
+            // also process the adaptee for WrapperAdapter
             if (w instanceof WrapperAdapter) {
                 Optional<T> r = process.apply((W) adapteeNonWrapper(w));
                 if (r.isPresent()) return r;
@@ -164,16 +164,18 @@ public final class Inspector {
     /**
      * Gets adaptee of the given WrapperAdapter instance with {@code null} check and non-{@link Wrapper} type check.
      */
-    private static Object adapteeNonWrapper(Object w) {
-        final Object adaptee = ((WrapperAdapter<?>) w).adaptee();
-        Supplier<String> msg = () -> "adaptee of WrapperAdapter(" + w.getClass().getName() + ") is null";
+    private static Object adapteeNonWrapper(final Object wrapper) {
+        final Object adaptee = ((WrapperAdapter<?>) wrapper).adaptee();
+
+        Supplier<String> msg = () -> "adaptee of WrapperAdapter(" + wrapper.getClass().getName() + ") is null";
         requireNonNull(adaptee, msg);
 
         if (adaptee instanceof Wrapper) {
             throw new IllegalStateException("adaptee(" + adaptee.getClass().getName() +
-                    ") of WrapperAdapter(" + w.getClass().getName() +
+                    ") of WrapperAdapter(" + wrapper.getClass().getName() +
                     ") is type Wrapper, adapting a Wrapper to a Wrapper is unnecessary!");
         }
+
         return adaptee;
     }
 
@@ -187,7 +189,7 @@ public final class Inspector {
     }
 
     /**
-     * no need to create instance at all
+     * NO need to create instance at all
      */
     private Inspector() {
     }
