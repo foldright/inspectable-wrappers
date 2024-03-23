@@ -21,7 +21,7 @@ public class LazyExecutorWrapper implements Executor, Wrapper<Executor>, Attacha
 
     @Override
     public void execute(Runnable command) {
-        System.out.println("I'm lazy, sleep before work");
+        System.out.println("I'm lazy, sleep before work.");
         sleep();
 
         executor.execute(command);

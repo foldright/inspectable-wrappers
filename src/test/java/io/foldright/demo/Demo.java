@@ -7,34 +7,48 @@ import java.util.concurrent.Executor;
 
 public class Demo {
     public static void main(String[] args) {
-        ////////////////////////////////////////
-        // prepare executor instance and wrappers
-        ////////////////////////////////////////
-
-        final Executor executor = Runnable::run;
-
-        final LazyExecutorWrapper lazy = new LazyExecutorWrapper(executor);
-        lazy.setAttachment("busy", "very, very busy!");
-
-        final Executor chatty = new ChattyExecutorWrapper(lazy);
+        final Executor executor = buildExecutorChain();
 
         ////////////////////////////////////////
-        // inspect the wrapper chain
+        // inspect the executor(wrapper chain)
         ////////////////////////////////////////
 
-        System.out.println("Is chatty executor LazyExecutor? " +
-                Wrapper.isInstanceOf(chatty, LazyExecutorWrapper.class));
+        System.out.println("Is executor lazy? " +
+                Wrapper.isInstanceOf(executor, LazyExecutorWrapper.class));
         // print true
 
-        String busy = Wrapper.getAttachment(chatty, "busy");
-        System.out.println("Is chatty executor busy? " + busy);
+        String busy = Wrapper.getAttachment(executor, "busy");
+        System.out.println("Is executor busy? " + busy);
         // print "very, very busy!"
 
         ////////////////////////////////////////
-        // call executor
+        // call executor(wrapper chain)
         ////////////////////////////////////////
 
         System.out.println();
-        chatty.execute(() -> System.out.println("work!"));
+        executor.execute(() -> System.out.println("I'm working."));
+    }
+
+    /**
+     * prepare executor instances/wrappers, build the executor/wrapper chain
+     **/
+    private static Executor buildExecutorChain() {
+        final Executor base = Runnable::run;
+
+        final LazyExecutorWrapper lazy = new LazyExecutorWrapper(base);
+        lazy.setAttachment("busy", "very, very busy!");
+
+        return new ChattyExecutorWrapper(lazy);
     }
 }
+
+/*
+demo output:
+
+Is executor lazy? true
+Is executor busy? very, very busy!
+
+BlaBlaBla...
+I'm lazy, sleep before work.
+I'm working.
+ */
