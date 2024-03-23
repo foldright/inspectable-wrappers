@@ -26,9 +26,12 @@ The purpose of **Inspectable Wrappers** is to provide a standard for wrapper cha
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [🥑 Core Classes](#-core-classes)
-- [🌰 Demo](#-demo)
+- [🌰 Usage Demo](#-usage-demo)
   - [wrapper implementations in your application code](#wrapper-implementations-in-your-application-code)
   - [inspection of the wrapper chain](#inspection-of-the-wrapper-chain)
+- [🌰 Integration Demo](#-integration-demo)
+  - [the demo existed wrapper cannot be modified](#the-demo-existed-wrapper-cannot-be-modified)
+  - [the integration demo](#the-integration-demo)
 - [🍼 Java API Docs](#-java-api-docs)
 - [🍪 Dependency](#-dependency)
 
@@ -44,7 +47,7 @@ The purpose of **Inspectable Wrappers** is to provide a standard for wrapper cha
 - [`Attachable`](src/main/java/io/foldright/inspectablewrappers/Attachable.java) interface is used to
   enhance the wrapper instances with the attachment storage ability
 
-## 🌰 Demo
+## 🌰 Usage Demo
 
 Below use the `Executor Wrapper` to demonstrate the usage.
 
@@ -159,6 +162,103 @@ I'm working.
 ```
 
 > Runnable demo codes in project: [`Demo.java`](src/test/java/io/foldright/demo/Demo.java)
+
+## 🌰 Integration Demo
+
+Integrate an existed executor wrapper without modification.
+
+### the demo existed wrapper cannot be modified
+
+```java
+public class ExistedExecutorWrapper implements Executor {
+  private final Executor executor;
+
+  public ExistedExecutorWrapper(Executor executor) {
+    this.executor = executor;
+  }
+
+  public Executor getExecutor() {
+    return executor;
+  }
+
+  @Override
+  public void execute(Runnable command) {
+    System.out.println("I'm existed executor, have nothing to do with ~inspectable~wrappers~.");
+    executor.execute(command);
+  }
+}
+```
+
+### the integration code
+
+```java
+public class IntegrationDemo {
+  public static void main(String[] args) {
+    final Executor executor = buildExecutorChain();
+
+    ////////////////////////////////////////
+    // inspect the executor(wrapper chain)
+    ////////////////////////////////////////
+
+    System.out.println("Is executor chatty? " +
+        Wrapper.isInstanceOf(executor, ChattyExecutorWrapper.class));
+    // print true
+    System.out.println("Is executor IntegrateExistedExecutor? " +
+        Wrapper.isInstanceOf(executor, IntegrateExistedExecutorWrapper.class));
+    // print true
+
+    ////////////////////////////////////////
+    // call executor(wrapper chain)
+    ////////////////////////////////////////
+
+    System.out.println();
+    executor.execute(() -> System.out.println("I'm working."));
+  }
+
+  private static Executor buildExecutorChain() {
+    final Executor base = Runnable::run;
+
+    final ExistedExecutorWrapper existed = new ExistedExecutorWrapper(base);
+    final IntegrateExistedExecutorWrapper integrate = new IntegrateExistedExecutorWrapper(existed);
+
+    return new ChattyExecutorWrapper(integrate);
+  }
+
+  /**
+   * Integrate an existed executor wrapper(`ExistedExecutorWrapper`) without modification
+   */
+  private static class IntegrateExistedExecutorWrapper implements Executor, Wrapper<Executor> {
+    private final ExistedExecutorWrapper existedExecutorWrapper;
+
+    public IntegrateExistedExecutorWrapper(ExistedExecutorWrapper existedExecutorWrapper) {
+      this.existedExecutorWrapper = existedExecutorWrapper;
+    }
+
+    @Override
+    public Executor unwrap() {
+      return existedExecutorWrapper.getExecutor();
+    }
+
+    @Override
+    public void execute(Runnable command) {
+      existedExecutorWrapper.execute(command);
+    }
+  }
+}
+
+/*
+demo output:
+
+Is executor chatty? true
+Is executor IntegrateExistedExecutor? true
+
+BlaBlaBla...
+I'm existed executor, have nothing to do with ~inspectable~wrappers~.
+I'm working.
+ */
+```
+
+> Runnable demo codes in project: [`IntegrationDemo.java`](src/test/java/io/foldright/demo/integration/IntegrationDemo.java)
 
 ## 🍼 Java API Docs
 
