@@ -1,8 +1,12 @@
 package io.foldright.demo.integration;
 
+import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.ReturnValuesAreNonnullByDefault;
 import io.foldright.demo.ChattyExecutorWrapper;
+import io.foldright.inspectablewrappers.Attachable;
 import io.foldright.inspectablewrappers.Wrapper;
+import io.foldright.inspectablewrappers.WrapperAdapter;
+import io.foldright.inspectablewrappers.utils.AttachableDelegate;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.concurrent.Executor;
@@ -18,12 +22,12 @@ public class IntegrationDemo {
         // inspect the executor(wrapper chain)
         ////////////////////////////////////////
 
-        System.out.println("Is executor chatty? " +
-                Wrapper.isInstanceOf(executor, ChattyExecutorWrapper.class));
+        System.out.println("Is executor ExistedExecutorWrapper? " +
+                Wrapper.isInstanceOf(executor, ExistedExecutorWrapper.class));
         // print true
-        System.out.println("Is executor IntegrateExistedExecutor? " +
-                Wrapper.isInstanceOf(executor, IntegrateExistedExecutorWrapper.class));
-        // print true
+        String adaptAttachment = Wrapper.getAttachment(executor, "adapted-existed-executor-wrapper-msg");
+        System.out.println("Adapted existed executor wrapper msg: " + adaptAttachment);
+        // print "I'm an adapter of an existed executor which have nothing to do with ~inspectable~wrappers~."
 
         ////////////////////////////////////////
         // call executor(wrapper chain)
@@ -37,29 +41,48 @@ public class IntegrationDemo {
         final Executor base = Runnable::run;
 
         final ExistedExecutorWrapper existed = new ExistedExecutorWrapper(base);
-        final IntegrateExistedExecutorWrapper integrate = new IntegrateExistedExecutorWrapper(existed);
+        final ExistedExecutorWrapperAdapter adapter = new ExistedExecutorWrapperAdapter(existed);
+        adapter.setAttachment("adapted-existed-executor-wrapper-msg", "I'm an adapter of an existed executor which have nothing to do with ~inspectable~wrappers~.");
 
-        return new ChattyExecutorWrapper(integrate);
+        return new ChattyExecutorWrapper(adapter);
     }
 
     /**
-     * Integrate an existed executor wrapper(`ExistedExecutorWrapper`) without modification
+     * Adaption an existed wrapper(`ExistedExecutorWrapper`) without modifying it.
      */
-    private static class IntegrateExistedExecutorWrapper implements Executor, Wrapper<Executor> {
-        private final ExistedExecutorWrapper existedExecutorWrapper;
+    private static class ExistedExecutorWrapperAdapter implements Executor, WrapperAdapter<Executor>, Attachable<String, String> {
+        private final ExistedExecutorWrapper adaptee;
 
-        public IntegrateExistedExecutorWrapper(ExistedExecutorWrapper existedExecutorWrapper) {
-            this.existedExecutorWrapper = existedExecutorWrapper;
+        public ExistedExecutorWrapperAdapter(ExistedExecutorWrapper adaptee) {
+            this.adaptee = adaptee;
         }
 
         @Override
         public Executor unwrap() {
-            return existedExecutorWrapper.getExecutor();
+            return adaptee.getExecutor();
+        }
+
+        @Override
+        public Executor adaptee() {
+            return adaptee;
         }
 
         @Override
         public void execute(Runnable command) {
-            existedExecutorWrapper.execute(command);
+            adaptee.execute(command);
+        }
+
+        private final Attachable<String, String> attachable = new AttachableDelegate<>();
+
+        @Override
+        public void setAttachment(String key, String value) {
+            attachable.setAttachment(key, value);
+        }
+
+        @Nullable
+        @Override
+        public String getAttachment(String key) {
+            return attachable.getAttachment(key);
         }
     }
 }
@@ -67,10 +90,10 @@ public class IntegrationDemo {
 /*
 demo output:
 
-Is executor chatty? true
-Is executor IntegrateExistedExecutor? true
+Is executor ExistedExecutorWrapper? true
+Adapted existed executor wrapper msg: I'm an adapter of an existed executor which have nothing to do with ~inspectable~wrappers~.
 
 BlaBlaBla...
-I'm existed executor, have nothing to do with ~inspectable~wrappers~.
+I'm an adapter of an existed executor which have nothing to do with ~inspectable~wrappers~.
 I'm working.
  */

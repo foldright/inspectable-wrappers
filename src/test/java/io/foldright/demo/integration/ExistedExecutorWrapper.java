@@ -21,7 +21,7 @@ public class ExistedExecutorWrapper implements Executor {
 
     @Override
     public void execute(Runnable command) {
-        System.out.println("I'm existed executor, have nothing to do with ~inspectable~wrappers~.");
+        System.out.println("I'm a adapter of an existed executor which have nothing to do with ~inspectable~wrappers~.");
         executor.execute(command);
     }
 }

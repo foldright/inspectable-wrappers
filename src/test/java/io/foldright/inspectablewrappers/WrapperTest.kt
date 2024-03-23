@@ -12,37 +12,37 @@ import java.util.concurrent.Executor
 import java.util.concurrent.ExecutorService
 
 class WrapperTest : FunSpec({
-    // prepare executor instance and wrappers
-    val chatty: Executor = Executor { runnable -> runnable.run() }.let {
-        LazyExecutorWrapper(it).apply { setAttachment("busy", "very, very busy!") }
-    }.let(::ChattyExecutorWrapper)
+    // prepare executor instances/wrappers, build the executor/wrapper chain
+    val executorChain: Executor = LazyExecutorWrapper { runnable -> runnable.run() }
+        .apply { setAttachment("busy", "very, very busy!") }
+        .let(::ChattyExecutorWrapper)
 
     test("wrapper") {
-        Wrapper.isInstanceOf(chatty, LazyExecutorWrapper::class.java).shouldBeTrue()
-        Wrapper.isInstanceOf(chatty, ExecutorService::class.java).shouldBeFalse()
+        Wrapper.isInstanceOf(executorChain, LazyExecutorWrapper::class.java).shouldBeTrue()
+        Wrapper.isInstanceOf(executorChain, ChattyExecutorWrapper::class.java).shouldBeTrue()
+        Wrapper.isInstanceOf(executorChain, ExecutorService::class.java).shouldBeFalse()
 
-        val value: String = Wrapper.getAttachment(chatty, "busy")!!
+        val value: String? = Wrapper.getAttachment(executorChain, "busy")
         value shouldBe "very, very busy!"
 
-        Wrapper.getAttachment<Executor, String, String>(chatty, "not existed").shouldBeNull()
+        Wrapper.getAttachment<Executor, String, String?>(executorChain, "not existed").shouldBeNull()
     }
 
     test("ClassCastException") {
         shouldThrow<ClassCastException> {
-            val value = Wrapper.getAttachment<Executor, String, Int?>(chatty, "busy")
+            val value = Wrapper.getAttachment<Executor, String, Int?>(executorChain, "busy")
             fail(value.toString())
         }
     }
 
+    @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "CAST_NEVER_SUCCEEDS")
     test("argument null") {
         shouldThrow<NullPointerException> {
-            @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "CAST_NEVER_SUCCEEDS")
-            Wrapper.getAttachment<Executor, String, String>(null as? Executor, "busy")
+            Wrapper.getAttachment<Executor, String, String?>(null as? Executor, "busy")
         }.message shouldBe "wrapper is null"
 
         shouldThrow<NullPointerException> {
-            @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "CAST_NEVER_SUCCEEDS")
-            Wrapper.getAttachment<Executor, String, String>(chatty, null as? String)
+            Wrapper.getAttachment<Executor, String, String?>(executorChain, null as? String)
         }.message shouldBe "key is null"
     }
 })
@@ -59,7 +59,7 @@ class ChattyExecutorWrapper(private val executor: Executor) : Executor, Wrapper<
 class LazyExecutorWrapper(private val executor: Executor) :
         Executor, Wrapper<Executor>, Attachable<String, String> by AttachableDelegate() {
     override fun execute(command: Runnable) {
-        println("I'm lazy, sleep before work")
+        println("I'm lazy, sleep before work.")
         sleep()
         executor.execute(command)
     }
