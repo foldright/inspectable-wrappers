@@ -24,7 +24,7 @@ class WrapperAdapterTest : FunSpec({
         }
     }.let(::ChattyExecutorWrapper)
 
-    test("wrapper") {
+    test("WrapperAdapter") {
         Wrapper.isInstanceOf(executorChain, ExistedExecutorWrapper::class.java).shouldBeTrue()
         Wrapper.isInstanceOf(executorChain, ExistedExecutorWrapperAdapter::class.java).shouldBeTrue()
         Wrapper.isInstanceOf(executorChain, ChattyExecutorWrapper::class.java).shouldBeTrue()

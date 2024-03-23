@@ -10,6 +10,7 @@ import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import java.util.concurrent.Executor
 import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 class WrapperTest : FunSpec({
     // prepare executor instances/wrappers, build the executor/wrapper chain
@@ -44,6 +45,30 @@ class WrapperTest : FunSpec({
         shouldThrow<NullPointerException> {
             Wrapper.getAttachment<Executor, String, String?>(executorChain, null)
         }.message shouldBe "key is null"
+    }
+
+    test("inspect last instance - isInstanceOf") {
+        val pool = Executors.newCachedThreadPool()
+        Wrapper.isInstanceOf(pool, ExecutorService::class.java).shouldBeTrue()
+
+        val chatty = ChattyExecutorWrapper(pool)
+        Wrapper.isInstanceOf(chatty, ExecutorService::class.java).shouldBeTrue()
+    }
+
+    test("inspect last instance - getAttachment") {
+        val attachable = AttachableDelegate<String, String>().apply { setAttachment("k1", "v1") }
+        Wrapper.getAttachment<Any, String, String?>(attachable, "k1") shouldBe "v1"
+
+        val base = object : Executor, Attachable<String, String> by AttachableDelegate() {
+            override fun execute(command: Runnable) {
+                command.run()
+            }
+        }
+        base.setAttachment("k1", "v1")
+        Wrapper.getAttachment<Any, String, String?>(base, "k1") shouldBe "v1"
+
+        val c2 = ChattyExecutorWrapper(base)
+        Wrapper.getAttachment<Any, String, String?>(c2, "k1") shouldBe "v1"
     }
 })
 
