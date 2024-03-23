@@ -248,7 +248,7 @@
 				<artifactId>maven-enforcer-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>enforce-maven</id>
+						<id>enforces</id>
 						<goals>
 							<goal>enforce</goal>
 						</goals>
@@ -260,6 +260,12 @@
 								<requireMavenVersion>
 									<version>3.3.9</version>
 								</requireMavenVersion>
+								<!-- https://maven.apache.org/enforcer/enforcer-rules/requireProperty.html -->
+								<requireProperty>
+									<property>project.version</property>
+									<regex>^\d\.\d+\.\d+(-(Alpha|Beta|RC)\d+)?$|^\d(\.\d+)?\.(\d+|x)-SNAPSHOT$</regex>
+									<regexMessage>"Project version(${project.version}) format is invalid!"</regexMessage>
+								</requireProperty>
 							</rules>
 						</configuration>
 					</execution>
