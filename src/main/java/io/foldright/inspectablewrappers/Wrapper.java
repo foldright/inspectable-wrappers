@@ -41,7 +41,7 @@ public interface Wrapper<T> {
      * otherwise return {@code true}
      * @throws NullPointerException if any arguments is null
      */
-    static <W> boolean isInstanceOf(W wrapper, Class<?> clazz) {
+    static <W> boolean isInstanceOf(final W wrapper, final Class<?> clazz) {
         requireNonNull(wrapper, "wrapper is null");
         requireNonNull(clazz, "clazz is null");
         return inspect(wrapper, w -> clazz.isAssignableFrom(w.getClass()));
