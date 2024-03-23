@@ -8,10 +8,9 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * This {@code Attachable} interface is used to be implemented by wrapper classes,
  * provide the attachment storage ability.
  * <p>
- * Retrieve the attachment from wrapper chain(wrapper instances implement interface {@link Wrapper})
- * by static method {@link Inspector#getAttachment(Object, Object)}.
+ * Retrieves the attachment from wrapper chain the static method {@link Inspector#getAttachment(Object, Object)}.
  * <p>
- * Provide {@link io.foldright.inspectablewrappers.utils.AttachableDelegate AttachableDelegate}
+ * Provided {@link io.foldright.inspectablewrappers.utils.AttachableDelegate AttachableDelegate}
  * as a simple delegate implementation.
  *
  * @param <K> the key type, requirements depending on which storage is used
@@ -32,7 +31,7 @@ public interface Attachable<K, V> {
     void setAttachment(@NonNull K key, @NonNull V value);
 
     /**
-     * Gets the attachment of the given key.
+     * Gets the attachment value for the given key.
      *
      * @param key the attachment key
      * @return return the attachment value, or {@code null} if contains no attachment for the key

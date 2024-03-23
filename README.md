@@ -25,13 +25,13 @@ The purpose of **Inspectable Wrappers** is to provide a standard for wrapper cha
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [🥑 Core Classes](#-core-classes)
+- [🥑 Core Files](#-core-files)
 - [🌰 Usage Demo](#-usage-demo)
   - [wrapper implementations in your application code](#wrapper-implementations-in-your-application-code)
   - [inspection of the wrapper chain](#inspection-of-the-wrapper-chain)
 - [🌰 Integration Demo](#-integration-demo)
   - [the demo existed wrapper cannot be modified](#the-demo-existed-wrapper-cannot-be-modified)
-  - [the integration demo](#the-integration-demo)
+  - [the integration code](#the-integration-code)
 - [🍼 Java API Docs](#-java-api-docs)
 - [🍪 Dependency](#-dependency)
 
@@ -39,17 +39,16 @@ The purpose of **Inspectable Wrappers** is to provide a standard for wrapper cha
 
 --------------------------------------------------------------------------------
 
-## 🥑 Core
+## 🥑 Core Files
 
 - Core interfaces:
-  - [`Wrapper`](src/main/java/io/foldright/inspectablewrappers/Wrapper.java) interface is core interface, used to
+  - [`Wrapper`](src/main/java/io/foldright/inspectablewrappers/Wrapper.java) interface is used to
     be implemented by wrapper classes, make an **inspectable wrapper chain**(linked list)
   - [`Attachable`](src/main/java/io/foldright/inspectablewrappers/Attachable.java) interface is used to
     enhance the wrapper instances with the attachment storage ability
   - [`WrapperAdapter`](src/main/java/io/foldright/inspectablewrappers/WrapperAdapter.java) interface is used to
     adapt an existed wrapper instance to type `Wrapper` without modifying it
-- [`Inspector`](src/main/java/io/foldright/inspectablewrappers/Inspector.java) class is used to
-  inspect the **wrapper chain**
+- [`Inspector`](src/main/java/io/foldright/inspectablewrappers/Inspector.java) class is used to inspect the **wrapper chain**
 
 ## 🌰 Usage Demo
 
@@ -295,7 +294,7 @@ For `Maven` projects:
 <dependency>
   <groupId>io.foldright</groupId>
   <artifactId>inspectable-wrappers</artifactId>
-  <version>0.4.0</version>
+  <version>0.5.0</version>
 </dependency>
 ```
 
@@ -303,12 +302,12 @@ For `Gradle` projects:
 
 ```groovy
 // Gradle Kotlin DSL
-implementation("io.foldright:inspectable-wrappers:0.4.0")
+implementation("io.foldright:inspectable-wrappers:0.5.0")
 ```
 
 ```groovy
 // Gradle Groovy DSL
-implementation 'io.foldright:inspectable-wrappers:0.4.0'
+implementation 'io.foldright:inspectable-wrappers:0.5.0'
 ```
 
 `inspectable-wrappers` has published to maven central, find the latest version at [central.sonatype.com](https://central.sonatype.com/artifact/io.foldright/inspectable-wrappers/0.3.0/versions).
