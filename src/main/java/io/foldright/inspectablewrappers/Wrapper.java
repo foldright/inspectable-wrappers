@@ -72,10 +72,14 @@ public interface Wrapper<T> {
     static <W> boolean inspect(final W wrapper, final Predicate<? super W> predicate) {
         requireNonNull(wrapper, "wrapper is null");
         requireNonNull(predicate, "predicate is null");
-        for (Object w = wrapper; w instanceof Wrapper; w = unwrapNonNull(w)) {
+
+        Object w = wrapper;
+        while (true) {
             if (predicate.test((W) w)) return true;
+
+            if (!(w instanceof Wrapper)) return false;
+            w = unwrapNonNull(w);
         }
-        return false;
     }
 
     /**
@@ -103,12 +107,16 @@ public interface Wrapper<T> {
     static <W, K, V> V getAttachment(final W wrapper, final K key) {
         requireNonNull(wrapper, "wrapper is null");
         requireNonNull(key, "key is null");
-        for (Object w = wrapper; w instanceof Wrapper; w = unwrapNonNull(w)) {
-            if (!(w instanceof Attachable)) continue;
 
-            V value = ((Attachable<K, V>) w).getAttachment(key);
-            if (value != null) return value;
+        Object w = wrapper;
+        while (true) {
+            if (w instanceof Attachable) {
+                V value = ((Attachable<K, V>) w).getAttachment(key);
+                if (value != null) return value;
+            }
+
+            if (!(w instanceof Wrapper)) return null;
+            w = unwrapNonNull(w);
         }
-        return null;
     }
 }
