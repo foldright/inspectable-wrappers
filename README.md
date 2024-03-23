@@ -43,7 +43,7 @@ The purpose of **Inspectable Wrappers** is to provide a standard for wrapper cha
 
 - Core interfaces:
   - [`Wrapper`](src/main/java/io/foldright/inspectablewrappers/Wrapper.java) interface is core interface, used to
-    be implemented by wrapper classes, make an **inspectable wrapper chain**(linked list).
+    be implemented by wrapper classes, make an **inspectable wrapper chain**(linked list)
   - [`Attachable`](src/main/java/io/foldright/inspectablewrappers/Attachable.java) interface is used to
     enhance the wrapper instances with the attachment storage ability
   - [`WrapperAdapter`](src/main/java/io/foldright/inspectablewrappers/WrapperAdapter.java) interface is used to

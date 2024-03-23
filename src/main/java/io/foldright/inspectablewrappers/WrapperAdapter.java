@@ -19,7 +19,7 @@ public interface WrapperAdapter<T> extends Wrapper<T> {
     /**
      * Returns the adapted/existed wrapper.
      * <p>
-     * <b><i>Note:<br></i></b>
+     * <strong>Note:</strong>
      * <ul>
      *   <li>The adaptee MUST not a {@link Wrapper},
      *       since adapting a {@link Wrapper} to a {@link Wrapper} is unnecessary.

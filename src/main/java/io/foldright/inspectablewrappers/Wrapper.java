@@ -5,9 +5,9 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * This {@code Wrapper} interface is used to be implemented by wrapper classes,
- * make an <b>inspectable wrapper chain</b>(linked list).
+ * make an <strong>inspectable wrapper chain</strong>(linked list).
  * <p>
- * <b><i>Note about wrapper chain:<br></i></b>
+ * <strong>Note about wrapper chain:</strong>
  * <ul>
  *   <li>The wrapper chain consists of wrapper itself, followed by the wrappers
  *       obtained by repeatedly calling {@link Wrapper#unwrap()}

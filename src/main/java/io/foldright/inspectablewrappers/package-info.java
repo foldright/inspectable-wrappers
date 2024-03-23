@@ -3,7 +3,7 @@
  *
  * <ul>
  *   <li>{@link io.foldright.inspectablewrappers.Wrapper} is core interface, used to
- *   be implemented by wrapper classes, make an <b>inspectable wrapper chain</b>(linked list).
+ *   be implemented by wrapper classes, make an <strong>inspectable wrapper chain</strong>(linked list).
  *   <li>{@link io.foldright.inspectablewrappers.Attachable} interface is used to
  *     enhance the wrapper instances with the attachment storage ability
  *   <li>{@link io.foldright.inspectablewrappers.WrapperAdapter} interface is used to

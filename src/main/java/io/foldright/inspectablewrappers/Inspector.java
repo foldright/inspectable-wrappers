@@ -7,21 +7,31 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
-import static io.foldright.inspectablewrappers.InternalUtils.unwrapNonNull;
 import static java.util.Objects.requireNonNull;
 
 
 /**
  * This {@code Inspector} class is used to inspect the wrapper chain.
- * <p>
- * Common usages:
+ *
+ * <h2>Common simple usages</h2>
  * <ul>
  *   <li>Reports whether any instance on the wrapper chain matches the given type
  *       by static method {@link #isInstanceOf(Object, Class)}
  *   <li>Retrieve the attachment from wrapper chain(wrapper instances implement interface {@link Wrapper})
  *       by static method {@link #getAttachment(Object, Object)}
  * </ul>
+ *
+ * <h2>Advanced usages</h2>
+ * <ul>
+ *   <li>Reports whether any instance on the wrapper chain satisfy the given {@link Predicate}
+ *       by static method {@link #inspect(Object, Predicate)}
+ *   <li>Traverses the wrapper chain, and applies the given {@link Function} to each instance on the wrapper chain,
+ *       by static method {@link #travel(Object, Function)}
+ * </ul>
+ * <p>
+ * You can implement your own inspection logic using above advanced methods.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @author Zava (zava dot kid at gmail dot com)
@@ -112,9 +122,9 @@ public final class Inspector {
     }
 
     /**
-     * Traverses the wrapper chain, and apply the given {@code process} function to each instances on the wrapper chain,
-     * and returns the first non-empty({@link Optional#empty()}) result of the process function,
-     * otherwise returns {@link Optional#empty()}.
+     * Traverses the wrapper chain, and applies the given {@code process} function to
+     * each instance on the wrapper chain, and returns the first non-empty({@link Optional#empty()}) result
+     * of the process function, otherwise returns {@link Optional#empty()}.
      * <p>
      * The wrapper chain consists of wrapper itself, followed by the wrappers
      * obtained by repeatedly calling {@link Wrapper#unwrap()}.
@@ -130,7 +140,7 @@ public final class Inspector {
      */
     @NonNull
     @SuppressWarnings("unchecked")
-    public static <W, T> Optional<T> travel(final W wrapper, final Function<W, Optional<T>> process) {
+    public static <W, T> Optional<T> travel(final W wrapper, final Function<? super W, Optional<T>> process) {
         requireNonNull(wrapper, "wrapper is null");
         requireNonNull(process, "process is null");
 
@@ -142,14 +152,7 @@ public final class Inspector {
 
             // also process the adaptee if it's a WrapperAdapter
             if (w instanceof WrapperAdapter) {
-                final Object adaptee = ((WrapperAdapter<?>) w).adaptee();
-                if (adaptee instanceof Wrapper) {
-                    throw new IllegalStateException("adaptee(" + adaptee.getClass().getName() +
-                            ") of WrapperAdapter(" + w.getClass().getName() +
-                            ") is type Wrapper, adapting a Wrapper to a Wrapper is unnecessary!");
-                }
-
-                Optional<T> r = process.apply((W) adaptee);
+                Optional<T> r = process.apply((W) adapteeNonWrapper(w));
                 if (r.isPresent()) return r;
             }
 
@@ -158,7 +161,34 @@ public final class Inspector {
         }
     }
 
-    // no need to create instance at all
+    /**
+     * Gets adaptee of the given WrapperAdapter instance with {@code null} check and non-{@link Wrapper} type check.
+     */
+    private static Object adapteeNonWrapper(Object w) {
+        final Object adaptee = ((WrapperAdapter<?>) w).adaptee();
+        Supplier<String> msg = () -> "adaptee of WrapperAdapter(" + w.getClass().getName() + ") is null";
+        requireNonNull(adaptee, msg);
+
+        if (adaptee instanceof Wrapper) {
+            throw new IllegalStateException("adaptee(" + adaptee.getClass().getName() +
+                    ") of WrapperAdapter(" + w.getClass().getName() +
+                    ") is type Wrapper, adapting a Wrapper to a Wrapper is unnecessary!");
+        }
+        return adaptee;
+    }
+
+    /**
+     * Unwraps the given wrapper instance with {@code null} check.
+     */
+    private static Object unwrapNonNull(final Object wrapper) {
+        Object unwrap = ((Wrapper<?>) wrapper).unwrap();
+        Supplier<String> msg = () -> "unwrap of Wrapper(" + wrapper.getClass().getName() + ") is null";
+        return requireNonNull(unwrap, msg);
+    }
+
+    /**
+     * no need to create instance at all
+     */
     private Inspector() {
     }
 }
