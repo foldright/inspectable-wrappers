@@ -1,9 +1,7 @@
 package io.foldright.inspectablewrappers;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
-import edu.umd.cs.findbugs.annotations.ReturnValuesAreNonnullByDefault;
-
-import javax.annotation.ParametersAreNonnullByDefault;
 
 
 /**
@@ -23,8 +21,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * @see Wrapper#getAttachment(Object, Object)
  * @see io.foldright.inspectablewrappers.utils.AttachableDelegate
  */
-@ParametersAreNonnullByDefault
-@ReturnValuesAreNonnullByDefault
 public interface Attachable<K, V> {
     /**
      * Sets an attachment.
@@ -33,7 +29,7 @@ public interface Attachable<K, V> {
      * @param value the attachment value
      * @throws NullPointerException if any arguments is null
      */
-    void setAttachment(K key, V value);
+    void setAttachment(@NonNull K key, @NonNull V value);
 
     /**
      * Gets the attachment of the given key.
@@ -45,5 +41,5 @@ public interface Attachable<K, V> {
      * @see Wrapper#getAttachment(Object, Object)
      */
     @Nullable
-    V getAttachment(K key);
+    V getAttachment(@NonNull K key);
 }

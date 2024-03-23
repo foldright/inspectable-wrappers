@@ -1,7 +1,6 @@
 package io.foldright.inspectablewrappers.utils;
 
 import edu.umd.cs.findbugs.annotations.Nullable;
-import edu.umd.cs.findbugs.annotations.ReturnValuesAreNonnullByDefault;
 import io.foldright.inspectablewrappers.Attachable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -25,7 +24,6 @@ import static java.util.Objects.requireNonNull;
  * @see Attachable
  */
 @ParametersAreNonnullByDefault
-@ReturnValuesAreNonnullByDefault
 public class AttachableDelegate<K, V> implements Attachable<K, V> {
     private final ConcurrentMap<K, V> attachments = new ConcurrentHashMap<>();
 

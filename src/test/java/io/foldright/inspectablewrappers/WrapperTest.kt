@@ -35,14 +35,14 @@ class WrapperTest : FunSpec({
         }
     }
 
-    @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "CAST_NEVER_SUCCEEDS")
+    @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
     test("argument null") {
         shouldThrow<NullPointerException> {
-            Wrapper.getAttachment<Executor, String, String?>(null as? Executor, "busy")
+            Wrapper.getAttachment<Executor, String, String?>(null, "busy")
         }.message shouldBe "wrapper is null"
 
         shouldThrow<NullPointerException> {
-            Wrapper.getAttachment<Executor, String, String?>(executorChain, null as? String)
+            Wrapper.getAttachment<Executor, String, String?>(executorChain, null)
         }.message shouldBe "key is null"
     }
 })

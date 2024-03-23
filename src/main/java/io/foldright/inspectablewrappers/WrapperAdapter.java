@@ -1,8 +1,6 @@
 package io.foldright.inspectablewrappers;
 
-import edu.umd.cs.findbugs.annotations.ReturnValuesAreNonnullByDefault;
-
-import javax.annotation.ParametersAreNonnullByDefault;
+import edu.umd.cs.findbugs.annotations.NonNull;
 
 
 /**
@@ -14,8 +12,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * @param <T> the type of instances that be wrapped
  * @see Wrapper
  */
-@ParametersAreNonnullByDefault
-@ReturnValuesAreNonnullByDefault
 public interface WrapperAdapter<T> extends Wrapper<T> {
     /**
      * Returns the adapted/existed wrapper.
@@ -23,5 +19,6 @@ public interface WrapperAdapter<T> extends Wrapper<T> {
      * @return the adapted wrapper.
      * @see Wrapper#isInstanceOf(Object, Class)
      */
+    @NonNull
     T adaptee();
 }
