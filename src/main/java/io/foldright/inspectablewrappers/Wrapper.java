@@ -17,6 +17,7 @@ import static java.util.Objects.requireNonNull;
  * @param <T> the type of instances that be wrapped
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @see Attachable
+ * @see WrapperAdapter
  */
 @ParametersAreNonnullByDefault
 @ReturnValuesAreNonnullByDefault
@@ -40,11 +41,18 @@ public interface Wrapper<T> {
      * @return return {@code false} if no wrapper on the wrapper chain matches the given type,
      * otherwise return {@code true}
      * @throws NullPointerException if any arguments is null
+     * @see WrapperAdapter#adaptee()
      */
     static <W> boolean isInstanceOf(final W wrapper, final Class<?> clazz) {
         requireNonNull(wrapper, "wrapper is null");
         requireNonNull(clazz, "clazz is null");
-        return inspect(wrapper, w -> clazz.isAssignableFrom(w.getClass()));
+        return inspect(wrapper, w -> {
+            if (w instanceof WrapperAdapter) {
+                Object adaptee = ((WrapperAdapter<?>) w).adaptee();
+                if (clazz.isAssignableFrom(adaptee.getClass())) return true;
+            }
+            return clazz.isAssignableFrom(w.getClass());
+        });
     }
 
     /**
