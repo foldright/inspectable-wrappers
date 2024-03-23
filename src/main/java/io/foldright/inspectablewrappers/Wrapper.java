@@ -4,6 +4,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import static io.foldright.inspectablewrappers.InternalUtils.unwrapNonNull;
@@ -68,18 +70,13 @@ public interface Wrapper<T> {
      * otherwise return {@code true}
      * @throws NullPointerException if any arguments is null or any wrapper {{@link #unwrap()}} returns null
      */
-    @SuppressWarnings("unchecked")
     static <W> boolean inspect(final W wrapper, final Predicate<? super W> predicate) {
         requireNonNull(wrapper, "wrapper is null");
         requireNonNull(predicate, "predicate is null");
-
-        Object w = wrapper;
-        while (true) {
-            if (predicate.test((W) w)) return true;
-
-            if (!(w instanceof Wrapper)) return false;
-            w = unwrapNonNull(w);
-        }
+        return travel(wrapper, w -> {
+            if (predicate.test(w)) return Optional.of(true);
+            else return Optional.empty();
+        }).orElse(false);
     }
 
     /**
@@ -107,15 +104,41 @@ public interface Wrapper<T> {
     static <W, K, V> V getAttachment(final W wrapper, final K key) {
         requireNonNull(wrapper, "wrapper is null");
         requireNonNull(key, "key is null");
-
-        Object w = wrapper;
-        while (true) {
+        return travel(wrapper, w -> {
             if (w instanceof Attachable) {
                 V value = ((Attachable<K, V>) w).getAttachment(key);
-                if (value != null) return value;
+                return Optional.ofNullable(value);
+            } else {
+                return Optional.empty();
             }
+        }).orElse(null);
+    }
 
-            if (!(w instanceof Wrapper)) return null;
+    /**
+     * Traverses the wrapper chain, and apply the given {@code process} function to each wrapper,
+     * and returns the first non-empty({@link Optional#empty()}) result of the process function,
+     * otherwise returns {@link Optional#empty()}.
+     * <p>
+     * The wrapper chain consists of wrapper itself, followed by the wrappers
+     * obtained by repeatedly calling {@link #unwrap()}.
+     *
+     * @param wrapper wrapper instance
+     * @param process process function
+     * @param <W>     the type of instances that be wrapped
+     * @param <T>     the return data type of process function
+     * @return the first non-empty({@link Optional#empty()}) result of the process function,
+     * otherwise returns {@link Optional#empty()}.
+     */
+    @SuppressWarnings("unchecked")
+    static <W, T> Optional<T> travel(final W wrapper, final Function<W, Optional<T>> process) {
+        requireNonNull(wrapper, "wrapper is null");
+        requireNonNull(process, "process is null");
+        Object w = wrapper;
+        while (true) {
+            Optional<T> result = process.apply((W) w);
+            if (result.isPresent()) return result;
+
+            if (!(w instanceof Wrapper)) return Optional.empty();
             w = unwrapNonNull(w);
         }
     }
