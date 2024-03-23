@@ -46,6 +46,30 @@
 			<organization>FoldRight</organization>
 			<organizationUrl>https://foldright.io</organizationUrl>
 		</developer>
+		<developer>
+			<name>Zava Xu</name>
+			<id>zavakid</id>
+			<email>zava.kid(AT)gmail(DOT)com</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>+8</timezone>
+			<url>https://github.com/zavakid</url>
+			<organization>FoldRight</organization>
+			<organizationUrl>https://foldright.io</organizationUrl>
+		</developer>
+		<developer>
+			<name>Yang Fang</name>
+			<id>driventokill</id>
+			<email>snoop(DOT)fy(AT)gmail(DOT)com</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>+8</timezone>
+			<url>https://github.com/driventokill</url>
+			<organization>FoldRight</organization>
+			<organizationUrl>https://foldright.io</organizationUrl>
+		</developer>
 	</developers>
 
 	<properties>

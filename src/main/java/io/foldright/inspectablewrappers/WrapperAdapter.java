@@ -12,7 +12,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  *
  * @param <T> the type of instances that be wrapped
  * @author Jerry Lee (oldratlee at gmail dot com)
- * @author Zava (zava dot kid at gmail dot com)
+ * @author Zava Xu (zava dot kid at gmail dot com)
  * @see Wrapper
  */
 public interface WrapperAdapter<T> extends Wrapper<T> {
@@ -21,13 +21,14 @@ public interface WrapperAdapter<T> extends Wrapper<T> {
      * <p>
      * <strong>Note:</strong>
      * <ul>
+     *   <li>Do NOT return {@code null} which makes no sense.
      *   <li>The adaptee MUST not a {@link Wrapper},
-     *       since adapting a {@link Wrapper} to a {@link Wrapper} is unnecessary.
+     *       since adapting a {@link Wrapper} to a {@link Wrapper} is UNNECESSARY.
      *   <li>If adapting a {@link Wrapper}, the inspection operations of {@link Inspector} will
      *       throw {@link IllegalStateException} when touch the {@link Wrapper} type adaptee.
      * </ul>
      *
-     * @return the adapted wrapper.
+     * @return the adapted wrapper
      * @see Inspector
      */
     @NonNull

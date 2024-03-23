@@ -20,7 +20,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @author Yang Fang (snoop dot fy at gmail dot com)
- * @author Zava (zava dot kid at gmail dot com)
+ * @author Zava Xu (zava dot kid at gmail dot com)
  * @see Attachable
  */
 @ParametersAreNonnullByDefault

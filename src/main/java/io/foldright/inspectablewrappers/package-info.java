@@ -13,6 +13,8 @@
  * The {@link io.foldright.inspectablewrappers.Inspector} class is used to inspect the wrapper chain.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
+ * @author Yang Fang (snoop dot fy at gmail dot com)
+ * @author Zava Xu (zava dot kid at gmail dot com)
  * @see io.foldright.inspectablewrappers.Wrapper
  * @see io.foldright.inspectablewrappers.Attachable
  * @see io.foldright.inspectablewrappers.WrapperAdapter
