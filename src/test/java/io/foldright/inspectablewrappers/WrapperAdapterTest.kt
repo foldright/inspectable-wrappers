@@ -60,7 +60,7 @@ class WrapperAdapterTest : FunSpec({
 
         val errMsg = "adaptee(io.foldright.inspectablewrappers.ChattyExecutorWrapper)" +
                 " of WrapperAdapter(io.foldright.inspectablewrappers.ChattyExecutorWrapperAdapter)" +
-                " is a wrapper instance, the use of WrapperAdapter is unnecessary!"
+                " is type Wrapper, adapting a Wrapper to a Wrapper is unnecessary!"
 
         shouldThrow<IllegalStateException> {
             Inspector.isInstanceOf(chain, ExecutorService::class.java)
@@ -77,7 +77,7 @@ class WrapperAdapterTest : FunSpec({
 })
 
 /**
- * Adaption an existed wrapper(`ExistedExecutorWrapper`) without modifying it.
+ * Adaption an existed wrapper([ExistedExecutorWrapper]) without modifying it.
  */
 private class ExistedExecutorWrapperAdapter(private val adaptee: ExistedExecutorWrapper) :
         Executor by adaptee, WrapperAdapter<Executor>, Attachable<String, String> by AttachableDelegate() {
@@ -93,7 +93,7 @@ class ExistedExecutorWrapper(val executor: Executor) : Executor {
 }
 
 /**
- * Wrong use the [WrapperAdapter], the adaptee is [Wrapper].
+ * Wrong use the [WrapperAdapter], the adaptee is already [Wrapper]!
  */
 private class ChattyExecutorWrapperAdapter(private val adaptee: ChattyExecutorWrapper) :
         Executor by adaptee, WrapperAdapter<Executor>, Attachable<String, String> by AttachableDelegate() {

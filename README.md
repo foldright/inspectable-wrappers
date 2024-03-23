@@ -39,15 +39,17 @@ The purpose of **Inspectable Wrappers** is to provide a standard for wrapper cha
 
 --------------------------------------------------------------------------------
 
-## 🥑 Core Classes
+## 🥑 Core
 
-- [`Wrapper`](src/main/java/io/foldright/inspectablewrappers/Wrapper.java) is core interface, used to
-  - identify the wrapper instances as a wrapper chain
-  - provide static entry methods to inspect the wrapper chain
-- [`Attachable`](src/main/java/io/foldright/inspectablewrappers/Attachable.java) interface is used to
-  enhance the wrapper instances with the attachment storage ability
-- [`WrapperAdapter`](src/main/java/io/foldright/inspectablewrappers/WrapperAdapter.java) interface is used to
-  adapt an existed wrapper without modifying it
+- Core interfaces:
+  - [`Wrapper`](src/main/java/io/foldright/inspectablewrappers/Wrapper.java) interface is core interface, used to
+    be implemented by wrapper classes, make an **inspectable wrapper chain**(linked list).
+  - [`Attachable`](src/main/java/io/foldright/inspectablewrappers/Attachable.java) interface is used to
+    enhance the wrapper instances with the attachment storage ability
+  - [`WrapperAdapter`](src/main/java/io/foldright/inspectablewrappers/WrapperAdapter.java) interface is used to
+    adapt an existed wrapper instance to type `Wrapper` without modifying it
+- [`Inspector`](src/main/java/io/foldright/inspectablewrappers/Inspector.java) class is used to
+  inspect the **wrapper chain**
 
 ## 🌰 Usage Demo
 
@@ -123,10 +125,10 @@ public class Demo {
     ////////////////////////////////////////
 
     System.out.println("Is executor lazy? " +
-        Wrapper.isInstanceOf(executor, LazyExecutorWrapper.class));
+        Inspector.isInstanceOf(executor, LazyExecutorWrapper.class));
     // print true
 
-    String busy = Wrapper.getAttachment(executor, "busy");
+    String busy = Inspector.getAttachment(executor, "busy");
     System.out.println("Is executor busy? " + busy);
     // print "very, very busy!"
 
@@ -203,9 +205,9 @@ public class IntegrationDemo {
     ////////////////////////////////////////
 
     System.out.println("Is executor ExistedExecutorWrapper? " +
-        Wrapper.isInstanceOf(executor, ExistedExecutorWrapper.class));
+        Inspector.isInstanceOf(executor, ExistedExecutorWrapper.class));
     // print true
-    String adaptAttachment = Wrapper.getAttachment(executor, "adapted-existed-executor-wrapper-msg");
+    String adaptAttachment = Inspector.getAttachment(executor, "adapted-existed-executor-wrapper-msg");
     System.out.println("Adapted existed executor wrapper msg: " + adaptAttachment);
     // print "I'm an adapter of an existed executor which have nothing to do with ~inspectable~wrappers~."
 
@@ -259,7 +261,6 @@ public class IntegrationDemo {
       attachable.setAttachment(key, value);
     }
 
-    @Nullable
     @Override
     public String getAttachment(String key) {
       return attachable.getAttachment(key);
