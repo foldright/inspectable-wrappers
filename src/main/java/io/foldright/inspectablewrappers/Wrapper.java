@@ -48,13 +48,7 @@ public interface Wrapper<T> {
     static <W> boolean isInstanceOf(final W wrapper, final Class<?> clazz) {
         requireNonNull(wrapper, "wrapper is null");
         requireNonNull(clazz, "clazz is null");
-        return inspect(wrapper, w -> {
-            if (w instanceof WrapperAdapter) {
-                Object adaptee = ((WrapperAdapter<?>) w).adaptee();
-                if (clazz.isAssignableFrom(adaptee.getClass())) return true;
-            }
-            return clazz.isAssignableFrom(w.getClass());
-        });
+        return inspect(wrapper, w -> clazz.isAssignableFrom(w.getClass()));
     }
 
     /**
@@ -128,15 +122,34 @@ public interface Wrapper<T> {
      * @param <T>     the return data type of process function
      * @return the first non-empty({@link Optional#empty()}) result of the process function,
      * otherwise returns {@link Optional#empty()}.
+     * @throws NullPointerException  if any arguments is null or any wrapper {{@link #unwrap()}} returns null
+     * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is a wrapper instance,
+     *                               the use of WrapperAdapter is unnecessary!
      */
+    @NonNull
     @SuppressWarnings("unchecked")
     static <W, T> Optional<T> travel(final W wrapper, final Function<W, Optional<T>> process) {
         requireNonNull(wrapper, "wrapper is null");
         requireNonNull(process, "process is null");
+
         Object w = wrapper;
         while (true) {
+            // process the instance on wrapper chain
             Optional<T> result = process.apply((W) w);
             if (result.isPresent()) return result;
+
+            // also process the adaptee if it's a WrapperAdapter
+            if (w instanceof WrapperAdapter) {
+                final Object adaptee = ((WrapperAdapter<?>) w).adaptee();
+                if (adaptee instanceof Wrapper) {
+                    throw new IllegalStateException("adaptee(" + adaptee.getClass().getName() +
+                            ") of WrapperAdapter(" + w.getClass().getName() +
+                            ") is a wrapper instance, the use of WrapperAdapter is unnecessary!");
+                }
+
+                Optional<T> r = process.apply((W) adaptee);
+                if (r.isPresent()) return r;
+            }
 
             if (!(w instanceof Wrapper)) return Optional.empty();
             w = unwrapNonNull(w);
