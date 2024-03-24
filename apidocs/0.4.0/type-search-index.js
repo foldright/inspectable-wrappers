@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"io.foldright.inspectablewrappers","l":"Attachable"},{"p":"io.foldright.inspectablewrappers.utils","l":"AttachableDelegate"},{"p":"io.foldright.inspectablewrappers","l":"Wrapper"},{"p":"io.foldright.inspectablewrappers","l":"WrapperAdapter"}];updateSearchResults();
