@@ -4,6 +4,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import static io.foldright.inspectablewrappers.InternalUtils.unwrapNonNull;
@@ -46,13 +48,7 @@ public interface Wrapper<T> {
     static <W> boolean isInstanceOf(final W wrapper, final Class<?> clazz) {
         requireNonNull(wrapper, "wrapper is null");
         requireNonNull(clazz, "clazz is null");
-        return inspect(wrapper, w -> {
-            if (w instanceof WrapperAdapter) {
-                Object adaptee = ((WrapperAdapter<?>) w).adaptee();
-                if (clazz.isAssignableFrom(adaptee.getClass())) return true;
-            }
-            return clazz.isAssignableFrom(w.getClass());
-        });
+        return inspect(wrapper, w -> clazz.isAssignableFrom(w.getClass()));
     }
 
     /**
@@ -68,18 +64,13 @@ public interface Wrapper<T> {
      * otherwise return {@code true}
      * @throws NullPointerException if any arguments is null or any wrapper {{@link #unwrap()}} returns null
      */
-    @SuppressWarnings("unchecked")
     static <W> boolean inspect(final W wrapper, final Predicate<? super W> predicate) {
         requireNonNull(wrapper, "wrapper is null");
         requireNonNull(predicate, "predicate is null");
-
-        Object w = wrapper;
-        while (true) {
-            if (predicate.test((W) w)) return true;
-
-            if (!(w instanceof Wrapper)) return false;
-            w = unwrapNonNull(w);
-        }
+        return travel(wrapper, w -> {
+            if (predicate.test(w)) return Optional.of(true);
+            else return Optional.empty();
+        }).orElse(false);
     }
 
     /**
@@ -107,15 +98,60 @@ public interface Wrapper<T> {
     static <W, K, V> V getAttachment(final W wrapper, final K key) {
         requireNonNull(wrapper, "wrapper is null");
         requireNonNull(key, "key is null");
+        return travel(wrapper, w -> {
+            if (w instanceof Attachable) {
+                V value = ((Attachable<K, V>) w).getAttachment(key);
+                return Optional.ofNullable(value);
+            } else {
+                return Optional.empty();
+            }
+        }).orElse(null);
+    }
+
+    /**
+     * Traverses the wrapper chain, and apply the given {@code process} function to each wrapper,
+     * and returns the first non-empty({@link Optional#empty()}) result of the process function,
+     * otherwise returns {@link Optional#empty()}.
+     * <p>
+     * The wrapper chain consists of wrapper itself, followed by the wrappers
+     * obtained by repeatedly calling {@link #unwrap()}.
+     *
+     * @param wrapper wrapper instance
+     * @param process process function
+     * @param <W>     the type of instances that be wrapped
+     * @param <T>     the return data type of process function
+     * @return the first non-empty({@link Optional#empty()}) result of the process function,
+     * otherwise returns {@link Optional#empty()}.
+     * @throws NullPointerException  if any arguments is null or any wrapper {{@link #unwrap()}} returns null
+     * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is a wrapper instance,
+     *                               the use of WrapperAdapter is unnecessary!
+     */
+    @NonNull
+    @SuppressWarnings("unchecked")
+    static <W, T> Optional<T> travel(final W wrapper, final Function<W, Optional<T>> process) {
+        requireNonNull(wrapper, "wrapper is null");
+        requireNonNull(process, "process is null");
 
         Object w = wrapper;
         while (true) {
-            if (w instanceof Attachable) {
-                V value = ((Attachable<K, V>) w).getAttachment(key);
-                if (value != null) return value;
+            // process the instance on wrapper chain
+            Optional<T> result = process.apply((W) w);
+            if (result.isPresent()) return result;
+
+            // also process the adaptee if it's a WrapperAdapter
+            if (w instanceof WrapperAdapter) {
+                final Object adaptee = ((WrapperAdapter<?>) w).adaptee();
+                if (adaptee instanceof Wrapper) {
+                    throw new IllegalStateException("adaptee(" + adaptee.getClass().getName() +
+                            ") of WrapperAdapter(" + w.getClass().getName() +
+                            ") is a wrapper instance, the use of WrapperAdapter is unnecessary!");
+                }
+
+                Optional<T> r = process.apply((W) adaptee);
+                if (r.isPresent()) return r;
             }
 
-            if (!(w instanceof Wrapper)) return null;
+            if (!(w instanceof Wrapper)) return Optional.empty();
             w = unwrapNonNull(w);
         }
     }

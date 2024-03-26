@@ -46,7 +46,7 @@ class WrapperAdapterTest : FunSpec({
     @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
     test("argument null") {
         shouldThrow<NullPointerException> {
-            Wrapper.getAttachment<Executor, String, String?>(null , ADAPTED_MSG_KEY)
+            Wrapper.getAttachment<Executor, String, String?>(null, ADAPTED_MSG_KEY)
         }.message shouldBe "wrapper is null"
 
         shouldThrow<NullPointerException> {
@@ -54,6 +54,26 @@ class WrapperAdapterTest : FunSpec({
         }.message shouldBe "key is null"
     }
 
+    test("travel IllegalStateException - the adaptee of WrapperAdapter is a wrapper instance") {
+        val chain: Executor = ChattyExecutorWrapper { runnable -> runnable.run() }
+            .let(::ChattyExecutorWrapperAdapter)
+
+        val errMsg = "adaptee(io.foldright.inspectablewrappers.ChattyExecutorWrapper)" +
+                " of WrapperAdapter(io.foldright.inspectablewrappers.ChattyExecutorWrapperAdapter)" +
+                " is a wrapper instance, the use of WrapperAdapter is unnecessary!"
+
+        shouldThrow<IllegalStateException> {
+            Wrapper.isInstanceOf(chain, ExecutorService::class.java)
+        }.message shouldBe errMsg
+        // first instance is ok, not trigger the check logic yet...
+        Wrapper.isInstanceOf(chain, Executor::class.java).shouldBeTrue()
+        Wrapper.isInstanceOf(chain, ChattyExecutorWrapperAdapter::class.java).shouldBeTrue()
+
+
+        shouldThrow<IllegalStateException> {
+            Wrapper.getAttachment(chain, "k1")
+        }.message shouldBe errMsg
+    }
 })
 
 /**
@@ -62,7 +82,6 @@ class WrapperAdapterTest : FunSpec({
 private class ExistedExecutorWrapperAdapter(private val adaptee: ExistedExecutorWrapper) :
         Executor by adaptee, WrapperAdapter<Executor>, Attachable<String, String> by AttachableDelegate() {
     override fun unwrap(): Executor = adaptee.executor
-
     override fun adaptee(): Executor = adaptee
 }
 
@@ -72,3 +91,13 @@ class ExistedExecutorWrapper(val executor: Executor) : Executor {
         executor.execute(command)
     }
 }
+
+/**
+ * Wrong use the [WrapperAdapter], the adaptee is [Wrapper].
+ */
+private class ChattyExecutorWrapperAdapter(private val adaptee: ChattyExecutorWrapper) :
+        Executor by adaptee, WrapperAdapter<Executor>, Attachable<String, String> by AttachableDelegate() {
+    override fun unwrap(): Executor = adaptee.unwrap()
+    override fun adaptee(): Executor = adaptee
+}
+
