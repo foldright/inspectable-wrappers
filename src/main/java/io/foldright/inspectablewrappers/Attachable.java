@@ -9,7 +9,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * provide the attachment storage ability.
  * <p>
  * Retrieve the attachment from wrapper chain(wrapper instances implement interface {@link Wrapper})
- * by static method {@link Wrapper#getAttachment(Object, Object)}.
+ * by static method {@link Inspector#getAttachment(Object, Object)}.
  * <p>
  * Provide {@link io.foldright.inspectablewrappers.utils.AttachableDelegate AttachableDelegate}
  * as a simple delegate implementation.
@@ -18,7 +18,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * @param <V> the value type to be stored
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @author Yang Fang (snoop dot fy at gmail dot com)
- * @see Wrapper#getAttachment(Object, Object)
+ * @see Inspector#getAttachment(Object, Object)
  * @see io.foldright.inspectablewrappers.utils.AttachableDelegate
  */
 public interface Attachable<K, V> {
@@ -38,7 +38,7 @@ public interface Attachable<K, V> {
      * @return return the attachment value, or {@code null} if contains no attachment for the key
      * @throws NullPointerException if key argument is null
      * @throws ClassCastException   if the return value is not type {@code <V>}
-     * @see Wrapper#getAttachment(Object, Object)
+     * @see Inspector#getAttachment(Object, Object)
      */
     @Nullable
     V getAttachment(@NonNull K key);

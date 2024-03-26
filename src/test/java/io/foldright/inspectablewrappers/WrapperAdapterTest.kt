@@ -25,20 +25,20 @@ class WrapperAdapterTest : FunSpec({
     }.let(::ChattyExecutorWrapper)
 
     test("WrapperAdapter") {
-        Wrapper.isInstanceOf(executorChain, ExistedExecutorWrapper::class.java).shouldBeTrue()
-        Wrapper.isInstanceOf(executorChain, ExistedExecutorWrapperAdapter::class.java).shouldBeTrue()
-        Wrapper.isInstanceOf(executorChain, ChattyExecutorWrapper::class.java).shouldBeTrue()
-        Wrapper.isInstanceOf(executorChain, ExecutorService::class.java).shouldBeFalse()
+        Inspector.isInstanceOf(executorChain, ExistedExecutorWrapper::class.java).shouldBeTrue()
+        Inspector.isInstanceOf(executorChain, ExistedExecutorWrapperAdapter::class.java).shouldBeTrue()
+        Inspector.isInstanceOf(executorChain, ChattyExecutorWrapper::class.java).shouldBeTrue()
+        Inspector.isInstanceOf(executorChain, ExecutorService::class.java).shouldBeFalse()
 
-        val value: String? = Wrapper.getAttachment(executorChain, ADAPTED_MSG_KEY)
+        val value: String? = Inspector.getAttachment(executorChain, ADAPTED_MSG_KEY)
         value shouldBe ADAPTED_MSG_VALUE
 
-        Wrapper.getAttachment<Executor, String, String?>(executorChain, "not existed").shouldBeNull()
+        Inspector.getAttachment<Executor, String, String?>(executorChain, "not existed").shouldBeNull()
     }
 
     test("ClassCastException") {
         shouldThrow<ClassCastException> {
-            val value = Wrapper.getAttachment<Executor, String, Int?>(executorChain, ADAPTED_MSG_KEY)
+            val value = Inspector.getAttachment<Executor, String, Int?>(executorChain, ADAPTED_MSG_KEY)
             fail(value.toString())
         }
     }
@@ -46,11 +46,11 @@ class WrapperAdapterTest : FunSpec({
     @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
     test("argument null") {
         shouldThrow<NullPointerException> {
-            Wrapper.getAttachment<Executor, String, String?>(null, ADAPTED_MSG_KEY)
+            Inspector.getAttachment<Executor, String, String?>(null, ADAPTED_MSG_KEY)
         }.message shouldBe "wrapper is null"
 
         shouldThrow<NullPointerException> {
-            Wrapper.getAttachment<Executor, String, String?>(executorChain, null)
+            Inspector.getAttachment<Executor, String, String?>(executorChain, null)
         }.message shouldBe "key is null"
     }
 
@@ -63,15 +63,15 @@ class WrapperAdapterTest : FunSpec({
                 " is a wrapper instance, the use of WrapperAdapter is unnecessary!"
 
         shouldThrow<IllegalStateException> {
-            Wrapper.isInstanceOf(chain, ExecutorService::class.java)
+            Inspector.isInstanceOf(chain, ExecutorService::class.java)
         }.message shouldBe errMsg
         // first instance is ok, not trigger the check logic yet...
-        Wrapper.isInstanceOf(chain, Executor::class.java).shouldBeTrue()
-        Wrapper.isInstanceOf(chain, ChattyExecutorWrapperAdapter::class.java).shouldBeTrue()
+        Inspector.isInstanceOf(chain, Executor::class.java).shouldBeTrue()
+        Inspector.isInstanceOf(chain, ChattyExecutorWrapperAdapter::class.java).shouldBeTrue()
 
 
         shouldThrow<IllegalStateException> {
-            Wrapper.getAttachment(chain, "k1")
+            Inspector.getAttachment(chain, "k1")
         }.message shouldBe errMsg
     }
 })

@@ -19,19 +19,19 @@ class WrapperTest : FunSpec({
         .let(::ChattyExecutorWrapper)
 
     test("wrapper") {
-        Wrapper.isInstanceOf(executorChain, LazyExecutorWrapper::class.java).shouldBeTrue()
-        Wrapper.isInstanceOf(executorChain, ChattyExecutorWrapper::class.java).shouldBeTrue()
-        Wrapper.isInstanceOf(executorChain, ExecutorService::class.java).shouldBeFalse()
+        Inspector.isInstanceOf(executorChain, LazyExecutorWrapper::class.java).shouldBeTrue()
+        Inspector.isInstanceOf(executorChain, ChattyExecutorWrapper::class.java).shouldBeTrue()
+        Inspector.isInstanceOf(executorChain, ExecutorService::class.java).shouldBeFalse()
 
-        val value: String? = Wrapper.getAttachment(executorChain, "busy")
+        val value: String? = Inspector.getAttachment(executorChain, "busy")
         value shouldBe "very, very busy!"
 
-        Wrapper.getAttachment<Executor, String, String?>(executorChain, "not existed").shouldBeNull()
+        Inspector.getAttachment<Executor, String, String?>(executorChain, "not existed").shouldBeNull()
     }
 
     test("ClassCastException") {
         shouldThrow<ClassCastException> {
-            val value = Wrapper.getAttachment<Executor, String, Int?>(executorChain, "busy")
+            val value = Inspector.getAttachment<Executor, String, Int?>(executorChain, "busy")
             fail(value.toString())
         }
     }
@@ -39,25 +39,25 @@ class WrapperTest : FunSpec({
     @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
     test("argument null") {
         shouldThrow<NullPointerException> {
-            Wrapper.getAttachment<Executor, String, String?>(null, "busy")
+            Inspector.getAttachment<Executor, String, String?>(null, "busy")
         }.message shouldBe "wrapper is null"
 
         shouldThrow<NullPointerException> {
-            Wrapper.getAttachment<Executor, String, String?>(executorChain, null)
+            Inspector.getAttachment<Executor, String, String?>(executorChain, null)
         }.message shouldBe "key is null"
     }
 
     test("inspect last instance - isInstanceOf") {
         val pool = Executors.newCachedThreadPool()
-        Wrapper.isInstanceOf(pool, ExecutorService::class.java).shouldBeTrue()
+        Inspector.isInstanceOf(pool, ExecutorService::class.java).shouldBeTrue()
 
         val chatty = ChattyExecutorWrapper(pool)
-        Wrapper.isInstanceOf(chatty, ExecutorService::class.java).shouldBeTrue()
+        Inspector.isInstanceOf(chatty, ExecutorService::class.java).shouldBeTrue()
     }
 
     test("inspect last instance - getAttachment") {
         val attachable = AttachableDelegate<String, String>().apply { setAttachment("k1", "v1") }
-        Wrapper.getAttachment<Any, String, String?>(attachable, "k1") shouldBe "v1"
+        Inspector.getAttachment<Any, String, String?>(attachable, "k1") shouldBe "v1"
 
         val base = object : Executor, Attachable<String, String> by AttachableDelegate() {
             override fun execute(command: Runnable) {
@@ -65,10 +65,10 @@ class WrapperTest : FunSpec({
             }
         }
         base.setAttachment("k1", "v1")
-        Wrapper.getAttachment<Any, String, String?>(base, "k1") shouldBe "v1"
+        Inspector.getAttachment<Any, String, String?>(base, "k1") shouldBe "v1"
 
         val c2 = ChattyExecutorWrapper(base)
-        Wrapper.getAttachment<Any, String, String?>(c2, "k1") shouldBe "v1"
+        Inspector.getAttachment<Any, String, String?>(c2, "k1") shouldBe "v1"
     }
 })
 

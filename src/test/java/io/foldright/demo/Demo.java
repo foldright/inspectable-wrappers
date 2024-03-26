@@ -1,6 +1,6 @@
 package io.foldright.demo;
 
-import io.foldright.inspectablewrappers.Wrapper;
+import io.foldright.inspectablewrappers.Inspector;
 
 import java.util.concurrent.Executor;
 
@@ -14,10 +14,10 @@ public class Demo {
         ////////////////////////////////////////
 
         System.out.println("Is executor lazy? " +
-                Wrapper.isInstanceOf(executor, LazyExecutorWrapper.class));
+                Inspector.isInstanceOf(executor, LazyExecutorWrapper.class));
         // print true
 
-        String busy = Wrapper.getAttachment(executor, "busy");
+        String busy = Inspector.getAttachment(executor, "busy");
         System.out.println("Is executor busy? " + busy);
         // print "very, very busy!"
 

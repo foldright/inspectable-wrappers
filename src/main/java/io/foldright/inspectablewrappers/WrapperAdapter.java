@@ -17,7 +17,7 @@ public interface WrapperAdapter<T> extends Wrapper<T> {
      * Returns the adapted/existed wrapper.
      *
      * @return the adapted wrapper.
-     * @see Wrapper#isInstanceOf(Object, Class)
+     * @see Inspector#isInstanceOf(Object, Class)
      */
     @NonNull
     T adaptee();
