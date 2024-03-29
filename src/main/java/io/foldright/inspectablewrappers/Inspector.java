@@ -4,6 +4,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Iterator;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -158,6 +159,51 @@ public final class Inspector {
 
             if (!(w instanceof Wrapper)) return Optional.empty();
             w = unwrapNonNull(w);
+        }
+    }
+
+    public static <W> Iterable<W> chain(W wrapper) {
+        return () -> new ChainIterator<W>(wrapper);
+    }
+
+    private static class ChainIterator<W> implements Iterator<W> {
+        private W nextWrapper;
+        private boolean isAdaptee;
+        private W adaptee;
+
+        private ChainIterator(W wrapper) {
+            nextWrapper = wrapper;
+            isAdaptee = false;
+        }
+
+        @Override
+        public boolean hasNext() {
+            if (!isAdaptee) return nextWrapper != null;
+            else return adaptee != null;
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public W next() {
+            final W ret;
+            if (!isAdaptee) ret = nextWrapper;
+            else ret = adaptee;
+
+            W w = (W) unwrapNonNull(nextWrapper);
+            while (true) {
+                // process the instance on wrapper chain
+                Optional<T> result = process.apply((W) w);
+                if (result.isPresent()) return result;
+
+                // also process the adaptee for WrapperAdapter
+                if (w instanceof WrapperAdapter) {
+                    Optional<T> r = process.apply((W) adapteeNonWrapper(w));
+                    if (r.isPresent()) return r;
+                }
+
+                if (!(w instanceof Wrapper)) return Optional.empty();
+                w = unwrapNonNull(w);
+            }
         }
     }
 
