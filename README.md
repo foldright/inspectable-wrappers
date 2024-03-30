@@ -50,12 +50,12 @@ The purpose of **Inspectable Wrappers** is to provide a standard for wrapper cha
     adapt an existed wrapper instance to type `Wrapper` without modifying it
 - The [`Inspector`](src/main/java/io/foldright/inspectablewrappers/Inspector.java) class is used to
   inspect the **wrapper chain**
-- Util classes:
+- The util classes:
   - [`AttachableDelegate`](src/main/java/io/foldright/inspectablewrappers/utils/AttachableDelegate.java) class
-    provides a simple `Attachable` delegate implementation.
+    provides a simple `Attachable` delegate implementation
   - [`WrapperAdapterUtils`](src/main/java/io/foldright/inspectablewrappers/utils/WrapperAdapterUtils.java) class
     provides utility methods for creating `WrapperAdapter` instances
-    without writing the boilerplate code to create a new adapter class.
+    without writing the boilerplate code to create a new adapter class
 
 ## 🌰 Usage Demo
 
@@ -303,7 +303,7 @@ For `Maven` projects:
 <dependency>
   <groupId>io.foldright</groupId>
   <artifactId>inspectable-wrappers</artifactId>
-  <version>0.5.1</version>
+  <version>0.5.2</version>
 </dependency>
 ```
 
@@ -311,12 +311,12 @@ For `Gradle` projects:
 
 ```groovy
 // Gradle Kotlin DSL
-implementation("io.foldright:inspectable-wrappers:0.5.1")
+implementation("io.foldright:inspectable-wrappers:0.5.2")
 ```
 
 ```groovy
 // Gradle Groovy DSL
-implementation 'io.foldright:inspectable-wrappers:0.5.1'
+implementation 'io.foldright:inspectable-wrappers:0.5.2'
 ```
 
 `inspectable-wrappers` has published to maven central, find the latest version at [central.sonatype.com](https://central.sonatype.com/artifact/io.foldright/inspectable-wrappers/0.3.0/versions).
