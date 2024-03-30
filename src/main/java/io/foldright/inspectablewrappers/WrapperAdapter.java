@@ -9,6 +9,11 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * <p>
  * The existed wrapper may not be able to be modified to integrate with {@code inspectable wrappers};
  * Integration with {@code inspectable wrappers} means implementation the {@link Wrapper} interface.
+ * <p>
+ * The wrapper chain contained {@code WrapperAdapter} looks like:
+ * <p>
+ * <img src="https://github.com/foldright/inspectable-wrappers/assets/1063891/07093502-2f7a-4bfd-887f-d953e8e31bc8"
+ * alt="Wrapper Chain contains WrapperAdapter">
  *
  * @param <T> the type of instances that be wrapped
  * @author Jerry Lee (oldratlee at gmail dot com)

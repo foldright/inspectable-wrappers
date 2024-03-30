@@ -10,7 +10,9 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * <strong>Note about wrapper chain:</strong>
  * <ul>
  * <li>The wrapper chain consists of wrapper itself, followed by the wrappers
- *     obtained by repeatedly calling {@link Wrapper#unwrap()}
+ *     obtained by repeatedly calling {@link Wrapper#unwrap()}<br>
+ *     <img src="https://github.com/foldright/inspectable-wrappers/assets/1063891/7beeb043-0210-4964-8108-7200ac6a7ef9"
+ *      alt="Wrapper Chain">
  * <li>The last instance of wrapper chain is NEVER type {@link Wrapper}
  * <li>Uses the static methods of {@link Inspector} to inspect the wrapper chain
  * </ul>
