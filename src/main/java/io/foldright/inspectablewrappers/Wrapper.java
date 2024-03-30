@@ -11,9 +11,9 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * <ul>
  * <li>The wrapper chain consists of wrapper itself, followed by the wrappers
  *     obtained by repeatedly calling {@link Wrapper#unwrap()}<br>
- *     <img src="https://github.com/foldright/inspectable-wrappers/assets/1063891/c638c7d0-c529-4208-86b3-a761dfb22a13"
- *      width="400" alt="Wrapper Chain">
- * <li>The last instance of wrapper chain is NEVER type {@link Wrapper}
+ *     <img src="https://github.com/foldright/inspectable-wrappers/assets/1063891/7bb7db14-2dee-44e6-b843-9817a94eef44"
+ *      width="350" alt="Wrapper Chain">
+ * <li>The last instance of wrapper chain is NEVER an instance of {@link Wrapper}
  * <li>Uses the static methods of {@link Inspector} to inspect the wrapper chain
  * </ul>
  *

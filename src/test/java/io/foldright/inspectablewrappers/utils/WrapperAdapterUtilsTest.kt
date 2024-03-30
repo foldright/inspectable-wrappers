@@ -26,7 +26,7 @@ class WrapperAdapterUtilsTest : FunSpec({
                     existed,
                     AttachableDelegate<String, String>(),
                 )
-                adapter.toString() shouldStartWith "[WrapperAdapterProxy created by WrapperAdapterUtils] "
+                adapter.toString() shouldStartWith "[WrapperAdapter proxy created by WrapperAdapterUtils] "
 
                 val attachable = adapter as Attachable<String, String>
                 attachable.setAttachment(ADAPTED_MSG_KEY, ADAPTED_MSG_VALUE)
@@ -75,7 +75,7 @@ class WrapperAdapterUtilsTest : FunSpec({
         val wrongAdaptee = WrongWrapperAdapter(executor)
         shouldThrow<IllegalArgumentException> {
             createWrapperAdapter(Executor::class.java, executor, wrongAdaptee)
-        }.message shouldBe "adaptee(io.foldright.inspectablewrappers.utils.WrongWrapperAdapter) is type Wrapper," +
+        }.message shouldBe "adaptee(io.foldright.inspectablewrappers.utils.WrongWrapperAdapter) is an instance of Wrapper," +
                 " adapting a Wrapper to a Wrapper is unnecessary!"
     }
 
@@ -107,14 +107,14 @@ class WrapperAdapterUtilsTest : FunSpec({
                 Executor::class.java as Class<Any>,
                 "", ""
             )
-        }.message shouldBe "underlying(java.lang.String) is not a java.util.concurrent.Executor"
+        }.message shouldBe "underlying(java.lang.String) is not an instance of java.util.concurrent.Executor"
 
         shouldThrow<IllegalArgumentException> {
             createWrapperAdapter(
                 Executor::class.java as Class<Any>,
                 Executor { it.run() }, ""
             )
-        }.message shouldBe "adaptee(java.lang.String) is not a java.util.concurrent.Executor"
+        }.message shouldBe "adaptee(java.lang.String) is not an instance of java.util.concurrent.Executor"
     }
 })
 

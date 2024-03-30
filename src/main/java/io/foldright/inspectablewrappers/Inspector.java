@@ -65,7 +65,7 @@ public final class Inspector {
      * @throws NullPointerException  if any arguments is null,
      *                               or any wrapper {@link Wrapper#unwrap()} returns null,
      *                               or the adaptee of {@link WrapperAdapter} is null
-     * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is type {@link Wrapper}
+     * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is an instance of {@link Wrapper}
      * @see Wrapper#unwrap()
      * @see WrapperAdapter#adaptee()
      */
@@ -99,7 +99,7 @@ public final class Inspector {
      *                               or any wrapper {@link Wrapper#unwrap()} returns null,
      *                               or the adaptee of {@link WrapperAdapter} is null
      * @throws ClassCastException    if the return value is not type {@code <V>}
-     * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is type {@link Wrapper}
+     * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is an instance of {@link Wrapper}
      * @see Attachable#getAttachment(Object)
      * @see Wrapper#unwrap()
      * @see WrapperAdapter#adaptee()
@@ -133,7 +133,7 @@ public final class Inspector {
      * @throws NullPointerException  if wrapped argument is null,
      *                               or any wrapper {@link Wrapper#unwrap()} returns null,
      *                               or the adaptee of {@link WrapperAdapter} is null
-     * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is type {@link Wrapper}
+     * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is an instance of {@link Wrapper}
      * @see Wrapper#unwrap()
      * @see WrapperAdapter#adaptee()
      */
@@ -155,7 +155,7 @@ public final class Inspector {
      * @throws NullPointerException  if any arguments is null,
      *                               or any wrapper {@link Wrapper#unwrap()} returns null,
      *                               or the adaptee of {@link WrapperAdapter} is null
-     * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is type {@link Wrapper}
+     * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is an instance of {@link Wrapper}
      * @see Wrapper#unwrap()
      * @see WrapperAdapter#adaptee()
      */
@@ -185,7 +185,7 @@ public final class Inspector {
      * @throws NullPointerException  if any arguments is null,
      *                               or any wrapper {@link Wrapper#unwrap()} returns null,
      *                               or the adaptee of {@link WrapperAdapter} is null
-     * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is type {@link Wrapper}
+     * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is an instance of {@link Wrapper}
      * @see Wrapper#unwrap()
      * @see WrapperAdapter#adaptee()
      */
@@ -224,7 +224,7 @@ public final class Inspector {
         if (adaptee instanceof Wrapper) {
             throw new IllegalStateException("adaptee(" + adaptee.getClass().getName() +
                     ") of WrapperAdapter(" + wrapper.getClass().getName() +
-                    ") is type Wrapper, adapting a Wrapper to a Wrapper is unnecessary!");
+                    ") is an instance of Wrapper, adapting a Wrapper to a Wrapper is unnecessary!");
         }
 
         return adaptee;

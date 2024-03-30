@@ -38,8 +38,8 @@ class SpecificationContractsTest {
 
         IllegalStateException e = Assertions.assertThrowsExactly(IllegalStateException.class, () -> verifyWrapperChainContracts(w));
         String expected = "adaptee(io.foldright.inspectablewrappers.SpecificationContractsTest$WrapperImpl)" +
-                " of WrapperAdapter(io.foldright.inspectablewrappers.SpecificationContractsTest$WrapperAdapterImpl) is type Wrapper," +
-                " adapting a Wrapper to a Wrapper is unnecessary!";
+                " of WrapperAdapter(io.foldright.inspectablewrappers.SpecificationContractsTest$WrapperAdapterImpl)" +
+                " is an instance of Wrapper, adapting a Wrapper to a Wrapper is unnecessary!";
         assertEquals(expected, e.getMessage());
     }
 

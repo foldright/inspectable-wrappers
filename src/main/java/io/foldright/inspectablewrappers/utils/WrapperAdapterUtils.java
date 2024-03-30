@@ -19,26 +19,32 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * Utility class for creating {@link WrapperAdapter} instances
- * without writing the boilerplate code to create a new adapter class.
+ * without writing boilerplate codes of creating new adapter classes.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
 @ParametersAreNonnullByDefault
 public final class WrapperAdapterUtils {
     /**
-     * Creates a {@link WrapperAdapter} instance with the given biz interface type
-     * by the underlying instance that be wrapped and the adapted/existed wrapper instance.
+     * Creates a {@link WrapperAdapter} instance of the given biz interface type by
+     * the underlying({@link Wrapper#unwrap()}) and adaptee({@link WrapperAdapter#adaptee()}) instances.
      *
      * @param <T>          the type of instances that be wrapped
      * @param bizInterface the class of instances that be wrapped
      * @param underlying   the underlying instance that be wrapped, more info see {@link Wrapper#unwrap()}
      * @param adaptee      the adapted/existed wrapper instance, more info see {@link WrapperAdapter#adaptee()}
      * @return the new {@link WrapperAdapter} instance
+     * @throws IllegalArgumentException if {@code bizInterface} is not an interface,
+     *                                  or {@code bizInterface} is {@link Wrapper}/{@link WrapperAdapter}/{@link Attachable},
+     *                                  or underlying is not an instance of {@code bizInterface},
+     *                                  or adaptee is not an instance of {@code bizInterface},
+     *                                  or adaptee is an instance of {@link Wrapper}
+     * @throws NullPointerException     if any argument is null
      * @see Wrapper#unwrap()
      * @see WrapperAdapter#adaptee()
      */
     @NonNull
-    public static <T> T createWrapperAdapter(Class<T> bizInterface, T underlying, T adaptee) {
+    public static <T> T createWrapperAdapter(Class<? super T> bizInterface, T underlying, T adaptee) {
         return createWrapperAdapter0(
                 requireNonNull(bizInterface, "bizInterface is null"),
                 requireNonNull(underlying, "underlying is null"),
@@ -47,8 +53,8 @@ public final class WrapperAdapterUtils {
     }
 
     /**
-     * Creates a {@link WrapperAdapter} instance with the given biz interface type and {@link Attachable} type
-     * by the underlying instance that be wrapped, the adapted/existed wrapper instance and an attachable instance.
+     * Creates a {@link WrapperAdapter} instance of the given biz interface type and {@link Attachable} type by
+     * the underlying({@link Wrapper#unwrap()}), adaptee({@link WrapperAdapter#adaptee()}) and attachable instances.
      *
      * @param <T>          the type of instances that be wrapped
      * @param bizInterface the class of instances that be wrapped
@@ -56,6 +62,12 @@ public final class WrapperAdapterUtils {
      * @param adaptee      the adapted/existed wrapper instance, more info see {@link WrapperAdapter#adaptee()}
      * @param attachable   the attachable instance, more info see {@link Attachable}
      * @return the new {@link WrapperAdapter} instance
+     * @throws IllegalArgumentException if {@code bizInterface} is not an interface,
+     *                                  or {@code bizInterface} is {@link Wrapper}/{@link WrapperAdapter}/{@link Attachable},
+     *                                  or underlying is not an instance of {@code bizInterface},
+     *                                  or adaptee is not an instance of {@code bizInterface},
+     *                                  or adaptee is an instance of {@link Wrapper}
+     * @throws NullPointerException     if any argument is null
      * @see Wrapper#unwrap()
      * @see WrapperAdapter#adaptee()
      * @see Attachable#getAttachment(Object)
@@ -63,7 +75,7 @@ public final class WrapperAdapterUtils {
      */
     @NonNull
     public static <T> T createWrapperAdapter(
-            Class<T> bizInterface, T underlying, T adaptee, Attachable<?, ?> attachable) {
+            Class<? super T> bizInterface, T underlying, T adaptee, Attachable<?, ?> attachable) {
         return createWrapperAdapter0(
                 requireNonNull(bizInterface, "bizInterface is null"),
                 requireNonNull(underlying, "underlying is null"),
@@ -73,7 +85,7 @@ public final class WrapperAdapterUtils {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     private static <T> T createWrapperAdapter0(
-            Class<T> bizInterface, T underlying, T adaptee, @Nullable Attachable<?, ?> attachable) {
+            Class<? super T> bizInterface, T underlying, T adaptee, @Nullable Attachable<?, ?> attachable) {
         checkTypeRequirements(bizInterface, underlying, adaptee);
 
         final InvocationHandler handler = (proxy, method, args) -> {
@@ -89,7 +101,7 @@ public final class WrapperAdapterUtils {
             }
 
             if (TO_STRING.sameSignatureAs(method)) {
-                return "[WrapperAdapterProxy created by WrapperAdapterUtils] " + adaptee;
+                return "[WrapperAdapter proxy created by WrapperAdapterUtils] " + adaptee;
             }
 
             return method.invoke(adaptee, args);
@@ -116,16 +128,16 @@ public final class WrapperAdapterUtils {
 
         if (!bizInterface.isAssignableFrom(underlying.getClass())) {
             throw new IllegalArgumentException("underlying(" + underlying.getClass().getName() +
-                    ") is not a " + bizInterface.getName());
+                    ") is not an instance of " + bizInterface.getName());
         }
         if (!bizInterface.isAssignableFrom(adaptee.getClass())) {
             throw new IllegalArgumentException("adaptee(" + adaptee.getClass().getName() +
-                    ") is not a " + bizInterface.getName());
+                    ") is not an instance of " + bizInterface.getName());
         }
 
         if (adaptee instanceof Wrapper) {
             throw new IllegalArgumentException("adaptee(" + adaptee.getClass().getName() +
-                    ") is type Wrapper, adapting a Wrapper to a Wrapper is unnecessary!");
+                    ") is an instance of Wrapper, adapting a Wrapper to a Wrapper is unnecessary!");
         }
     }
 
@@ -142,11 +154,11 @@ public final class WrapperAdapterUtils {
  */
 enum WrapperAdapterProxyRelatedMethod {
     /**
-     * {@link WrapperAdapter#adaptee()}
+     * {@link Wrapper#unwrap()}
      */
     UNWRAP(() -> Wrapper.class.getMethod("unwrap")),
     /**
-     * {@link Wrapper#unwrap()}
+     * {@link WrapperAdapter#adaptee()}
      */
     ADAPTEE(() -> WrapperAdapter.class.getMethod("adaptee")),
     /**

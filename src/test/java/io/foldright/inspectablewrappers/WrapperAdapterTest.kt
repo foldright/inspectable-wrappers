@@ -53,13 +53,13 @@ class WrapperAdapterTest : FunSpec({
         }.message shouldBe "key is null"
     }
 
-    test("travelWrapperChain IllegalStateException - the adaptee of WrapperAdapter is type wrapper") {
+    test("travelWrapperChain IllegalStateException - the adaptee of WrapperAdapter is an instance of Wrapper") {
         val chain: Executor = ChattyExecutorWrapper { runnable -> runnable.run() }
             .let(::ChattyExecutorWrapperAdapter)
 
         val errMsg = "adaptee(io.foldright.inspectablewrappers.ChattyExecutorWrapper)" +
                 " of WrapperAdapter(io.foldright.inspectablewrappers.ChattyExecutorWrapperAdapter)" +
-                " is type Wrapper, adapting a Wrapper to a Wrapper is unnecessary!"
+                " is an instance of Wrapper, adapting a Wrapper to a Wrapper is unnecessary!"
 
         shouldThrow<IllegalStateException> {
             containsInstanceOnWrapperChain(chain, ExecutorService::class.java)

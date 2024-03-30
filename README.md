@@ -32,6 +32,7 @@ The purpose of **Inspectable Wrappers** is to provide a standard for wrapper cha
 - [🌰 Integration Demo](#-integration-demo)
   - [the demo existed wrapper cannot be modified](#the-demo-existed-wrapper-cannot-be-modified)
   - [the integration code](#the-integration-code)
+- [🌰 Integration Demo using `WrapperAdapterUtils`](#-integration-demo-using-wrapperadapterutils)
 - [🍼 Java API Docs](#-java-api-docs)
 - [🍪 Dependency](#-dependency)
 
@@ -50,18 +51,18 @@ The purpose of **Inspectable Wrappers** is to provide a standard for wrapper cha
     adapt an existed wrapper instance to type `Wrapper` without modifying it
 - The [`Inspector`](src/main/java/io/foldright/inspectablewrappers/Inspector.java) class is used to
   inspect the **wrapper chain**
-- The util classes:
+- The utility classes:
   - [`AttachableDelegate`](src/main/java/io/foldright/inspectablewrappers/utils/AttachableDelegate.java) class
     provides a simple `Attachable` delegate implementation
   - [`WrapperAdapterUtils`](src/main/java/io/foldright/inspectablewrappers/utils/WrapperAdapterUtils.java) class
     provides utility methods for creating `WrapperAdapter` instances
-    without writing the boilerplate code to create a new adapter class
+    without writing boilerplate codes of creating new adapter classes
 
 ## 🌰 Usage Demo
 
 Below use the `Executor Wrapper` to demonstrate the usage.
 
-### wrapper implementations in your application code
+### demo wrapper implementations in your application code
 
 ```java
 // a wrapper implementation
@@ -175,9 +176,9 @@ I'm working.
 
 ## 🌰 Integration Demo
 
-Integrate an existed executor wrapper without modification.
+Integrate an existed wrapper instance to type `Wrapper` without modifying it.
 
-### the demo existed wrapper cannot be modified
+### the demo existed wrapper which cannot be modified
 
 ```java
 public class ExistedExecutorWrapper implements Executor {
@@ -289,6 +290,64 @@ I'm working.
 ```
 
 > Runnable demo codes in project: [`IntegrationDemo.java`](src/test/java/io/foldright/demo/integration/IntegrationDemo.java)
+
+## 🌰 Integration Demo using `WrapperAdapterUtils`
+
+Uses `WrapperAdapterUtils` to create `WrapperAdapter` instances without writing boilerplate codes of creating new adapter classes.
+
+```java
+public class IntegrationDemoUsingWrapperAdapterUtils {
+  public static void main(String[] args) {
+    final Executor executor = buildExecutorChain();
+
+    ////////////////////////////////////////
+    // inspect the executor(wrapper chain)
+    ////////////////////////////////////////
+
+    System.out.println("Is executor ExistedExecutorWrapper? " +
+        containsInstanceOnWrapperChain(executor, ExistedExecutorWrapper.class));
+    // print true
+    String adaptAttachment = getAttachmentFromWrapperChain(executor, "adapted-existed-executor-wrapper-msg");
+    System.out.println("Adapted existed executor wrapper msg: " + adaptAttachment);
+    // print "I'm an adapter of an existed executor which have nothing to do with ~inspectable~wrappers~."
+
+    ////////////////////////////////////////
+    // call executor(wrapper chain)
+    ////////////////////////////////////////
+
+    System.out.println();
+    executor.execute(() -> System.out.println("I'm working."));
+  }
+
+  private static Executor buildExecutorChain() {
+    final Executor base = Runnable::run;
+    final Executor adapter = createExistedExecutorWrapperAdapter(base);
+    return new ChattyExecutorWrapper(adapter);
+  }
+
+  private static Executor createExistedExecutorWrapperAdapter(Executor base) {
+    final Executor existed = new ExistedExecutorWrapper(base);
+
+    Attachable<String, String> attachable = new AttachableDelegate<>();
+    attachable.setAttachment("adapted-existed-executor-wrapper-msg", "I'm an adapter of an existed executor which have nothing to do with ~inspectable~wrappers~.");
+
+    return WrapperAdapterUtils.createWrapperAdapter(Executor.class, base, existed, attachable);
+  }
+}
+
+/*
+demo output:
+
+Is executor ExistedExecutorWrapper? true
+Adapted existed executor wrapper msg: I'm an adapter of an existed executor which have nothing to do with ~inspectable~wrappers~.
+
+BlaBlaBla...
+I'm an adapter of an existed executor which have nothing to do with ~inspectable~wrappers~.
+I'm working.
+ */
+```
+
+> Runnable demo codes in project: [`IntegrationDemoUsingWrapperAdapterUtils.java`](src/test/java/io/foldright/demo/integration/IntegrationDemoUsingWrapperAdapterUtils.java)
 
 ## 🍼 Java API Docs
 

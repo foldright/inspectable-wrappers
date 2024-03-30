@@ -12,12 +12,12 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * <p>
  * The wrapper chain contained {@code WrapperAdapter} looks like:
  * <p>
- * <img src="https://github.com/foldright/inspectable-wrappers/assets/1063891/31f9e604-5864-4312-b280-cc732e84df07"
- * width="400" alt="Wrapper Chain contains WrapperAdapter">
+ * <img src="https://github.com/foldright/inspectable-wrappers/assets/1063891/eeaf02a9-9887-4ed1-a160-a12f92338d7b"
+ * width="350" alt="Wrapper Chain contains WrapperAdapter">
  * <p>
  * Provided {@link io.foldright.inspectablewrappers.utils.WrapperAdapterUtils WrapperAdapterUtils}
- * to create {@link WrapperAdapter} instances of the given biz interface type
- * by the adaptee and underlying instance without writing boilerplate code of creating a new adapter class.
+ * to create {@link WrapperAdapter} instances of the given biz interface type by the underlying
+ * and adaptee instances without writing boilerplate codes of creating new adapter classes.
  *
  * @param <T> the type of instances that be wrapped
  * @author Jerry Lee (oldratlee at gmail dot com)
@@ -34,7 +34,7 @@ public interface WrapperAdapter<T> extends Wrapper<T> {
      * <li>Do NOT return {@code null} which makes no sense.<br>
      *     If returns {@code null}, the inspection operations of {@link Inspector} will
      *     throw {@link NullPointerException} when touch adaptee.
-     * <li>The adaptee MUST NOT a {@link Wrapper},
+     * <li>The adaptee MUST NOT an instance of {@link Wrapper},
      *     since adapting a {@link Wrapper} to a {@link Wrapper} is UNNECESSARY.<br>
      *     If adapting a {@link Wrapper}, the inspection operations of {@link Inspector} will
      *     throw {@link IllegalStateException} when touch the {@link Wrapper} type adaptee.
