@@ -12,8 +12,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * <p>
  * The wrapper chain contained {@code WrapperAdapter} looks like:
  * <p>
- * <img src="https://github.com/foldright/inspectable-wrappers/assets/1063891/07093502-2f7a-4bfd-887f-d953e8e31bc8"
- * alt="Wrapper Chain contains WrapperAdapter">
+ * <img src="https://github.com/foldright/inspectable-wrappers/assets/1063891/31f9e604-5864-4312-b280-cc732e84df07"
+ * width="400" alt="Wrapper Chain contains WrapperAdapter">
  *
  * @param <T> the type of instances that be wrapped
  * @author Jerry Lee (oldratlee at gmail dot com)

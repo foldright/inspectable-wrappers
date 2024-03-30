@@ -37,12 +37,12 @@ public class IntegrationDemo {
 
     private static Executor buildExecutorChain() {
         final Executor base = Runnable::run;
-        final ExistedExecutorWrapperAdapter adapter = createExistedExecutorWrapperAdapter(base);
+        final Executor adapter = createExistedExecutorWrapperAdapter(base);
         return new ChattyExecutorWrapper(adapter);
     }
 
-    private static ExistedExecutorWrapperAdapter createExistedExecutorWrapperAdapter(Executor base) {
-        final ExistedExecutorWrapper existed = new ExistedExecutorWrapper(base);
+    private static Executor createExistedExecutorWrapperAdapter(Executor base) {
+        final Executor existed = new ExistedExecutorWrapper(base);
         final ExistedExecutorWrapperAdapter adapter = new ExistedExecutorWrapperAdapter(base, existed);
         adapter.setAttachment("adapted-existed-executor-wrapper-msg", "I'm an adapter of an existed executor which have nothing to do with ~inspectable~wrappers~.");
         return adapter;
