@@ -20,11 +20,9 @@ private const val ADAPTED_MSG_VALUE =
 
 class WrapperAdapterTest : FunSpec({
     // prepare executor instances/wrappers, build the executor/wrapper chain
-    val executorChain: Executor = ExistedExecutorWrapper { runnable -> runnable.run() }.let {
-        ExistedExecutorWrapperAdapter(it).apply {
-            setAttachment(ADAPTED_MSG_KEY, ADAPTED_MSG_VALUE)
-        }
-    }.let(::ChattyExecutorWrapper)
+    val executorChain: Executor = Executor { runnable -> runnable.run() }
+        .let(ExistedExecutorWrapperAdapter::createExistedExecutorWrapperAdapter)
+        .let(::ChattyExecutorWrapper)
 
     test("WrapperAdapter") {
         containsInstanceOnWrapperChain(executorChain, ExistedExecutorWrapper::class.java).shouldBeTrue()
@@ -71,23 +69,35 @@ class WrapperAdapterTest : FunSpec({
         containsInstanceOnWrapperChain(chain, Executor::class.java).shouldBeTrue()
         containsInstanceOnWrapperChain(chain, ChattyExecutorWrapperAdapter::class.java).shouldBeTrue()
 
-
         shouldThrow<IllegalStateException> {
             getAttachmentFromWrapperChain(chain, "k1")
         }.message shouldBe errMsg
     }
 })
 
+
 /**
  * Adaption an existed wrapper([ExistedExecutorWrapper]) without modifying it.
  */
-private class ExistedExecutorWrapperAdapter(private val adaptee: ExistedExecutorWrapper) :
+private class ExistedExecutorWrapperAdapter(private val unwrap: Executor, private val adaptee: Executor) :
         Executor by adaptee, WrapperAdapter<Executor>, Attachable<String, String> by AttachableDelegate() {
-    override fun unwrap(): Executor = adaptee.executor
+    override fun unwrap(): Executor = unwrap
     override fun adaptee(): Executor = adaptee
+
+    companion object {
+        fun createExistedExecutorWrapperAdapter(base: Executor): ExistedExecutorWrapperAdapter {
+            val existed = ExistedExecutorWrapper(base)
+            return ExistedExecutorWrapperAdapter(base, existed).apply {
+                setAttachment(ADAPTED_MSG_KEY, ADAPTED_MSG_VALUE)
+            }
+        }
+    }
 }
 
-class ExistedExecutorWrapper(val executor: Executor) : Executor {
+/**
+ * An existed executor which have nothing to do with `Inspectable Wrappers`.
+ */
+class ExistedExecutorWrapper(private val executor: Executor) : Executor {
     override fun execute(command: Runnable) {
         println(ADAPTED_MSG_VALUE)
         executor.execute(command)
@@ -95,7 +105,7 @@ class ExistedExecutorWrapper(val executor: Executor) : Executor {
 }
 
 /**
- * Wrong use the [WrapperAdapter], the adaptee is already [Wrapper]!
+ * WRONG use the [WrapperAdapter], the adaptee is already [Wrapper]!
  */
 private class ChattyExecutorWrapperAdapter(private val adaptee: ChattyExecutorWrapper) :
         Executor by adaptee, WrapperAdapter<Executor>, Attachable<String, String> by AttachableDelegate() {

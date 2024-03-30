@@ -1,21 +1,17 @@
 package io.foldright.demo.integration;
 
 import edu.umd.cs.findbugs.annotations.Nullable;
-import edu.umd.cs.findbugs.annotations.ReturnValuesAreNonnullByDefault;
 import io.foldright.demo.ChattyExecutorWrapper;
 import io.foldright.inspectablewrappers.Attachable;
 import io.foldright.inspectablewrappers.WrapperAdapter;
 import io.foldright.inspectablewrappers.utils.AttachableDelegate;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.concurrent.Executor;
 
 import static io.foldright.inspectablewrappers.Inspector.containsInstanceOnWrapperChain;
 import static io.foldright.inspectablewrappers.Inspector.getAttachmentFromWrapperChain;
 
 
-@ParametersAreNonnullByDefault
-@ReturnValuesAreNonnullByDefault
 public class IntegrationDemo {
     public static void main(String[] args) {
         final Executor executor = buildExecutorChain();
@@ -41,27 +37,32 @@ public class IntegrationDemo {
 
     private static Executor buildExecutorChain() {
         final Executor base = Runnable::run;
-
-        final ExistedExecutorWrapper existed = new ExistedExecutorWrapper(base);
-        final ExistedExecutorWrapperAdapter adapter = new ExistedExecutorWrapperAdapter(existed);
-        adapter.setAttachment("adapted-existed-executor-wrapper-msg", "I'm an adapter of an existed executor which have nothing to do with ~inspectable~wrappers~.");
-
+        final ExistedExecutorWrapperAdapter adapter = createExistedExecutorWrapperAdapter(base);
         return new ChattyExecutorWrapper(adapter);
+    }
+
+    private static ExistedExecutorWrapperAdapter createExistedExecutorWrapperAdapter(Executor base) {
+        final ExistedExecutorWrapper existed = new ExistedExecutorWrapper(base);
+        final ExistedExecutorWrapperAdapter adapter = new ExistedExecutorWrapperAdapter(base, existed);
+        adapter.setAttachment("adapted-existed-executor-wrapper-msg", "I'm an adapter of an existed executor which have nothing to do with ~inspectable~wrappers~.");
+        return adapter;
     }
 
     /**
      * Adaption an existed wrapper(`ExistedExecutorWrapper`) without modifying it.
      */
     private static class ExistedExecutorWrapperAdapter implements Executor, WrapperAdapter<Executor>, Attachable<String, String> {
-        private final ExistedExecutorWrapper adaptee;
+        private final Executor base;
+        private final Executor adaptee;
 
-        public ExistedExecutorWrapperAdapter(ExistedExecutorWrapper adaptee) {
+        public ExistedExecutorWrapperAdapter(Executor base, Executor adaptee) {
+            this.base = base;
             this.adaptee = adaptee;
         }
 
         @Override
         public Executor unwrap() {
-            return adaptee.getExecutor();
+            return base;
         }
 
         @Override

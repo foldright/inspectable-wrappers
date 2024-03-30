@@ -181,10 +181,6 @@ public class ExistedExecutorWrapper implements Executor {
     this.executor = executor;
   }
 
-  public Executor getExecutor() {
-    return executor;
-  }
-
   @Override
   public void execute(Runnable command) {
     System.out.println("I'm existed executor, have nothing to do with ~inspectable~wrappers~.");
@@ -221,27 +217,32 @@ public class IntegrationDemo {
 
   private static Executor buildExecutorChain() {
     final Executor base = Runnable::run;
-
-    final ExistedExecutorWrapper existed = new ExistedExecutorWrapper(base);
-    final ExistedExecutorWrapperAdapter adapter = new ExistedExecutorWrapperAdapter(existed);
-    adapter.setAttachment("adapted-existed-executor-wrapper-msg", "I'm an adapter of an existed executor which have nothing to do with ~inspectable~wrappers~.");
-
+    final ExistedExecutorWrapperAdapter adapter = createExistedExecutorWrapperAdapter(base);
     return new ChattyExecutorWrapper(adapter);
+  }
+
+  private static ExistedExecutorWrapperAdapter createExistedExecutorWrapperAdapter(Executor base) {
+    final ExistedExecutorWrapper existed = new ExistedExecutorWrapper(base);
+    final ExistedExecutorWrapperAdapter adapter = new ExistedExecutorWrapperAdapter(base, existed);
+    adapter.setAttachment("adapted-existed-executor-wrapper-msg", "I'm an adapter of an existed executor which have nothing to do with ~inspectable~wrappers~.");
+    return adapter;
   }
 
   /**
    * Adaption an existed wrapper(`ExistedExecutorWrapper`) without modifying it.
    */
   private static class ExistedExecutorWrapperAdapter implements Executor, WrapperAdapter<Executor>, Attachable<String, String> {
-    private final ExistedExecutorWrapper adaptee;
+    private final Executor base;
+    private final Executor adaptee;
 
-    public ExistedExecutorWrapperAdapter(ExistedExecutorWrapper adaptee) {
+    public ExistedExecutorWrapperAdapter(Executor base, Executor adaptee) {
+      this.base = base;
       this.adaptee = adaptee;
     }
 
     @Override
     public Executor unwrap() {
-      return adaptee.getExecutor();
+      return base;
     }
 
     @Override
@@ -261,6 +262,7 @@ public class IntegrationDemo {
       attachable.setAttachment(key, value);
     }
 
+    @Nullable
     @Override
     public String getAttachment(String key) {
       return attachable.getAttachment(key);
