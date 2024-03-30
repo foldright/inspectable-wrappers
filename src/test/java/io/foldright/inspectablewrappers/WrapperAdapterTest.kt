@@ -1,5 +1,7 @@
 package io.foldright.inspectablewrappers
 
+import io.foldright.inspectablewrappers.Inspector.containsInstanceOnWrapperChain
+import io.foldright.inspectablewrappers.Inspector.getAttachmentFromWrapperChain
 import io.foldright.inspectablewrappers.utils.AttachableDelegate
 import io.kotest.assertions.fail
 import io.kotest.assertions.throwables.shouldThrow
@@ -25,20 +27,20 @@ class WrapperAdapterTest : FunSpec({
     }.let(::ChattyExecutorWrapper)
 
     test("WrapperAdapter") {
-        Inspector.isInstanceOf(executorChain, ExistedExecutorWrapper::class.java).shouldBeTrue()
-        Inspector.isInstanceOf(executorChain, ExistedExecutorWrapperAdapter::class.java).shouldBeTrue()
-        Inspector.isInstanceOf(executorChain, ChattyExecutorWrapper::class.java).shouldBeTrue()
-        Inspector.isInstanceOf(executorChain, ExecutorService::class.java).shouldBeFalse()
+        containsInstanceOnWrapperChain(executorChain, ExistedExecutorWrapper::class.java).shouldBeTrue()
+        containsInstanceOnWrapperChain(executorChain, ExistedExecutorWrapperAdapter::class.java).shouldBeTrue()
+        containsInstanceOnWrapperChain(executorChain, ChattyExecutorWrapper::class.java).shouldBeTrue()
+        containsInstanceOnWrapperChain(executorChain, ExecutorService::class.java).shouldBeFalse()
 
-        val value: String? = Inspector.getAttachment(executorChain, ADAPTED_MSG_KEY)
+        val value: String? = getAttachmentFromWrapperChain(executorChain, ADAPTED_MSG_KEY)
         value shouldBe ADAPTED_MSG_VALUE
 
-        Inspector.getAttachment<Executor, String, String?>(executorChain, "not existed").shouldBeNull()
+        getAttachmentFromWrapperChain<Executor, String, String?>(executorChain, "not existed").shouldBeNull()
     }
 
     test("ClassCastException") {
         shouldThrow<ClassCastException> {
-            val value = Inspector.getAttachment<Executor, String, Int?>(executorChain, ADAPTED_MSG_KEY)
+            val value = getAttachmentFromWrapperChain<Executor, String, Int?>(executorChain, ADAPTED_MSG_KEY)
             fail(value.toString())
         }
     }
@@ -46,15 +48,15 @@ class WrapperAdapterTest : FunSpec({
     @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
     test("argument null") {
         shouldThrow<NullPointerException> {
-            Inspector.getAttachment<Executor, String, String?>(null, ADAPTED_MSG_KEY)
+            getAttachmentFromWrapperChain<Executor, String, String?>(null, ADAPTED_MSG_KEY)
         }.message shouldBe "wrapper is null"
 
         shouldThrow<NullPointerException> {
-            Inspector.getAttachment<Executor, String, String?>(executorChain, null)
+            getAttachmentFromWrapperChain<Executor, String, String?>(executorChain, null)
         }.message shouldBe "key is null"
     }
 
-    test("travel IllegalStateException - the adaptee of WrapperAdapter is a wrapper instance") {
+    test("travelWrapperChain IllegalStateException - the adaptee of WrapperAdapter is type wrapper") {
         val chain: Executor = ChattyExecutorWrapper { runnable -> runnable.run() }
             .let(::ChattyExecutorWrapperAdapter)
 
@@ -63,15 +65,15 @@ class WrapperAdapterTest : FunSpec({
                 " is type Wrapper, adapting a Wrapper to a Wrapper is unnecessary!"
 
         shouldThrow<IllegalStateException> {
-            Inspector.isInstanceOf(chain, ExecutorService::class.java)
+            containsInstanceOnWrapperChain(chain, ExecutorService::class.java)
         }.message shouldBe errMsg
         // first instance is ok, not trigger the check logic yet...
-        Inspector.isInstanceOf(chain, Executor::class.java).shouldBeTrue()
-        Inspector.isInstanceOf(chain, ChattyExecutorWrapperAdapter::class.java).shouldBeTrue()
+        containsInstanceOnWrapperChain(chain, Executor::class.java).shouldBeTrue()
+        containsInstanceOnWrapperChain(chain, ChattyExecutorWrapperAdapter::class.java).shouldBeTrue()
 
 
         shouldThrow<IllegalStateException> {
-            Inspector.getAttachment(chain, "k1")
+            getAttachmentFromWrapperChain(chain, "k1")
         }.message shouldBe errMsg
     }
 })

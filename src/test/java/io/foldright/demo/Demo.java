@@ -4,6 +4,9 @@ import io.foldright.inspectablewrappers.Inspector;
 
 import java.util.concurrent.Executor;
 
+import static io.foldright.inspectablewrappers.Inspector.containsInstanceOnWrapperChain;
+import static io.foldright.inspectablewrappers.Inspector.getAttachmentFromWrapperChain;
+
 
 public class Demo {
     public static void main(String[] args) {
@@ -14,10 +17,10 @@ public class Demo {
         ////////////////////////////////////////
 
         System.out.println("Is executor lazy? " +
-                Inspector.isInstanceOf(executor, LazyExecutorWrapper.class));
+                containsInstanceOnWrapperChain(executor, LazyExecutorWrapper.class));
         // print true
 
-        String busy = Inspector.getAttachment(executor, "busy");
+        String busy = getAttachmentFromWrapperChain(executor, "busy");
         System.out.println("Is executor busy? " + busy);
         // print "very, very busy!"
 

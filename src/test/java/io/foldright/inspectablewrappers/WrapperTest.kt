@@ -1,5 +1,7 @@
 package io.foldright.inspectablewrappers
 
+import io.foldright.inspectablewrappers.Inspector.containsInstanceOnWrapperChain
+import io.foldright.inspectablewrappers.Inspector.getAttachmentFromWrapperChain
 import io.foldright.inspectablewrappers.utils.AttachableDelegate
 import io.kotest.assertions.fail
 import io.kotest.assertions.throwables.shouldThrow
@@ -19,19 +21,19 @@ class WrapperTest : FunSpec({
         .let(::ChattyExecutorWrapper)
 
     test("wrapper") {
-        Inspector.isInstanceOf(executorChain, LazyExecutorWrapper::class.java).shouldBeTrue()
-        Inspector.isInstanceOf(executorChain, ChattyExecutorWrapper::class.java).shouldBeTrue()
-        Inspector.isInstanceOf(executorChain, ExecutorService::class.java).shouldBeFalse()
+        containsInstanceOnWrapperChain(executorChain, LazyExecutorWrapper::class.java).shouldBeTrue()
+        containsInstanceOnWrapperChain(executorChain, ChattyExecutorWrapper::class.java).shouldBeTrue()
+        containsInstanceOnWrapperChain(executorChain, ExecutorService::class.java).shouldBeFalse()
 
-        val value: String? = Inspector.getAttachment(executorChain, "busy")
+        val value: String? = getAttachmentFromWrapperChain(executorChain, "busy")
         value shouldBe "very, very busy!"
 
-        Inspector.getAttachment<Executor, String, String?>(executorChain, "not existed").shouldBeNull()
+        getAttachmentFromWrapperChain<Executor, String, String?>(executorChain, "not existed").shouldBeNull()
     }
 
     test("ClassCastException") {
         shouldThrow<ClassCastException> {
-            val value = Inspector.getAttachment<Executor, String, Int?>(executorChain, "busy")
+            val value = getAttachmentFromWrapperChain<Executor, String, Int?>(executorChain, "busy")
             fail(value.toString())
         }
     }
@@ -39,25 +41,25 @@ class WrapperTest : FunSpec({
     @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
     test("argument null") {
         shouldThrow<NullPointerException> {
-            Inspector.getAttachment<Executor, String, String?>(null, "busy")
+            getAttachmentFromWrapperChain<Executor, String, String?>(null, "busy")
         }.message shouldBe "wrapper is null"
 
         shouldThrow<NullPointerException> {
-            Inspector.getAttachment<Executor, String, String?>(executorChain, null)
+            getAttachmentFromWrapperChain<Executor, String, String?>(executorChain, null)
         }.message shouldBe "key is null"
     }
 
-    test("inspect last instance - isInstanceOf") {
+    test("inspect last instance - containsInstanceOnWrapperChain") {
         val pool = Executors.newCachedThreadPool()
-        Inspector.isInstanceOf(pool, ExecutorService::class.java).shouldBeTrue()
+        containsInstanceOnWrapperChain(pool, ExecutorService::class.java).shouldBeTrue()
 
         val chatty = ChattyExecutorWrapper(pool)
-        Inspector.isInstanceOf(chatty, ExecutorService::class.java).shouldBeTrue()
+        containsInstanceOnWrapperChain(chatty, ExecutorService::class.java).shouldBeTrue()
     }
 
-    test("inspect last instance - getAttachment") {
+    test("inspect last instance - getAttachmentFromWrapperChain") {
         val attachable = AttachableDelegate<String, String>().apply { setAttachment("k1", "v1") }
-        Inspector.getAttachment<Any, String, String?>(attachable, "k1") shouldBe "v1"
+        getAttachmentFromWrapperChain<Any, String, String?>(attachable, "k1") shouldBe "v1"
 
         val base = object : Executor, Attachable<String, String> by AttachableDelegate() {
             override fun execute(command: Runnable) {
@@ -65,10 +67,10 @@ class WrapperTest : FunSpec({
             }
         }
         base.setAttachment("k1", "v1")
-        Inspector.getAttachment<Any, String, String?>(base, "k1") shouldBe "v1"
+        getAttachmentFromWrapperChain<Any, String, String?>(base, "k1") shouldBe "v1"
 
         val c2 = ChattyExecutorWrapper(base)
-        Inspector.getAttachment<Any, String, String?>(c2, "k1") shouldBe "v1"
+        getAttachmentFromWrapperChain<Any, String, String?>(c2, "k1") shouldBe "v1"
     }
 })
 

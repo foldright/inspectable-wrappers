@@ -48,8 +48,8 @@ The purpose of **Inspectable Wrappers** is to provide a standard for wrapper cha
     enhance the wrapper instances with the attachment storage ability
   - [`WrapperAdapter`](src/main/java/io/foldright/inspectablewrappers/WrapperAdapter.java) interface is used to
     adapt an existed wrapper instance to type `Wrapper` without modifying it
-- The [`Inspector`](src/main/java/io/foldright/inspectablewrappers/Inspector.java) class is used to inspect the **wrapper
-  chain**
+- The [`Inspector`](src/main/java/io/foldright/inspectablewrappers/Inspector.java) class is used to
+  inspect the **wrapper chain**
 
 ## 🌰 Usage Demo
 
@@ -125,10 +125,10 @@ public class Demo {
     ////////////////////////////////////////
 
     System.out.println("Is executor lazy? " +
-        Inspector.isInstanceOf(executor, LazyExecutorWrapper.class));
+        containsInstanceOnWrapperChain(executor, LazyExecutorWrapper.class));
     // print true
 
-    String busy = Inspector.getAttachment(executor, "busy");
+    String busy = getAttachmentFromWrapperChain(executor, "busy");
     System.out.println("Is executor busy? " + busy);
     // print "very, very busy!"
 
@@ -205,9 +205,9 @@ public class IntegrationDemo {
     ////////////////////////////////////////
 
     System.out.println("Is executor ExistedExecutorWrapper? " +
-        Inspector.isInstanceOf(executor, ExistedExecutorWrapper.class));
+        containsInstanceOnWrapperChain(executor, ExistedExecutorWrapper.class));
     // print true
-    String adaptAttachment = Inspector.getAttachment(executor, "adapted-existed-executor-wrapper-msg");
+    String adaptAttachment = getAttachmentFromWrapperChain(executor, "adapted-existed-executor-wrapper-msg");
     System.out.println("Adapted existed executor wrapper msg: " + adaptAttachment);
     // print "I'm an adapter of an existed executor which have nothing to do with ~inspectable~wrappers~."
 

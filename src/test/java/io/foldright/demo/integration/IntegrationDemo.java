@@ -4,12 +4,14 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.ReturnValuesAreNonnullByDefault;
 import io.foldright.demo.ChattyExecutorWrapper;
 import io.foldright.inspectablewrappers.Attachable;
-import io.foldright.inspectablewrappers.Inspector;
 import io.foldright.inspectablewrappers.WrapperAdapter;
 import io.foldright.inspectablewrappers.utils.AttachableDelegate;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.concurrent.Executor;
+
+import static io.foldright.inspectablewrappers.Inspector.containsInstanceOnWrapperChain;
+import static io.foldright.inspectablewrappers.Inspector.getAttachmentFromWrapperChain;
 
 
 @ParametersAreNonnullByDefault
@@ -23,9 +25,9 @@ public class IntegrationDemo {
         ////////////////////////////////////////
 
         System.out.println("Is executor ExistedExecutorWrapper? " +
-                Inspector.isInstanceOf(executor, ExistedExecutorWrapper.class));
+                containsInstanceOnWrapperChain(executor, ExistedExecutorWrapper.class));
         // print true
-        String adaptAttachment = Inspector.getAttachment(executor, "adapted-existed-executor-wrapper-msg");
+        String adaptAttachment = getAttachmentFromWrapperChain(executor, "adapted-existed-executor-wrapper-msg");
         System.out.println("Adapted existed executor wrapper msg: " + adaptAttachment);
         // print "I'm an adapter of an existed executor which have nothing to do with ~inspectable~wrappers~."
 
