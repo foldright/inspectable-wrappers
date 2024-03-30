@@ -25,7 +25,7 @@ The purpose of **Inspectable Wrappers** is to provide a standard for wrapper cha
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [🥑 Core Files](#-core-files)
+- [🍡 Files](#-files)
 - [🌰 Usage Demo](#-usage-demo)
   - [wrapper implementations in your application code](#wrapper-implementations-in-your-application-code)
   - [inspection of the wrapper chain](#inspection-of-the-wrapper-chain)
@@ -39,9 +39,9 @@ The purpose of **Inspectable Wrappers** is to provide a standard for wrapper cha
 
 --------------------------------------------------------------------------------
 
-## 🥑 Core Files
+## 🍡 Files
 
-- The specification interfaces:
+- The core interfaces/specification interfaces:
   - [`Wrapper`](src/main/java/io/foldright/inspectablewrappers/Wrapper.java) interface is used to
     be implemented by wrapper classes, make an **inspectable wrapper chain**(linked list)
   - [`Attachable`](src/main/java/io/foldright/inspectablewrappers/Attachable.java) interface is used to
@@ -50,6 +50,12 @@ The purpose of **Inspectable Wrappers** is to provide a standard for wrapper cha
     adapt an existed wrapper instance to type `Wrapper` without modifying it
 - The [`Inspector`](src/main/java/io/foldright/inspectablewrappers/Inspector.java) class is used to
   inspect the **wrapper chain**
+- Util classes:
+  - [`AttachableDelegate`](src/main/java/io/foldright/inspectablewrappers/utils/AttachableDelegate.java) class
+    provides a simple `Attachable` delegate implementation.
+  - [`WrapperAdapterUtils`](src/main/java/io/foldright/inspectablewrappers/utils/WrapperAdapterUtils.java) class
+    provides utility methods for creating `WrapperAdapter` instances
+    without writing the boilerplate code to create a new adapter class.
 
 ## 🌰 Usage Demo
 

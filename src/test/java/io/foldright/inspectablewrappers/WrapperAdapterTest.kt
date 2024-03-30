@@ -11,6 +11,7 @@ import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldStartWith
 import java.util.concurrent.Executor
 import java.util.concurrent.ExecutorService
 
@@ -48,9 +49,12 @@ class WrapperAdapterTest : FunSpec({
                     existed,
                     AttachableDelegate<String, String>(),
                 )
+                adapter.toString() shouldStartWith "[WrapperAdapterProxy created by WrapperAdapterUtils] "
+
                 val attachable = adapter as Attachable<String, String>
                 attachable.setAttachment(ADAPTED_MSG_KEY, ADAPTED_MSG_VALUE)
                 attachable.getAttachment(ADAPTED_MSG_KEY) shouldBe ADAPTED_MSG_VALUE
+
                 adapter
             }
             .let(::ChattyExecutorWrapper)
