@@ -74,6 +74,8 @@ public final class WrapperAdapterUtils {
     @SuppressWarnings({"unchecked", "rawtypes"})
     private static <T> T createWrapperAdapter0(
             Class<T> bizInterface, T underlying, T adaptee, @Nullable Attachable<?, ?> attachable) {
+        checkTypeRequirements(bizInterface, underlying, adaptee);
+
         final InvocationHandler handler = (proxy, method, args) -> {
             if (UNWRAP.sameSignatureAs(method)) return underlying;
             if (ADAPTEE.sameSignatureAs(method)) return adaptee;
@@ -99,6 +101,32 @@ public final class WrapperAdapterUtils {
                         ? new Class[]{bizInterface, WrapperAdapter.class}
                         : new Class[]{bizInterface, WrapperAdapter.class, Attachable.class},
                 handler);
+    }
+
+    private static <T> void checkTypeRequirements(Class<T> bizInterface, T underlying, T adaptee) {
+        if (!bizInterface.isInterface()) {
+            throw new IllegalArgumentException("bizInterface(" + bizInterface.getName() + ") is not an interface");
+        }
+        if (bizInterface == Wrapper.class
+                || bizInterface == WrapperAdapter.class
+                || bizInterface == Attachable.class) {
+            throw new IllegalArgumentException(bizInterface.getName() +
+                    " is auto implemented by proxy, not a valid biz interface");
+        }
+
+        if (!bizInterface.isAssignableFrom(underlying.getClass())) {
+            throw new IllegalArgumentException("underlying(" + underlying.getClass().getName() +
+                    ") is not a " + bizInterface.getName());
+        }
+        if (!bizInterface.isAssignableFrom(adaptee.getClass())) {
+            throw new IllegalArgumentException("adaptee(" + adaptee.getClass().getName() +
+                    ") is not a " + bizInterface.getName());
+        }
+
+        if (adaptee instanceof Wrapper) {
+            throw new IllegalArgumentException("adaptee(" + adaptee.getClass().getName() +
+                    ") is type Wrapper, adapting a Wrapper to a Wrapper is unnecessary!");
+        }
     }
 
     /**

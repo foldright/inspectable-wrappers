@@ -3,7 +3,6 @@ package io.foldright.inspectablewrappers
 import io.foldright.inspectablewrappers.Inspector.containsInstanceOnWrapperChain
 import io.foldright.inspectablewrappers.Inspector.getAttachmentFromWrapperChain
 import io.foldright.inspectablewrappers.utils.AttachableDelegate
-import io.foldright.inspectablewrappers.utils.WrapperAdapterUtils.createWrapperAdapter
 import io.kotest.assertions.fail
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
@@ -11,13 +10,12 @@ import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldStartWith
 import java.util.concurrent.Executor
 import java.util.concurrent.ExecutorService
 
 
-private const val ADAPTED_MSG_KEY = "adapted-existed-executor-wrapper-msg"
-private const val ADAPTED_MSG_VALUE =
+const val ADAPTED_MSG_KEY = "adapted-existed-executor-wrapper-msg"
+const val ADAPTED_MSG_VALUE =
     "I'm a adapter of an existed executor which have nothing to do with ~inspectable~wrappers~."
 
 class WrapperAdapterTest : FunSpec({
@@ -37,62 +35,6 @@ class WrapperAdapterTest : FunSpec({
 
         getAttachmentFromWrapperChain<Executor, String, String?>(executorChain, "not existed").shouldBeNull()
     }
-
-    @Suppress("UNCHECKED_CAST")
-    test("WrapperAdapter - createWrapperAdapter with Attachable") {
-        val chain: Executor = Executor { runnable -> runnable.run() }
-            .let {
-                val existed = ExistedExecutorWrapper(it)
-                val adapter = createWrapperAdapter(
-                    Executor::class.java,
-                    it,
-                    existed,
-                    AttachableDelegate<String, String>(),
-                )
-                adapter.toString() shouldStartWith "[WrapperAdapterProxy created by WrapperAdapterUtils] "
-
-                val attachable = adapter as Attachable<String, String>
-                attachable.setAttachment(ADAPTED_MSG_KEY, ADAPTED_MSG_VALUE)
-                attachable.getAttachment(ADAPTED_MSG_KEY) shouldBe ADAPTED_MSG_VALUE
-
-                adapter
-            }
-            .let(::ChattyExecutorWrapper)
-
-        containsInstanceOnWrapperChain(chain, ExistedExecutorWrapper::class.java).shouldBeTrue()
-        containsInstanceOnWrapperChain(chain, ChattyExecutorWrapper::class.java).shouldBeTrue()
-        containsInstanceOnWrapperChain(chain, ExecutorService::class.java).shouldBeFalse()
-
-        val value: String? = getAttachmentFromWrapperChain(chain, ADAPTED_MSG_KEY)
-        value shouldBe ADAPTED_MSG_VALUE
-
-        getAttachmentFromWrapperChain<Executor, String, String?>(chain, "not existed").shouldBeNull()
-
-        // testing the proxy invocation
-        chain.execute { println("I'm working.") }
-    }
-
-    test("WrapperAdapter - createWrapperAdapter without Attachable") {
-        val chain: Executor = Executor { runnable -> runnable.run() }
-            .let {
-                createWrapperAdapter(
-                    Executor::class.java,
-                    it,
-                    ExistedExecutorWrapper(it),
-                )
-            }
-            .let(::ChattyExecutorWrapper)
-
-        containsInstanceOnWrapperChain(chain, ExistedExecutorWrapper::class.java).shouldBeTrue()
-        containsInstanceOnWrapperChain(chain, ChattyExecutorWrapper::class.java).shouldBeTrue()
-        containsInstanceOnWrapperChain(chain, ExecutorService::class.java).shouldBeFalse()
-
-        getAttachmentFromWrapperChain<Executor, String, String?>(chain, "not existed").shouldBeNull()
-
-        // testing the proxy invocation
-        chain.execute { println("I'm working.") }
-    }
-
     test("ClassCastException") {
         shouldThrow<ClassCastException> {
             val value = getAttachmentFromWrapperChain<Executor, String, Int?>(executorChain, ADAPTED_MSG_KEY)
@@ -131,7 +73,6 @@ class WrapperAdapterTest : FunSpec({
         }.message shouldBe errMsg
     }
 })
-
 
 /**
  * Adaption an existed wrapper([ExistedExecutorWrapper]) without modifying it.
