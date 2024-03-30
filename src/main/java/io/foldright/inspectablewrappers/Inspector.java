@@ -21,6 +21,8 @@ import static java.util.Objects.requireNonNull;
  *     by static method {@link #containsInstanceOnWrapperChain(Object, Class)}
  * <li>Retrieves the attachment of instance on the wrapper chain
  *     by static method {@link #getAttachmentFromWrapperChain(Object, Object)}
+ * <li>Verifies the compliance of wrapper chain with the specification contracts
+ *     by static method {@link #verifyWrapperChainContracts(Object)}
  * </ul>
  *
  * <h2>Advanced usages</h2>
@@ -99,6 +101,8 @@ public final class Inspector {
      * @throws ClassCastException    if the return value is not type {@code <V>}
      * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is type {@link Wrapper}
      * @see Attachable#getAttachment(Object)
+     * @see Wrapper#unwrap()
+     * @see WrapperAdapter#adaptee()
      */
     @Nullable
     @SuppressWarnings("unchecked")
@@ -116,6 +120,28 @@ public final class Inspector {
     }
 
     /**
+     * Verifies the compliance of wrapper chain with the specification contracts.
+     * <p>
+     * more about the specification contracts see the doc of below methods:
+     * <ul>
+     * <li>{@link Wrapper#unwrap()}
+     * <li>{@link WrapperAdapter#adaptee()}
+     * </ul>
+     *
+     * @param wrapper wrapper instance
+     * @param <W>     the type of instances that be wrapped
+     * @throws NullPointerException  if wrapped argument is null,
+     *                               or any wrapper {@link Wrapper#unwrap()} returns null,
+     *                               or the adaptee of {@link WrapperAdapter} is null
+     * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is type {@link Wrapper}
+     * @see Wrapper#unwrap()
+     * @see WrapperAdapter#adaptee()
+     */
+    public static <W> void verifyWrapperChainContracts(final W wrapper) {
+        travelWrapperChain(wrapper, w -> Optional.empty());
+    }
+
+    /**
      * Reports whether any instance on the wrapper chain satisfies the given {@code predicate}.
      * <p>
      * The wrapper chain consists of wrapper itself, followed by the wrappers
@@ -130,6 +156,8 @@ public final class Inspector {
      *                               or any wrapper {@link Wrapper#unwrap()} returns null,
      *                               or the adaptee of {@link WrapperAdapter} is null
      * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is type {@link Wrapper}
+     * @see Wrapper#unwrap()
+     * @see WrapperAdapter#adaptee()
      */
     public static <W> boolean testWrapperChain(final W wrapper, final Predicate<? super W> predicate) {
         requireNonNull(wrapper, "wrapper is null");
@@ -158,6 +186,8 @@ public final class Inspector {
      *                               or any wrapper {@link Wrapper#unwrap()} returns null,
      *                               or the adaptee of {@link WrapperAdapter} is null
      * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is type {@link Wrapper}
+     * @see Wrapper#unwrap()
+     * @see WrapperAdapter#adaptee()
      */
     @NonNull
     @SuppressWarnings("unchecked")
