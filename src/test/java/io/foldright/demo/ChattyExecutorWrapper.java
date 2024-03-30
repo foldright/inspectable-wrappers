@@ -1,14 +1,10 @@
 package io.foldright.demo;
 
-import edu.umd.cs.findbugs.annotations.ReturnValuesAreNonnullByDefault;
 import io.foldright.inspectablewrappers.Wrapper;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.concurrent.Executor;
 
 
-@ParametersAreNonnullByDefault
-@ReturnValuesAreNonnullByDefault
 public class ChattyExecutorWrapper implements Executor, Wrapper<Executor> {
     private final Executor executor;
 

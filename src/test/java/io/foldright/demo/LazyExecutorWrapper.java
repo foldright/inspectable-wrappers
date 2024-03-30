@@ -1,17 +1,13 @@
 package io.foldright.demo;
 
 import edu.umd.cs.findbugs.annotations.Nullable;
-import edu.umd.cs.findbugs.annotations.ReturnValuesAreNonnullByDefault;
 import io.foldright.inspectablewrappers.Attachable;
 import io.foldright.inspectablewrappers.Wrapper;
 import io.foldright.inspectablewrappers.utils.AttachableDelegate;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.concurrent.Executor;
 
 
-@ParametersAreNonnullByDefault
-@ReturnValuesAreNonnullByDefault
 public class LazyExecutorWrapper implements Executor, Wrapper<Executor>, Attachable<String, String> {
     private final Executor executor;
 

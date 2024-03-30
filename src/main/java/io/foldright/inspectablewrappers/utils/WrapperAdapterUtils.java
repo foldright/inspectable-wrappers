@@ -1,12 +1,12 @@
 package io.foldright.inspectablewrappers.utils;
 
+import edu.umd.cs.findbugs.annotations.DefaultAnnotationForParameters;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import io.foldright.inspectablewrappers.Attachable;
 import io.foldright.inspectablewrappers.Wrapper;
 import io.foldright.inspectablewrappers.WrapperAdapter;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -23,7 +23,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
-@ParametersAreNonnullByDefault
+@DefaultAnnotationForParameters(NonNull.class)
 public final class WrapperAdapterUtils {
     /**
      * Creates a {@link WrapperAdapter} instance of the given biz interface type by

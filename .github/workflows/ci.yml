@@ -23,18 +23,23 @@ jobs:
           distribution: zulu
           java-version: ${{ matrix.java }}
           cache: maven
-      - run: ./mvnw -V --no-transfer-progress clean package
+      - name: Run dev mode test
+        run: ./mvnw -V --no-transfer-progress clean package
         if: matrix.java != 17
-      - run: ./mvnw -V --no-transfer-progress clean package spotbugs:check git-commit-id:validateRevision -DperformRelease
+      - name: Run release mode test
+        run: ./mvnw -V --no-transfer-progress clean package spotbugs:check git-commit-id:validateRevision -DperformRelease
         if: matrix.java == 17
       # https://github.com/marketplace/actions/codecov
       - uses: codecov/codecov-action@v4
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      - name: Check forbidden classes
+        run: scripts/check-forbidden-classes.sh
+        # https://docs.github.com/en/actions/learn-github-actions/variables#detecting-the-operating-system
+        if: runner.os != 'Windows'
       # https://remarkablemark.org/blog/2017/10/12/check-git-dirty/
       - name: Check git dirty
         run: |
           git status --short
           [ -z "$(git status --short)" ]
-        # https://docs.github.com/en/actions/learn-github-actions/variables#detecting-the-operating-system
         if: runner.os != 'Windows'

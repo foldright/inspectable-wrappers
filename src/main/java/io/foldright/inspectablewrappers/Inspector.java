@@ -1,9 +1,9 @@
 package io.foldright.inspectablewrappers;
 
+import edu.umd.cs.findbugs.annotations.DefaultAnnotationForParameters;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -49,7 +49,7 @@ import static java.util.Objects.requireNonNull;
  * @see Attachable
  * @see WrapperAdapter
  */
-@ParametersAreNonnullByDefault
+@DefaultAnnotationForParameters(NonNull.class)
 public final class Inspector {
     /**
      * Reports whether any instance on the wrapper chain matches the given type.
