@@ -27,10 +27,10 @@ The purpose of **Inspectable Wrappers** is to provide a standard for wrapper cha
 
 - [🍡 Files](#-files)
 - [🌰 Usage Demo](#-usage-demo)
-  - [wrapper implementations in your application code](#wrapper-implementations-in-your-application-code)
+  - [demo wrapper implementations in your application code](#demo-wrapper-implementations-in-your-application-code)
   - [inspection of the wrapper chain](#inspection-of-the-wrapper-chain)
 - [🌰 Integration Demo](#-integration-demo)
-  - [the demo existed wrapper cannot be modified](#the-demo-existed-wrapper-cannot-be-modified)
+  - [the demo existed wrapper which cannot be modified](#the-demo-existed-wrapper-which-cannot-be-modified)
   - [the integration code](#the-integration-code)
 - [🌰 Integration Demo using `WrapperAdapterUtils`](#-integration-demo-using-wrapperadapterutils)
 - [🍼 Java API Docs](#-java-api-docs)
@@ -362,7 +362,7 @@ For `Maven` projects:
 <dependency>
   <groupId>io.foldright</groupId>
   <artifactId>inspectable-wrappers</artifactId>
-  <version>0.5.2</version>
+  <version>0.5.3</version>
 </dependency>
 ```
 
@@ -370,12 +370,12 @@ For `Gradle` projects:
 
 ```groovy
 // Gradle Kotlin DSL
-implementation("io.foldright:inspectable-wrappers:0.5.2")
+implementation("io.foldright:inspectable-wrappers:0.5.3")
 ```
 
 ```groovy
 // Gradle Groovy DSL
-implementation 'io.foldright:inspectable-wrappers:0.5.2'
+implementation 'io.foldright:inspectable-wrappers:0.5.3'
 ```
 
 `inspectable-wrappers` has published to maven central, find the latest version at [central.sonatype.com](https://central.sonatype.com/artifact/io.foldright/inspectable-wrappers/0.3.0/versions).
