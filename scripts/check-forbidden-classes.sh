@@ -5,25 +5,27 @@ set -eEuo pipefail
 cd "${0%/*}"/..
 
 readonly forbidden_classes=(
-  # use edu.umd.cs.findbugs.annotations.Nullable
+  # prefer edu.umd.cs.findbugs.annotations.Nullable
   javax.annotation.Nullable
   org.jetbrains.annotations.Nullable
 
-  # use edu.umd.cs.findbugs.annotations.NonNull
+  # prefer edu.umd.cs.findbugs.annotations.NonNull
   javax.annotation.Nonnull
   org.jetbrains.annotations.NotNull
 
-  # use edu.umd.cs.findbugs.annotations.CheckForNull
+  # prefer edu.umd.cs.findbugs.annotations.CheckForNull
   javax.annotation.CheckReturnValue
   org.jetbrains.annotations.CheckReturnValue
 
-  # use @edu.umd.cs.findbugs.annotations.DefaultAnnotationForParameters(NonNull.class)
+  # prefer @edu.umd.cs.findbugs.annotations.DefaultAnnotationForParameters(NonNull.class)
   javax.annotation.ParametersAreNonnullByDefault
+
+  # prefer static import methods of `Assertions`
+  org.junit.jupiter.api.Assertions\;
 )
 
 grep_pattern=$(printf '%s\n' "${forbidden_classes[@]}")
+[[ "${GITHUB_ACTIONS:-}" = true || -t 1 ]] && more_grep_options=(--color=always)
+readonly grep_pattern more_grep_options
 
-grep_options=("$grep_pattern" -F -n -C2 -r src/)
-[[ "${GITHUB_ACTIONS:-}" = true || -t 1 ]] && grep_options=("${grep_options[@]}" --color=always)
-
-! grep "${grep_options[@]}"
+! grep "$grep_pattern" -F ${more_grep_options[@]:+"${more_grep_options[@]}"} -n -C2 -r src/

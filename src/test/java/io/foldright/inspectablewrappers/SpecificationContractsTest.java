@@ -1,12 +1,12 @@
 package io.foldright.inspectablewrappers;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.Executor;
 
 import static io.foldright.inspectablewrappers.Inspector.verifyWrapperChainContracts;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
 
 class SpecificationContractsTest {
@@ -18,7 +18,7 @@ class SpecificationContractsTest {
     void test_null_unwrap() {
         Executor w = new WrapperImpl(null);
 
-        NullPointerException e = Assertions.assertThrowsExactly(NullPointerException.class, () -> verifyWrapperChainContracts(w));
+        NullPointerException e = assertThrowsExactly(NullPointerException.class, () -> verifyWrapperChainContracts(w));
         String expected = "unwrap of Wrapper(io.foldright.inspectablewrappers.SpecificationContractsTest$WrapperImpl) is null";
         assertEquals(expected, e.getMessage());
     }
@@ -27,7 +27,7 @@ class SpecificationContractsTest {
     void test_null_adaptee() {
         Executor w = new WrapperAdapterImpl(DUMMY, null);
 
-        NullPointerException e = Assertions.assertThrowsExactly(NullPointerException.class, () -> verifyWrapperChainContracts(w));
+        NullPointerException e = assertThrowsExactly(NullPointerException.class, () -> verifyWrapperChainContracts(w));
         String expected = "adaptee of WrapperAdapter(io.foldright.inspectablewrappers.SpecificationContractsTest$WrapperAdapterImpl) is null";
         assertEquals(expected, e.getMessage());
     }
@@ -36,7 +36,7 @@ class SpecificationContractsTest {
     void test_Wrap_type_adaptee() {
         Executor w = new WrapperAdapterImpl(DUMMY, new WrapperImpl(null));
 
-        IllegalStateException e = Assertions.assertThrowsExactly(IllegalStateException.class, () -> verifyWrapperChainContracts(w));
+        IllegalStateException e = assertThrowsExactly(IllegalStateException.class, () -> verifyWrapperChainContracts(w));
         String expected = "adaptee(io.foldright.inspectablewrappers.SpecificationContractsTest$WrapperImpl)" +
                 " of WrapperAdapter(io.foldright.inspectablewrappers.SpecificationContractsTest$WrapperAdapterImpl)" +
                 " is an instance of Wrapper, adapting a Wrapper to a Wrapper is unnecessary!";
