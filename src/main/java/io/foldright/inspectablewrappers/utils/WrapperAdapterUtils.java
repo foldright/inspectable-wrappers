@@ -137,7 +137,7 @@ public final class WrapperAdapterUtils {
 
         if (adaptee instanceof Wrapper) {
             throw new IllegalArgumentException("adaptee(" + adaptee.getClass().getName() +
-                    ") is an instance of Wrapper, adapting a Wrapper to a Wrapper is unnecessary!");
+                    ") is an instance of Wrapper, adapting a Wrapper to a Wrapper is UNNECESSARY");
         }
     }
 

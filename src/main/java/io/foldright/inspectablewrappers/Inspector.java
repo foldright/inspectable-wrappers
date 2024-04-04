@@ -4,6 +4,7 @@ import edu.umd.cs.findbugs.annotations.DefaultAnnotationForParameters;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+import java.util.IdentityHashMap;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -66,6 +67,7 @@ public final class Inspector {
      *                               or any wrapper {@link Wrapper#unwrap()} returns null,
      *                               or the adaptee of {@link WrapperAdapter} is null
      * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is an instance of {@link Wrapper}
+     *                               or CYCLIC wrapper chain
      * @see Wrapper#unwrap()
      * @see WrapperAdapter#adaptee()
      */
@@ -100,6 +102,7 @@ public final class Inspector {
      *                               or the adaptee of {@link WrapperAdapter} is null
      * @throws ClassCastException    if the return value is not type {@code <V>}
      * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is an instance of {@link Wrapper}
+     *                               or CYCLIC wrapper chain
      * @see Attachable#getAttachment(Object)
      * @see Wrapper#unwrap()
      * @see WrapperAdapter#adaptee()
@@ -134,6 +137,7 @@ public final class Inspector {
      *                               or any wrapper {@link Wrapper#unwrap()} returns null,
      *                               or the adaptee of {@link WrapperAdapter} is null
      * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is an instance of {@link Wrapper}
+     *                               or CYCLIC wrapper chain
      * @see Wrapper#unwrap()
      * @see WrapperAdapter#adaptee()
      */
@@ -156,6 +160,7 @@ public final class Inspector {
      *                               or any wrapper {@link Wrapper#unwrap()} returns null,
      *                               or the adaptee of {@link WrapperAdapter} is null
      * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is an instance of {@link Wrapper}
+     *                               or CYCLIC wrapper chain
      * @see Wrapper#unwrap()
      * @see WrapperAdapter#adaptee()
      */
@@ -186,6 +191,7 @@ public final class Inspector {
      *                               or any wrapper {@link Wrapper#unwrap()} returns null,
      *                               or the adaptee of {@link WrapperAdapter} is null
      * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is an instance of {@link Wrapper}
+     *                               or CYCLIC wrapper chain
      * @see Wrapper#unwrap()
      * @see WrapperAdapter#adaptee()
      */
@@ -195,8 +201,11 @@ public final class Inspector {
         requireNonNull(wrapper, "wrapper is null");
         requireNonNull(process, "process is null");
 
+        final IdentityHashMap<Object, ?> history = new IdentityHashMap<>();
         Object w = wrapper;
         while (true) {
+            history.put(w, null);
+
             // process the instance on wrapper chain
             Optional<T> result = process.apply((W) w);
             if (result.isPresent()) return result;
@@ -209,6 +218,10 @@ public final class Inspector {
 
             if (!(w instanceof Wrapper)) return Optional.empty();
             w = unwrapNonNull(w);
+            if (history.containsKey(w)) {
+                throw new IllegalStateException("CYCLIC wrapper chain" +
+                        ", duplicate instance of " + w.getClass().getName());
+            }
         }
     }
 
@@ -224,7 +237,7 @@ public final class Inspector {
         if (adaptee instanceof Wrapper) {
             throw new IllegalStateException("adaptee(" + adaptee.getClass().getName() +
                     ") of WrapperAdapter(" + wrapper.getClass().getName() +
-                    ") is an instance of Wrapper, adapting a Wrapper to a Wrapper is unnecessary!");
+                    ") is an instance of Wrapper, adapting a Wrapper to a Wrapper is UNNECESSARY");
         }
 
         return adaptee;

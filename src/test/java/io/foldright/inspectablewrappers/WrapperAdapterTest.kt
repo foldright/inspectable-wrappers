@@ -59,7 +59,7 @@ class WrapperAdapterTest : FunSpec({
 
         val errMsg = "adaptee(io.foldright.inspectablewrappers.ChattyExecutorWrapper)" +
                 " of WrapperAdapter(io.foldright.inspectablewrappers.ChattyExecutorWrapperAdapter)" +
-                " is an instance of Wrapper, adapting a Wrapper to a Wrapper is unnecessary!"
+                " is an instance of Wrapper, adapting a Wrapper to a Wrapper is UNNECESSARY"
 
         shouldThrow<IllegalStateException> {
             containsInstanceOnWrapperChain(chain, ExecutorService::class.java)

@@ -18,7 +18,8 @@ class SpecificationContractsTest {
     void test_null_unwrap() {
         Executor w = new WrapperImpl(null);
 
-        NullPointerException e = assertThrowsExactly(NullPointerException.class, () -> verifyWrapperChainContracts(w));
+        NullPointerException e = assertThrowsExactly(NullPointerException.class,
+                () -> verifyWrapperChainContracts(w));
         String expected = "unwrap of Wrapper(io.foldright.inspectablewrappers.SpecificationContractsTest$WrapperImpl) is null";
         assertEquals(expected, e.getMessage());
     }
@@ -27,7 +28,9 @@ class SpecificationContractsTest {
     void test_null_adaptee() {
         Executor w = new WrapperAdapterImpl(DUMMY, null);
 
-        NullPointerException e = assertThrowsExactly(NullPointerException.class, () -> verifyWrapperChainContracts(w));
+        NullPointerException e = assertThrowsExactly(NullPointerException.class,
+                () -> verifyWrapperChainContracts(w));
+
         String expected = "adaptee of WrapperAdapter(io.foldright.inspectablewrappers.SpecificationContractsTest$WrapperAdapterImpl) is null";
         assertEquals(expected, e.getMessage());
     }
@@ -36,10 +39,27 @@ class SpecificationContractsTest {
     void test_Wrap_type_adaptee() {
         Executor w = new WrapperAdapterImpl(DUMMY, new WrapperImpl(null));
 
-        IllegalStateException e = assertThrowsExactly(IllegalStateException.class, () -> verifyWrapperChainContracts(w));
+        IllegalStateException e = assertThrowsExactly(IllegalStateException.class,
+                () -> verifyWrapperChainContracts(w));
+
         String expected = "adaptee(io.foldright.inspectablewrappers.SpecificationContractsTest$WrapperImpl)" +
                 " of WrapperAdapter(io.foldright.inspectablewrappers.SpecificationContractsTest$WrapperAdapterImpl)" +
-                " is an instance of Wrapper, adapting a Wrapper to a Wrapper is unnecessary!";
+                " is an instance of Wrapper, adapting a Wrapper to a Wrapper is UNNECESSARY";
+        assertEquals(expected, e.getMessage());
+    }
+
+    @Test
+    void testCyclicWrapperChain() {
+        MutableWrapperImpl w1 = new MutableWrapperImpl();
+        MutableWrapperImpl w2 = new MutableWrapperImpl();
+        w1.instance = w2;
+        w2.instance = w1;
+
+        IllegalStateException e = assertThrowsExactly(IllegalStateException.class,
+                () -> verifyWrapperChainContracts(w2));
+
+        String expected = "CYCLIC wrapper chain, duplicate instance of" +
+                " io.foldright.inspectablewrappers.SpecificationContractsTest$MutableWrapperImpl";
         assertEquals(expected, e.getMessage());
     }
 
@@ -77,6 +97,19 @@ class SpecificationContractsTest {
         @Override
         public Executor adaptee() {
             return adaptee;
+        }
+
+        @Override
+        public void execute(Runnable command) {
+        }
+    }
+
+    private static class MutableWrapperImpl implements Wrapper<Executor>, Executor {
+        Executor instance;
+
+        @Override
+        public Executor unwrap() {
+            return instance;
         }
 
         @Override

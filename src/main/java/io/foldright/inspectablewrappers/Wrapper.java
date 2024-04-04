@@ -27,13 +27,20 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public interface Wrapper<T> {
     /**
      * Returns the underlying instance that be wrapped.
-     * This method also make the wrapper instances as a wrapper chain(linked list).
+     * <p>
+     * This method also make the wrapper instances as a <strong>wrapper chain</strong>(linked list),
+     * The wrapper chain consists of wrapper itself, followed by the wrappers
+     * obtained by repeatedly calling this method.
      * <p>
      * <strong>Specification contracts:</strong>
-     * <p>
-     * Do NOT return {@code null} which makes no sense.<br>
-     * If returns {@code null}, the inspection operations of {@link Inspector} will
-     * throw {@link NullPointerException} when touch the {@code unwrap}.
+     * <ul>
+     * <li>Do NOT return {@code null} which makes no sense.<br>
+     *     If returns {@code null}, the inspection operations of {@link Inspector} will
+     *     throw {@link NullPointerException} when touch the {@code null unwrap value}.
+     * <li>The wrapper chain can NOT be CYCLIC(aka. the return value/wrapper instance
+     *     is duplicate on the wrapper chain).<br>If cyclic, the inspection operations of {@link Inspector}
+     *     will throw {@link IllegalStateException} when touch the {@code duplicate unwrap instance}.
+     * </ul>
      */
     @NonNull
     T unwrap();

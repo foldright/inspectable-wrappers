@@ -76,7 +76,7 @@ class WrapperAdapterUtilsTest : FunSpec({
         shouldThrow<IllegalArgumentException> {
             createWrapperAdapter(Executor::class.java, executor, wrongAdaptee)
         }.message shouldBe "adaptee(io.foldright.inspectablewrappers.utils.WrongWrapperAdapter) is an instance of Wrapper," +
-                " adapting a Wrapper to a Wrapper is unnecessary!"
+                " adapting a Wrapper to a Wrapper is UNNECESSARY"
     }
 
     @Suppress("UNCHECKED_CAST")
