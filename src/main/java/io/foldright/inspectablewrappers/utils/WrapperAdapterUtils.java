@@ -49,7 +49,7 @@ public final class WrapperAdapterUtils {
                 requireNonNull(bizInterface, "bizInterface is null"),
                 requireNonNull(underlying, "underlying is null"),
                 requireNonNull(adaptee, "adaptee is null"),
-                null);
+                null, null);
     }
 
     /**
@@ -80,13 +80,49 @@ public final class WrapperAdapterUtils {
                 requireNonNull(bizInterface, "bizInterface is null"),
                 requireNonNull(underlying, "underlying is null"),
                 requireNonNull(adaptee, "adaptee is null"),
-                requireNonNull(attachable, "attachable is null"));
+                requireNonNull(attachable, "attachable is null"),
+                null);
+    }
+
+    /**
+     * Same as {@link #createWrapperAdapter(Class, Object, Object)},
+     * but the returned {@link WrapperAdapter} instance also implements the given tag interfaces.
+     *
+     * @see #createWrapperAdapter(Class, Object, Object)
+     */
+    @NonNull
+    public static <T> T createWrapperAdapter(
+            Class<? super T> bizInterface, T underlying, T adaptee, Class<?>... tagInterfaces) {
+        return createWrapperAdapter0(
+                requireNonNull(bizInterface, "bizInterface is null"),
+                requireNonNull(underlying, "underlying is null"),
+                requireNonNull(adaptee, "adaptee is null"),
+                null,
+                requireTagsNonNull(tagInterfaces));
+    }
+
+    /**
+     * Same as {@link #createWrapperAdapter(Class, Object, Object, Attachable)},
+     * but the returned {@link WrapperAdapter} instance also implements the given tag interfaces.
+     *
+     * @see #createWrapperAdapter(Class, Object, Object, Attachable)
+     */
+    @NonNull
+    public static <T> T createWrapperAdapter(Class<? super T> bizInterface, T underlying, T adaptee,
+                                             Attachable<?, ?> attachable, Class<?>... tagInterfaces) {
+        return createWrapperAdapter0(
+                requireNonNull(bizInterface, "bizInterface is null"),
+                requireNonNull(underlying, "underlying is null"),
+                requireNonNull(adaptee, "adaptee is null"),
+                requireNonNull(attachable, "attachable is null"),
+                requireTagsNonNull(tagInterfaces));
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     private static <T> T createWrapperAdapter0(
-            Class<? super T> bizInterface, T underlying, T adaptee, @Nullable Attachable<?, ?> attachable) {
-        checkTypeRequirements(bizInterface, underlying, adaptee);
+            Class<? super T> bizInterface, T underlying, T adaptee,
+            @Nullable Attachable<?, ?> attachable, @Nullable Class<?>[] tagInterfaces) {
+        checkTypeRequirements(bizInterface, underlying, adaptee, tagInterfaces);
 
         final InvocationHandler handler = (proxy, method, args) -> {
             if (UNWRAP.sameSignatureAs(method)) return underlying;
@@ -110,12 +146,13 @@ public final class WrapperAdapterUtils {
         return (T) Proxy.newProxyInstance(
                 adaptee.getClass().getClassLoader(),
                 attachable == null
-                        ? new Class[]{bizInterface, WrapperAdapter.class}
-                        : new Class[]{bizInterface, WrapperAdapter.class, Attachable.class},
+                        ? merge(new Class[]{bizInterface, WrapperAdapter.class}, tagInterfaces)
+                        : merge(new Class[]{bizInterface, WrapperAdapter.class, Attachable.class}, tagInterfaces),
                 handler);
     }
 
-    private static <T> void checkTypeRequirements(Class<T> bizInterface, T underlying, T adaptee) {
+    private static <T> void checkTypeRequirements(
+            Class<T> bizInterface, T underlying, T adaptee, @Nullable Class<?>[] tagInterfaces) {
         if (!bizInterface.isInterface()) {
             throw new IllegalArgumentException("bizInterface(" + bizInterface.getName() + ") is not an interface");
         }
@@ -139,6 +176,34 @@ public final class WrapperAdapterUtils {
             throw new IllegalArgumentException("adaptee(" + adaptee.getClass().getName() +
                     ") is an instance of Wrapper, adapting a Wrapper to a Wrapper is UNNECESSARY");
         }
+
+        if (tagInterfaces != null) for (int i = 0; i < tagInterfaces.length; i++) {
+            Class<?> tag = tagInterfaces[i];
+            if (!tag.isInterface()) {
+                throw new IllegalArgumentException("tagInterfaces[" + (i + 1) + "]" +
+                        "(" + tag.getName() + ") is not an interface");
+            }
+            if (tag.getMethods().length > 0) {
+                throw new IllegalArgumentException("tagInterfaces[" + (i + 1) + "]" +
+                        "(" + tag.getName() + ") is not a tag interface");
+            }
+        }
+    }
+
+    private static Class<?>[] requireTagsNonNull(Class<?>[] tagInterfaces) {
+        requireNonNull(tagInterfaces, "tagInterfaces is null");
+        for (int i = 0; i < tagInterfaces.length; i++) {
+            requireNonNull(tagInterfaces[i], "tagInterfaces[" + (i + 1) + "] is null");
+        }
+        return tagInterfaces;
+    }
+
+    private static Class<?>[] merge(Class<?>[] a1, @Nullable Class<?>[] a2) {
+        if (a2 == null) return a1;
+        Class<?>[] ret = new Class<?>[a1.length + a2.length];
+        System.arraycopy(a1, 0, ret, 0, a1.length);
+        System.arraycopy(a2, 0, ret, a1.length, a2.length);
+        return ret;
     }
 
     /**

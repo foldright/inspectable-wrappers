@@ -17,16 +17,16 @@ import java.util.concurrent.Executors
 import java.util.concurrent.ThreadPoolExecutor
 
 class WrapperAdapterUtilsTest : FunSpec({
+    val dummy = Executor { it.run() }
+
     @Suppress("UNCHECKED_CAST")
     test("createWrapperAdapter with Attachable") {
-        val chain: Executor = Executor { runnable -> runnable.run() }
+        val chain: Executor = dummy
             .let {
                 val existed = ExistedExecutorWrapper(it)
                 val adapter = createWrapperAdapter(
-                    Executor::class.java,
-                    it,
-                    existed,
-                    AttachableDelegate<String, String>(),
+                    Executor::class.java, it, existed,
+                    AttachableDelegate<String, String>()
                 )
                 adapter.toString() shouldStartWith "[WrapperAdapter proxy created by WrapperAdapterUtils] "
 
@@ -52,14 +52,8 @@ class WrapperAdapterUtilsTest : FunSpec({
     }
 
     test("createWrapperAdapter without Attachable") {
-        val chain: Executor = Executor { runnable -> runnable.run() }
-            .let {
-                createWrapperAdapter(
-                    Executor::class.java,
-                    it,
-                    ExistedExecutorWrapper(it),
-                )
-            }
+        val chain: Executor = dummy
+            .let { createWrapperAdapter(Executor::class.java, it, ExistedExecutorWrapper(it)) }
             .let(::ChattyExecutorWrapper)
 
         containsInstanceTypeOnWrapperChain(chain, ExistedExecutorWrapper::class.java).shouldBeTrue()
@@ -72,11 +66,42 @@ class WrapperAdapterUtilsTest : FunSpec({
         chain.execute { println("I'm working.") }
     }
 
+    test("createWrapperAdapter with tag") {
+        createWrapperAdapter(Executor::class.java, dummy, ExistedExecutorWrapper(dummy), Tag1::class.java).let {
+            containsInstanceTypeOnWrapperChain(it, Tag1::class.java).shouldBeTrue()
+        }
+
+        createWrapperAdapter(
+            Executor::class.java, dummy, ExistedExecutorWrapper(dummy),
+            Tag1::class.java, Tag2::class.java
+        ).let {
+            containsInstanceTypeOnWrapperChain(it, Tag1::class.java).shouldBeTrue()
+            containsInstanceTypeOnWrapperChain(it, Tag2::class.java).shouldBeTrue()
+        }
+    }
+
+    test("createWrapperAdapter with attachable and tag") {
+        createWrapperAdapter(
+            Executor::class.java, dummy, ExistedExecutorWrapper(dummy),
+            Tag1::class.java
+        ).let { containsInstanceTypeOnWrapperChain(it, Tag1::class.java).shouldBeTrue() }
+
+        createWrapperAdapter(
+            Executor::class.java,
+            dummy,
+            ExistedExecutorWrapper(dummy),
+            AttachableDelegate<String, String>(),
+            Tag1::class.java, Tag2::class.java
+        ).let {
+            containsInstanceTypeOnWrapperChain(it, Tag1::class.java).shouldBeTrue()
+            containsInstanceTypeOnWrapperChain(it, Tag2::class.java).shouldBeTrue()
+        }
+    }
+
     test("adaptee contract") {
-        val executor = Executor { it.run() }
-        val wrongAdaptee = WrongWrapperAdapter(executor)
+        val wrongAdaptee = WrongWrapperAdapter(dummy)
         shouldThrow<IllegalArgumentException> {
-            createWrapperAdapter(Executor::class.java, executor, wrongAdaptee)
+            createWrapperAdapter(Executor::class.java, dummy, wrongAdaptee)
         }.message shouldBe "adaptee(io.foldright.inspectablewrappers.utils.WrongWrapperAdapter) is an instance of Wrapper," +
                 " adapting a Wrapper to a Wrapper is UNNECESSARY"
     }
@@ -112,11 +137,28 @@ class WrapperAdapterUtilsTest : FunSpec({
         }.message shouldBe "underlying(java.lang.String) is not an instance of java.util.concurrent.Executor"
 
         shouldThrow<IllegalArgumentException> {
-            createWrapperAdapter(
-                Executor::class.java as Class<Any>,
-                Executor { it.run() }, ""
-            )
+            createWrapperAdapter(Executor::class.java as Class<Any>, dummy, "")
         }.message shouldBe "adaptee(java.lang.String) is not an instance of java.util.concurrent.Executor"
+    }
+
+    test("checkTypeRequirements - tag") {
+        shouldThrow<NullPointerException> {
+            createWrapperAdapter(Executor::class.java, dummy, ExistedExecutorWrapper(dummy), Tag1::class.java, null)
+        }.message shouldBe "tagInterfaces[2] is null"
+
+        shouldThrow<IllegalArgumentException> {
+            createWrapperAdapter(
+                Executor::class.java, dummy, ExistedExecutorWrapper(dummy),
+                Tag1::class.java, NonTag::class.java
+            )
+        }.message shouldBe "tagInterfaces[2](io.foldright.inspectablewrappers.utils.NonTag) is not a tag interface"
+
+        shouldThrow<IllegalArgumentException> {
+            createWrapperAdapter(
+                Executor::class.java, dummy, ExistedExecutorWrapper(dummy),
+                Tag1::class.java, Integer::class.java
+            )
+        }.message shouldBe "tagInterfaces[2](java.lang.Integer) is not an interface"
     }
 })
 
@@ -124,3 +166,13 @@ class WrongWrapperAdapter(private val executor: Executor) : WrapperAdapter<Execu
     override fun unwrap(): Executor = executor
     override fun adaptee(): Executor = executor
 }
+
+interface Tag1
+
+interface Tag2
+
+interface NonTag {
+    @Suppress("unused")
+    fun foo()
+}
+
