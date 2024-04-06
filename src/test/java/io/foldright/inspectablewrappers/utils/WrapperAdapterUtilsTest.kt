@@ -1,6 +1,8 @@
 package io.foldright.inspectablewrappers.utils
 
 import io.foldright.inspectablewrappers.*
+import io.foldright.inspectablewrappers.Inspector.containsInstanceTypeOnWrapperChain
+import io.foldright.inspectablewrappers.Inspector.getAttachmentFromWrapperChain
 import io.foldright.inspectablewrappers.utils.WrapperAdapterUtils.createWrapperAdapter
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
@@ -36,14 +38,14 @@ class WrapperAdapterUtilsTest : FunSpec({
             }
             .let(::ChattyExecutorWrapper)
 
-        Inspector.containsInstanceOnWrapperChain(chain, ExistedExecutorWrapper::class.java).shouldBeTrue()
-        Inspector.containsInstanceOnWrapperChain(chain, ChattyExecutorWrapper::class.java).shouldBeTrue()
-        Inspector.containsInstanceOnWrapperChain(chain, ExecutorService::class.java).shouldBeFalse()
+        containsInstanceTypeOnWrapperChain(chain, ExistedExecutorWrapper::class.java).shouldBeTrue()
+        containsInstanceTypeOnWrapperChain(chain, ChattyExecutorWrapper::class.java).shouldBeTrue()
+        containsInstanceTypeOnWrapperChain(chain, ExecutorService::class.java).shouldBeFalse()
 
-        val value: String? = Inspector.getAttachmentFromWrapperChain(chain, ADAPTED_MSG_KEY)
+        val value: String? = getAttachmentFromWrapperChain(chain, ADAPTED_MSG_KEY)
         value shouldBe ADAPTED_MSG_VALUE
 
-        Inspector.getAttachmentFromWrapperChain<Executor, String, String?>(chain, "not existed").shouldBeNull()
+        getAttachmentFromWrapperChain<Executor, String, String?>(chain, "not existed").shouldBeNull()
 
         // testing the proxy invocation
         chain.execute { println("I'm working.") }
@@ -60,11 +62,11 @@ class WrapperAdapterUtilsTest : FunSpec({
             }
             .let(::ChattyExecutorWrapper)
 
-        Inspector.containsInstanceOnWrapperChain(chain, ExistedExecutorWrapper::class.java).shouldBeTrue()
-        Inspector.containsInstanceOnWrapperChain(chain, ChattyExecutorWrapper::class.java).shouldBeTrue()
-        Inspector.containsInstanceOnWrapperChain(chain, ExecutorService::class.java).shouldBeFalse()
+        containsInstanceTypeOnWrapperChain(chain, ExistedExecutorWrapper::class.java).shouldBeTrue()
+        containsInstanceTypeOnWrapperChain(chain, ChattyExecutorWrapper::class.java).shouldBeTrue()
+        containsInstanceTypeOnWrapperChain(chain, ExecutorService::class.java).shouldBeFalse()
 
-        Inspector.getAttachmentFromWrapperChain<Executor, String, String?>(chain, "not existed").shouldBeNull()
+        getAttachmentFromWrapperChain<Executor, String, String?>(chain, "not existed").shouldBeNull()
 
         // testing the proxy invocation
         chain.execute { println("I'm working.") }

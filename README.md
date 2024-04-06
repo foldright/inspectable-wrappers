@@ -132,7 +132,7 @@ public class Demo {
     ////////////////////////////////////////
 
     System.out.println("Is executor lazy? " +
-        containsInstanceOnWrapperChain(executor, LazyExecutorWrapper.class));
+        containsInstanceTypeOnWrapperChain(executor, LazyExecutorWrapper.class));
     // print true
 
     String busy = getAttachmentFromWrapperChain(executor, "busy");
@@ -208,7 +208,7 @@ public class IntegrationDemo {
     ////////////////////////////////////////
 
     System.out.println("Is executor ExistedExecutorWrapper? " +
-        containsInstanceOnWrapperChain(executor, ExistedExecutorWrapper.class));
+        containsInstanceTypeOnWrapperChain(executor, ExistedExecutorWrapper.class));
     // print true
     String adaptAttachment = getAttachmentFromWrapperChain(executor, "adapted-existed-executor-wrapper-msg");
     System.out.println("Adapted existed executor wrapper msg: " + adaptAttachment);
@@ -305,7 +305,7 @@ public class IntegrationDemoUsingWrapperAdapterUtils {
     ////////////////////////////////////////
 
     System.out.println("Is executor ExistedExecutorWrapper? " +
-        containsInstanceOnWrapperChain(executor, ExistedExecutorWrapper.class));
+        containsInstanceTypeOnWrapperChain(executor, ExistedExecutorWrapper.class));
     // print true
     String adaptAttachment = getAttachmentFromWrapperChain(executor, "adapted-existed-executor-wrapper-msg");
     System.out.println("Adapted existed executor wrapper msg: " + adaptAttachment);
