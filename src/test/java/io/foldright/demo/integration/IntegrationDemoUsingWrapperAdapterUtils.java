@@ -7,7 +7,7 @@ import io.foldright.inspectablewrappers.utils.WrapperAdapterUtils;
 
 import java.util.concurrent.Executor;
 
-import static io.foldright.inspectablewrappers.Inspector.containsInstanceOnWrapperChain;
+import static io.foldright.inspectablewrappers.Inspector.containsInstanceTypeOnWrapperChain;
 import static io.foldright.inspectablewrappers.Inspector.getAttachmentFromWrapperChain;
 
 
@@ -20,7 +20,7 @@ public class IntegrationDemoUsingWrapperAdapterUtils {
         ////////////////////////////////////////
 
         System.out.println("Is executor ExistedExecutorWrapper? " +
-                containsInstanceOnWrapperChain(executor, ExistedExecutorWrapper.class));
+                containsInstanceTypeOnWrapperChain(executor, ExistedExecutorWrapper.class));
         // print true
         String adaptAttachment = getAttachmentFromWrapperChain(executor, "adapted-existed-executor-wrapper-msg");
         System.out.println("Adapted existed executor wrapper msg: " + adaptAttachment);

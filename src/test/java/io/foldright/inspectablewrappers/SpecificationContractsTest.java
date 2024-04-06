@@ -3,6 +3,7 @@ package io.foldright.inspectablewrappers;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 
 import static io.foldright.inspectablewrappers.Inspector.verifyWrapperChainContracts;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,6 +26,17 @@ class SpecificationContractsTest {
     }
 
     @Test
+    void test_not_biz_interface() {
+        Executor w = new WrapperImpl(DUMMY);
+        @SuppressWarnings({"unchecked", "rawtypes"})
+        IllegalStateException e = assertThrowsExactly(IllegalStateException.class,
+                () -> verifyWrapperChainContracts(w, (Class) ExecutorService.class));
+        String expected = "the instance(io.foldright.inspectablewrappers.SpecificationContractsTest$WrapperImpl" +
+                ") on wrapper chain is not an instance of java.util.concurrent.ExecutorService";
+        assertEquals(expected, e.getMessage());
+    }
+
+    @Test
     void test_null_adaptee() {
         Executor w = new WrapperAdapterImpl(DUMMY, null);
 
@@ -36,7 +48,7 @@ class SpecificationContractsTest {
     }
 
     @Test
-    void test_Wrap_type_adaptee() {
+    void test_wrap_type_adaptee() {
         Executor w = new WrapperAdapterImpl(DUMMY, new WrapperImpl(null));
 
         IllegalStateException e = assertThrowsExactly(IllegalStateException.class,

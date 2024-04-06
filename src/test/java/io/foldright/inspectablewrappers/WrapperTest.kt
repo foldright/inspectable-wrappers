@@ -1,34 +1,55 @@
 package io.foldright.inspectablewrappers
 
-import io.foldright.inspectablewrappers.Inspector.containsInstanceOnWrapperChain
-import io.foldright.inspectablewrappers.Inspector.getAttachmentFromWrapperChain
+import io.foldright.inspectablewrappers.Inspector.*
 import io.foldright.inspectablewrappers.utils.AttachableDelegate
 import io.kotest.assertions.fail
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue
+import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeSameInstanceAs
 import java.util.concurrent.Executor
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 class WrapperTest : FunSpec({
     // prepare executor instances/wrappers, build the executor/wrapper chain
-    val executorChain: Executor = LazyExecutorWrapper { runnable -> runnable.run() }
+    val baseExecutor = BaseExecutor()
+    val lazyExecutorWrapper = LazyExecutorWrapper(baseExecutor)
         .apply { setAttachment("busy", "very, very busy!") }
-        .let(::ChattyExecutorWrapper)
+    val executorChain: Executor = ChattyExecutorWrapper(lazyExecutorWrapper)
 
-    test("wrapper") {
-        containsInstanceOnWrapperChain(executorChain, LazyExecutorWrapper::class.java).shouldBeTrue()
-        containsInstanceOnWrapperChain(executorChain, ChattyExecutorWrapper::class.java).shouldBeTrue()
-        containsInstanceOnWrapperChain(executorChain, ExecutorService::class.java).shouldBeFalse()
+    test("wrapper chain") {
+        containsInstanceTypeOnWrapperChain(executorChain, BaseExecutor::class.java).shouldBeTrue()
+        containsInstanceTypeOnWrapperChain(executorChain, LazyExecutorWrapper::class.java).shouldBeTrue()
+        containsInstanceTypeOnWrapperChain(executorChain, ChattyExecutorWrapper::class.java).shouldBeTrue()
+        containsInstanceTypeOnWrapperChain(executorChain, ExecutorService::class.java).shouldBeFalse()
 
         val value: String? = getAttachmentFromWrapperChain(executorChain, "busy")
         value shouldBe "very, very busy!"
 
         getAttachmentFromWrapperChain<Executor, String, String?>(executorChain, "not existed").shouldBeNull()
+
+        getInstancesOfWrapperChain(executorChain).shouldContainExactly(executorChain, lazyExecutorWrapper, baseExecutor)
+        getInstancesOfWrapperChain(baseExecutor).shouldContainExactly(baseExecutor)
+
+        getBaseOfWrapperChain(executorChain).shouldBeSameInstanceAs(baseExecutor)
+        getBaseOfWrapperChain(baseExecutor).shouldBeSameInstanceAs(baseExecutor)
+
+        unwrap(executorChain).shouldBeSameInstanceAs(lazyExecutorWrapper)
+        unwrap(lazyExecutorWrapper).shouldBeSameInstanceAs(baseExecutor)
+        unwrap(baseExecutor).shouldBeSameInstanceAs(baseExecutor)
+
+        isWrapper(executorChain).shouldBeTrue()
+        isWrapper(baseExecutor).shouldBeFalse()
+
+        verifyWrapperChainContracts(lazyExecutorWrapper)
+        verifyWrapperChainContracts(lazyExecutorWrapper, Executor::class.java)
+        verifyWrapperChainContracts(baseExecutor)
+        verifyWrapperChainContracts(baseExecutor, Executor::class.java)
     }
 
     test("ClassCastException") {
@@ -38,7 +59,6 @@ class WrapperTest : FunSpec({
         }
     }
 
-    @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
     test("argument null") {
         shouldThrow<NullPointerException> {
             getAttachmentFromWrapperChain<Executor, String, String?>(null, "busy")
@@ -49,12 +69,12 @@ class WrapperTest : FunSpec({
         }.message shouldBe "key is null"
     }
 
-    test("inspect last instance - containsInstanceOnWrapperChain") {
+    test("inspect last instance - containsInstanceTypeOnWrapperChain") {
         val pool = Executors.newCachedThreadPool()
-        containsInstanceOnWrapperChain(pool, ExecutorService::class.java).shouldBeTrue()
+        containsInstanceTypeOnWrapperChain(pool, ExecutorService::class.java).shouldBeTrue()
 
         val chatty = ChattyExecutorWrapper(pool)
-        containsInstanceOnWrapperChain(chatty, ExecutorService::class.java).shouldBeTrue()
+        containsInstanceTypeOnWrapperChain(chatty, ExecutorService::class.java).shouldBeTrue()
     }
 
     test("inspect last instance - getAttachmentFromWrapperChain") {
@@ -73,6 +93,12 @@ class WrapperTest : FunSpec({
         getAttachmentFromWrapperChain<Any, String, String?>(c2, "k1") shouldBe "v1"
     }
 })
+
+class BaseExecutor : Executor {
+    override fun execute(command: Runnable) {
+        command.run()
+    }
+}
 
 class ChattyExecutorWrapper(private val executor: Executor) : Executor, Wrapper<Executor> {
     override fun execute(command: Runnable) {

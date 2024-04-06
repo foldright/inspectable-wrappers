@@ -1,10 +1,8 @@
 package io.foldright.demo;
 
-import io.foldright.inspectablewrappers.Inspector;
-
 import java.util.concurrent.Executor;
 
-import static io.foldright.inspectablewrappers.Inspector.containsInstanceOnWrapperChain;
+import static io.foldright.inspectablewrappers.Inspector.containsInstanceTypeOnWrapperChain;
 import static io.foldright.inspectablewrappers.Inspector.getAttachmentFromWrapperChain;
 
 
@@ -17,7 +15,7 @@ public class Demo {
         ////////////////////////////////////////
 
         System.out.println("Is executor lazy? " +
-                containsInstanceOnWrapperChain(executor, LazyExecutorWrapper.class));
+                containsInstanceTypeOnWrapperChain(executor, LazyExecutorWrapper.class));
         // print true
 
         String busy = getAttachmentFromWrapperChain(executor, "busy");

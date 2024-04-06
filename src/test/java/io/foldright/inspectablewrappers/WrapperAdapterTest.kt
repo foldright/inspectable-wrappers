@@ -1,6 +1,6 @@
 package io.foldright.inspectablewrappers
 
-import io.foldright.inspectablewrappers.Inspector.containsInstanceOnWrapperChain
+import io.foldright.inspectablewrappers.Inspector.containsInstanceTypeOnWrapperChain
 import io.foldright.inspectablewrappers.Inspector.getAttachmentFromWrapperChain
 import io.foldright.inspectablewrappers.utils.AttachableDelegate
 import io.kotest.assertions.fail
@@ -25,10 +25,10 @@ class WrapperAdapterTest : FunSpec({
         .let(::ChattyExecutorWrapper)
 
     test("WrapperAdapter") {
-        containsInstanceOnWrapperChain(executorChain, ExistedExecutorWrapper::class.java).shouldBeTrue()
-        containsInstanceOnWrapperChain(executorChain, ExistedExecutorWrapperAdapter::class.java).shouldBeTrue()
-        containsInstanceOnWrapperChain(executorChain, ChattyExecutorWrapper::class.java).shouldBeTrue()
-        containsInstanceOnWrapperChain(executorChain, ExecutorService::class.java).shouldBeFalse()
+        containsInstanceTypeOnWrapperChain(executorChain, ExistedExecutorWrapper::class.java).shouldBeTrue()
+        containsInstanceTypeOnWrapperChain(executorChain, ExistedExecutorWrapperAdapter::class.java).shouldBeTrue()
+        containsInstanceTypeOnWrapperChain(executorChain, ChattyExecutorWrapper::class.java).shouldBeTrue()
+        containsInstanceTypeOnWrapperChain(executorChain, ExecutorService::class.java).shouldBeFalse()
 
         val value: String? = getAttachmentFromWrapperChain(executorChain, ADAPTED_MSG_KEY)
         value shouldBe ADAPTED_MSG_VALUE
@@ -42,7 +42,6 @@ class WrapperAdapterTest : FunSpec({
         }
     }
 
-    @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
     test("argument null") {
         shouldThrow<NullPointerException> {
             getAttachmentFromWrapperChain<Executor, String, String?>(null, ADAPTED_MSG_KEY)
@@ -62,11 +61,11 @@ class WrapperAdapterTest : FunSpec({
                 " is an instance of Wrapper, adapting a Wrapper to a Wrapper is UNNECESSARY"
 
         shouldThrow<IllegalStateException> {
-            containsInstanceOnWrapperChain(chain, ExecutorService::class.java)
+            containsInstanceTypeOnWrapperChain(chain, ExecutorService::class.java)
         }.message shouldBe errMsg
         // first instance is ok, not trigger the check logic yet...
-        containsInstanceOnWrapperChain(chain, Executor::class.java).shouldBeTrue()
-        containsInstanceOnWrapperChain(chain, ChattyExecutorWrapperAdapter::class.java).shouldBeTrue()
+        containsInstanceTypeOnWrapperChain(chain, Executor::class.java).shouldBeTrue()
+        containsInstanceTypeOnWrapperChain(chain, ChattyExecutorWrapperAdapter::class.java).shouldBeTrue()
 
         shouldThrow<IllegalStateException> {
             getAttachmentFromWrapperChain(chain, "k1")
