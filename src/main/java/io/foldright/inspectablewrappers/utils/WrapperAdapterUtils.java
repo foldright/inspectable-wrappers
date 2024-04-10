@@ -180,12 +180,12 @@ public final class WrapperAdapterUtils {
         if (tagInterfaces != null) for (int i = 0; i < tagInterfaces.length; i++) {
             Class<?> tag = tagInterfaces[i];
             if (!tag.isInterface()) {
-                throw new IllegalArgumentException("tagInterfaces[" + (i + 1) + "]" +
-                        "(" + tag.getName() + ") is not an interface");
+                throw new IllegalArgumentException("tagInterfaces[" + (i + 1) +
+                        "](" + tag.getName() + ") is not an interface");
             }
             if (tag.getMethods().length > 0) {
-                throw new IllegalArgumentException("tagInterfaces[" + (i + 1) + "]" +
-                        "(" + tag.getName() + ") is not a tag interface");
+                throw new IllegalArgumentException("tagInterfaces[" + (i + 1) +
+                        "](" + tag.getName() + ") is not a tag interface");
             }
         }
     }
