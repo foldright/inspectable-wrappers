@@ -261,14 +261,16 @@ public final class Inspector {
      *
      * @param wrapper wrapper instance
      * @param <W>     the type of instances that be wrapped
-     * @throws NullPointerException  if wrapped argument is null,
+     * @throws NullPointerException  if any arguments is null,
      *                               or any wrapper {@link Wrapper#unwrap()} returns null,
      *                               or the adaptee of {@link WrapperAdapter} is null
      * @throws IllegalStateException if any instance on the wrapper chain is not an instance of {@code bizInterface},
      *                               or the adaptee of {@link WrapperAdapter} is an instance of {@link Wrapper}
      *                               or CYCLIC wrapper chain
      */
-    public static <W> void verifyWrapperChainContracts(final W wrapper, Class<W> bizInterface) {
+    public static <W> void verifyWrapperChainContracts(final W wrapper, final Class<W> bizInterface) {
+        requireNonNull(wrapper, "wrapper is null");
+        requireNonNull(bizInterface, "bizInterface is null");
         forEachOnWrapperChain(wrapper, w -> {
             if (!isInstanceOf(w, bizInterface)) {
                 throw new IllegalStateException("the instance(" + w.getClass().getName() +
