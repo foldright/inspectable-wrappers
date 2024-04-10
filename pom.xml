@@ -81,16 +81,16 @@
 		<maven.enforcer.pom.version.regex>^\d(\.\d+)?\.(\d+|x)-SNAPSHOT$</maven.enforcer.pom.version.regex>
 		<release.pom.version.regex>^\d\.\d+\.\d+(-(Alpha|Beta|RC)\d+)?$</release.pom.version.regex>
 
-		<spotbugs.annotations.version>4.8.4</spotbugs.annotations.version>
+		<spotbugs.annotations.version>4.8.5</spotbugs.annotations.version>
 		<jsr305.version>3.0.2</jsr305.version>
 		<jetbrains.annotations.version>24.1.0</jetbrains.annotations.version>
 
-		<kotlin.version>1.9.23</kotlin.version>
+		<kotlin.version>2.0.0</kotlin.version>
 		<kotlin.compiler.jvmTarget>${maven.compiler.source}</kotlin.compiler.jvmTarget>
 
 		<!-- testing dependencies versions -->
 		<junit5.version>5.10.2</junit5.version>
-		<kotest.version>5.8.1</kotest.version>
+		<kotest.version>5.9.1</kotest.version>
 	</properties>
 
 	<dependencies>
@@ -347,7 +347,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jar-plugin</artifactId>
-					<version>3.3.0</version>
+					<version>3.4.1</version>
 				</plugin>
 				<plugin>
 					<!-- https://github.com/moditect/moditect -->
@@ -380,12 +380,12 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>3.6.3</version>
+					<version>3.7.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-gpg-plugin</artifactId>
-					<version>3.2.2</version>
+					<version>3.2.4</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -395,17 +395,17 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-install-plugin</artifactId>
-					<version>3.1.1</version>
+					<version>3.1.2</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-deploy-plugin</artifactId>
-					<version>3.1.1</version>
+					<version>3.1.2</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-enforcer-plugin</artifactId>
-					<version>3.4.1</version>
+					<version>3.5.0</version>
 				</plugin>
 				<plugin>
 					<groupId>io.github.git-commit-id</groupId>
@@ -415,7 +415,7 @@
 				<plugin>
 					<groupId>com.github.spotbugs</groupId>
 					<artifactId>spotbugs-maven-plugin</artifactId>
-					<version>4.8.3.1</version>
+					<version>4.8.5.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.jacoco</groupId>
@@ -766,7 +766,7 @@
 					<plugin>
 						<groupId>org.sonatype.plugins</groupId>
 						<artifactId>nexus-staging-maven-plugin</artifactId>
-						<version>1.6.13</version>
+						<version>1.7.0</version>
 						<extensions>true</extensions>
 						<!--
 							In multiply module builds using the deploy-at-end feature,
