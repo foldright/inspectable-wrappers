@@ -78,6 +78,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.deploy.skip>false</maven.deploy.skip>
 		<perform.release.jdk.version>17</perform.release.jdk.version>
+		<maven.enforcer.pom.version.regex>^\d(\.\d+)?\.(\d+|x)-SNAPSHOT$</maven.enforcer.pom.version.regex>
+		<release.pom.version.regex>^\d\.\d+\.\d+(-(Alpha|Beta|RC)\d+)?$</release.pom.version.regex>
 
 		<spotbugs.annotations.version>4.8.4</spotbugs.annotations.version>
 		<jsr305.version>3.0.2</jsr305.version>
@@ -292,8 +294,8 @@
 								<!-- https://maven.apache.org/enforcer/enforcer-rules/requireProperty.html -->
 								<requireProperty>
 									<property>project.version</property>
-									<regex>^\d(\.\d+)?\.(\d+|x)-SNAPSHOT$</regex>
-									<regexMessage>Project dev version(${project.version}) format is invalid!</regexMessage>
+									<regex>${maven.enforcer.pom.version.regex}</regex>
+									<regexMessage>Project version(${project.version}) format is invalid!</regexMessage>
 								</requireProperty>
 							</rules>
 						</configuration>
@@ -724,6 +726,7 @@
 				</plugins>
 			</build>
 		</profile>
+
 		<profile>
 			<id>enforce-project-version-when-release</id>
 			<activation>
@@ -732,35 +735,24 @@
 					<value>true</value>
 				</property>
 			</activation>
-			<build>
-				<plugins>
-					<!--
-						add maven-enforce-plugin to make sure the right jdk is used
-						https://stackoverflow.com/a/18420462/922688
-					-->
-					<plugin>
-						<artifactId>maven-enforcer-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>enforces</id>
-								<goals>
-									<goal>enforce</goal>
-								</goals>
-								<configuration>
-									<rules>
-										<requireProperty>
-											<property>project.version</property>
-											<regex>^\d\.\d+\.\d+(-(Alpha|Beta|RC)\d+)?$</regex>
-											<regexMessage>Project release version(${project.version}) format is invalid!</regexMessage>
-										</requireProperty>
-									</rules>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
+			<properties>
+				<maven.enforcer.pom.version.regex>${release.pom.version.regex}</maven.enforcer.pom.version.regex>
+			</properties>
 		</profile>
+		<profile>
+			<id>enforce-project-version-when-github-action-triggered-by-tag</id>
+			<activation>
+				<property>
+					<!-- https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables -->
+					<name>env.GITHUB_REF_TYPE</name>
+					<value>tag</value>
+				</property>
+			</activation>
+			<properties>
+				<maven.enforcer.pom.version.regex>${release.pom.version.regex}</maven.enforcer.pom.version.regex>
+			</properties>
+		</profile>
+
 		<profile>
 			<id>deploy-settings</id>
 			<activation>
