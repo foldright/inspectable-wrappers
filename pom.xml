@@ -687,6 +687,11 @@
 								</goals>
 							</execution>
 						</executions>
+						<configuration>
+							<excludes>
+								<exclude>io/foldright/inspectablewrappers/study/**</exclude>
+							</excludes>
+						</configuration>
 					</plugin>
 				</plugins>
 			</build>
