@@ -27,12 +27,12 @@ import static java.util.Objects.requireNonNull;
 public final class WrapperAdapterUtils {
     /**
      * Creates a {@link WrapperAdapter} instance of the given biz interface type by
-     * the underlying({@link Wrapper#unwrap()}) and adaptee({@link WrapperAdapter#adaptee()}) instances.
+     * the underlying({@link Wrapper#unwrap_()}) and adaptee({@link WrapperAdapter#adaptee_()}) instances.
      *
      * @param <T>          the type of instances that be wrapped
      * @param bizInterface the class of instances that be wrapped
-     * @param underlying   the underlying instance that be wrapped, more info see {@link Wrapper#unwrap()}
-     * @param adaptee      the adapted/existed wrapper instance, more info see {@link WrapperAdapter#adaptee()}
+     * @param underlying   the underlying instance that be wrapped, more info see {@link Wrapper#unwrap_()}
+     * @param adaptee      the adapted/existed wrapper instance, more info see {@link WrapperAdapter#adaptee_()}
      * @return the new {@link WrapperAdapter} instance
      * @throws IllegalArgumentException if {@code bizInterface} is not an interface,
      *                                  or {@code bizInterface} is {@link Wrapper}/{@link WrapperAdapter}/{@link Attachable},
@@ -40,8 +40,8 @@ public final class WrapperAdapterUtils {
      *                                  or adaptee is not an instance of {@code bizInterface},
      *                                  or adaptee is an instance of {@link Wrapper}
      * @throws NullPointerException     if any argument is null
-     * @see Wrapper#unwrap()
-     * @see WrapperAdapter#adaptee()
+     * @see Wrapper#unwrap_()
+     * @see WrapperAdapter#adaptee_()
      */
     @NonNull
     public static <T> T createWrapperAdapter(Class<? super T> bizInterface, T underlying, T adaptee) {
@@ -54,12 +54,12 @@ public final class WrapperAdapterUtils {
 
     /**
      * Creates a {@link WrapperAdapter} instance of the given biz interface type and {@link Attachable} type by
-     * the underlying({@link Wrapper#unwrap()}), adaptee({@link WrapperAdapter#adaptee()}) and attachable instances.
+     * the underlying({@link Wrapper#unwrap_()}), adaptee({@link WrapperAdapter#adaptee_()}) and attachable instances.
      *
      * @param <T>          the type of instances that be wrapped
      * @param bizInterface the class of instances that be wrapped
-     * @param underlying   the underlying instance that be wrapped, more info see {@link Wrapper#unwrap()}
-     * @param adaptee      the adapted/existed wrapper instance, more info see {@link WrapperAdapter#adaptee()}
+     * @param underlying   the underlying instance that be wrapped, more info see {@link Wrapper#unwrap_()}
+     * @param adaptee      the adapted/existed wrapper instance, more info see {@link WrapperAdapter#adaptee_()}
      * @param attachable   the attachable instance, more info see {@link Attachable}
      * @return the new {@link WrapperAdapter} instance
      * @throws IllegalArgumentException if {@code bizInterface} is not an interface,
@@ -68,10 +68,10 @@ public final class WrapperAdapterUtils {
      *                                  or adaptee is not an instance of {@code bizInterface},
      *                                  or adaptee is an instance of {@link Wrapper}
      * @throws NullPointerException     if any argument is null
-     * @see Wrapper#unwrap()
-     * @see WrapperAdapter#adaptee()
-     * @see Attachable#getAttachment(Object)
-     * @see Attachable#setAttachment(Object, Object)
+     * @see Wrapper#unwrap_()
+     * @see WrapperAdapter#adaptee_()
+     * @see Attachable#getAttachment_(Object)
+     * @see Attachable#setAttachment_(Object, Object)
      */
     @NonNull
     public static <T> T createWrapperAdapter(
@@ -129,10 +129,10 @@ public final class WrapperAdapterUtils {
             if (ADAPTEE.sameSignatureAs(method)) return adaptee;
 
             if (attachable != null && GET_ATTACHMENT.sameSignatureAs(method)) {
-                return ((Attachable) attachable).getAttachment(args[0]);
+                return ((Attachable) attachable).getAttachment_(args[0]);
             }
             if (attachable != null && SET_ATTACHMENT.sameSignatureAs(method)) {
-                ((Attachable) attachable).setAttachment(args[0], args[1]);
+                ((Attachable) attachable).setAttachment_(args[0], args[1]);
                 return null;
             }
 
@@ -219,21 +219,21 @@ public final class WrapperAdapterUtils {
  */
 enum WrapperAdapterProxyRelatedMethod {
     /**
-     * {@link Wrapper#unwrap()}
+     * {@link Wrapper#unwrap_()}
      */
-    UNWRAP(() -> Wrapper.class.getMethod("unwrap")),
+    UNWRAP(() -> Wrapper.class.getMethod("unwrap_")),
     /**
-     * {@link WrapperAdapter#adaptee()}
+     * {@link WrapperAdapter#adaptee_()}
      */
-    ADAPTEE(() -> WrapperAdapter.class.getMethod("adaptee")),
+    ADAPTEE(() -> WrapperAdapter.class.getMethod("adaptee_")),
     /**
-     * {@link Attachable#getAttachment(Object)}
+     * {@link Attachable#getAttachment_(Object)}
      */
-    GET_ATTACHMENT(() -> Attachable.class.getMethod("getAttachment", Object.class)),
+    GET_ATTACHMENT(() -> Attachable.class.getMethod("getAttachment_", Object.class)),
     /**
-     * {@link Attachable#setAttachment(Object, Object)}
+     * {@link Attachable#setAttachment_(Object, Object)}
      */
-    SET_ATTACHMENT(() -> Attachable.class.getMethod("setAttachment", Object.class, Object.class)),
+    SET_ATTACHMENT(() -> Attachable.class.getMethod("setAttachment_", Object.class, Object.class)),
     /**
      * {@link Object#toString()}
      */

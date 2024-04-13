@@ -44,5 +44,5 @@ public interface WrapperAdapter<T> extends Wrapper<T> {
      * @see Inspector
      */
     @NonNull
-    T adaptee();
+    T adaptee_();
 }

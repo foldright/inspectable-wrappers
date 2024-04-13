@@ -44,7 +44,7 @@ public class IntegrationDemoUsingWrapperAdapterUtils {
         final Executor existed = new ExistedExecutorWrapper(base);
 
         Attachable<String, String> attachable = new AttachableDelegate<>();
-        attachable.setAttachment("adapted-existed-executor-wrapper-msg", "I'm an adapter of an existed executor which have nothing to do with ~inspectable~wrappers~.");
+        attachable.setAttachment_("adapted-existed-executor-wrapper-msg", "I'm an adapter of an existed executor which have nothing to do with ~inspectable~wrappers~.");
 
         return WrapperAdapterUtils.createWrapperAdapter(Executor.class, base, existed, attachable);
     }
