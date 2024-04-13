@@ -78,14 +78,14 @@ class WrapperAdapterTest : FunSpec({
  */
 private class ExistedExecutorWrapperAdapter(private val unwrap: Executor, private val adaptee: Executor) :
         Executor by adaptee, WrapperAdapter<Executor>, Attachable<String, String> by AttachableDelegate() {
-    override fun unwrap(): Executor = unwrap
-    override fun adaptee(): Executor = adaptee
+    override fun unwrap_(): Executor = unwrap
+    override fun adaptee_(): Executor = adaptee
 
     companion object {
         fun createExistedExecutorWrapperAdapter(base: Executor): ExistedExecutorWrapperAdapter {
             val existed = ExistedExecutorWrapper(base)
             return ExistedExecutorWrapperAdapter(base, existed).apply {
-                setAttachment(ADAPTED_MSG_KEY, ADAPTED_MSG_VALUE)
+                setAttachment_(ADAPTED_MSG_KEY, ADAPTED_MSG_VALUE)
             }
         }
     }
@@ -106,6 +106,6 @@ class ExistedExecutorWrapper(private val executor: Executor) : Executor {
  */
 private class ChattyExecutorWrapperAdapter(private val adaptee: ChattyExecutorWrapper) :
         Executor by adaptee, WrapperAdapter<Executor>, Attachable<String, String> by AttachableDelegate() {
-    override fun unwrap(): Executor = adaptee.unwrap()
-    override fun adaptee(): Executor = adaptee
+    override fun unwrap_(): Executor = adaptee.unwrap_()
+    override fun adaptee_(): Executor = adaptee
 }
