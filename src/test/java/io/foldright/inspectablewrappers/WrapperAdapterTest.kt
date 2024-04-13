@@ -109,4 +109,3 @@ private class ChattyExecutorWrapperAdapter(private val adaptee: ChattyExecutorWr
     override fun unwrap(): Executor = adaptee.unwrap()
     override fun adaptee(): Executor = adaptee
 }
-
