@@ -175,4 +175,3 @@ interface NonTag {
     @Suppress("unused")
     fun foo()
 }
-
