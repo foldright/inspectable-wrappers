@@ -35,7 +35,7 @@ public class AttachableDelegate<K, V> implements Attachable<K, V> {
      * @throws NullPointerException if any arguments is null
      */
     @Override
-    public void setAttachment(@NonNull K key, @NonNull V value) {
+    public void setAttachment_(@NonNull K key, @NonNull V value) {
         requireNonNull(key, "key is null");
         requireNonNull(value, "value is null");
         attachments.put(key, value);
@@ -52,7 +52,7 @@ public class AttachableDelegate<K, V> implements Attachable<K, V> {
      */
     @Nullable
     @Override
-    public V getAttachment(@NonNull K key) {
+    public V getAttachment_(@NonNull K key) {
         requireNonNull(key, "key is null");
         return attachments.get(key);
     }
