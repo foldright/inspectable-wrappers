@@ -19,7 +19,7 @@ class WrapperTest : FunSpec({
     // prepare executor instances/wrappers, build the executor/wrapper chain
     val baseExecutor = BaseExecutor()
     val lazyExecutorWrapper = LazyExecutorWrapper(baseExecutor)
-        .apply { setAttachment("busy", "very, very busy!") }
+        .apply { setAttachment_("busy", "very, very busy!") }
     val executorChain: Executor = ChattyExecutorWrapper(lazyExecutorWrapper)
 
     test("wrapper chain") {
@@ -78,7 +78,7 @@ class WrapperTest : FunSpec({
     }
 
     test("inspect last instance - getAttachmentFromWrapperChain") {
-        val attachable = AttachableDelegate<String, String>().apply { setAttachment("k1", "v1") }
+        val attachable = AttachableDelegate<String, String>().apply { setAttachment_("k1", "v1") }
         getAttachmentFromWrapperChain<Any, String, String?>(attachable, "k1") shouldBe "v1"
 
         val base = object : Executor, Attachable<String, String> by AttachableDelegate() {
@@ -86,7 +86,7 @@ class WrapperTest : FunSpec({
                 command.run()
             }
         }
-        base.setAttachment("k1", "v1")
+        base.setAttachment_("k1", "v1")
         getAttachmentFromWrapperChain<Any, String, String?>(base, "k1") shouldBe "v1"
 
         val c2 = ChattyExecutorWrapper(base)
@@ -106,7 +106,7 @@ class ChattyExecutorWrapper(private val executor: Executor) : Executor, Wrapper<
         executor.execute(command)
     }
 
-    override fun unwrap(): Executor = executor
+    override fun unwrap_(): Executor = executor
 }
 
 class LazyExecutorWrapper(private val executor: Executor) :
@@ -117,7 +117,7 @@ class LazyExecutorWrapper(private val executor: Executor) :
         executor.execute(command)
     }
 
-    override fun unwrap(): Executor = executor
+    override fun unwrap_(): Executor = executor
 
     private fun sleep() {
         Thread.sleep(100)

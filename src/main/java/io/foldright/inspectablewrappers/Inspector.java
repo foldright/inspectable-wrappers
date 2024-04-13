@@ -78,7 +78,7 @@ public final class Inspector {
      * Reports whether any instance on the wrapper chain matches the given type.
      * <p>
      * The wrapper chain consists of wrapper itself, followed by the wrappers
-     * obtained by repeatedly calling {@link Wrapper#unwrap()}.
+     * obtained by repeatedly calling {@link Wrapper#unwrap_()}.
      *
      * @param wrapper      wrapper instance/wrapper chain
      * @param instanceType target type
@@ -86,7 +86,7 @@ public final class Inspector {
      * @return return {@code false} if no wrapper on the wrapper chain matches the given type,
      * otherwise return {@code true}
      * @throws NullPointerException  if any arguments is null,
-     *                               or any wrapper {@link Wrapper#unwrap()} returns null,
+     *                               or any wrapper {@link Wrapper#unwrap_()} returns null,
      *                               or the adaptee of {@link WrapperAdapter} is null
      * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is an instance of {@link Wrapper}
      *                               or CYCLIC wrapper chain
@@ -104,10 +104,10 @@ public final class Inspector {
 
     /**
      * Retrieves the attachment of instance on the wrapper chain for the given key
-     * by calling {@link Attachable#getAttachment(Object)}.
+     * by calling {@link Attachable#getAttachment_(Object)}.
      * <p>
      * The wrapper chain consists of wrapper itself, followed by the wrappers
-     * obtained by repeatedly calling {@link Wrapper#unwrap()}.
+     * obtained by repeatedly calling {@link Wrapper#unwrap_()}.
      * <p>
      * If the same key exists in multiple wrappers, outer wrapper win.
      *
@@ -119,12 +119,12 @@ public final class Inspector {
      * @return the attachment value of wrapper for given key on the wrapper chain,
      * or null if the attachment is absent
      * @throws NullPointerException  if any arguments is null,
-     *                               or any wrapper {@link Wrapper#unwrap()} returns null,
+     *                               or any wrapper {@link Wrapper#unwrap_()} returns null,
      *                               or the adaptee of {@link WrapperAdapter} is null
      * @throws ClassCastException    if the return value is not type {@code <V>}
      * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is an instance of {@link Wrapper}
      *                               or CYCLIC wrapper chain
-     * @see Attachable#getAttachment(Object)
+     * @see Attachable#getAttachment_(Object)
      */
     @Nullable
     @Contract(pure = true)
@@ -134,7 +134,7 @@ public final class Inspector {
         requireNonNull(key, "key is null");
         return travelWrapperChain(wrapper, w -> {
             if (w instanceof Attachable) {
-                V value = ((Attachable<K, V>) w).getAttachment(key);
+                V value = ((Attachable<K, V>) w).getAttachment_(key);
                 return Optional.ofNullable(value);
             } else {
                 return Optional.empty();
@@ -146,12 +146,12 @@ public final class Inspector {
      * Gets the wrapper chain, aka. the list of all instances on the wrapper chain.
      * <p>
      * The wrapper chain consists of wrapper itself, followed by the wrappers
-     * obtained by repeatedly calling {@link Wrapper#unwrap()}.
+     * obtained by repeatedly calling {@link Wrapper#unwrap_()}.
      *
      * @param wrapper wrapper instance
      * @param <W>     the type of instances that be wrapped
      * @throws NullPointerException  if wrapped argument is null,
-     *                               or any wrapper {@link Wrapper#unwrap()} returns null,
+     *                               or any wrapper {@link Wrapper#unwrap_()} returns null,
      *                               or the adaptee of {@link WrapperAdapter} is null
      * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is an instance of {@link Wrapper}
      *                               or CYCLIC wrapper chain
@@ -168,12 +168,12 @@ public final class Inspector {
      * Gets the base of the wrapper chain, aka. the last instance of the wrapper chain.
      * <p>
      * The wrapper chain consists of wrapper itself, followed by the wrappers
-     * obtained by repeatedly calling {@link Wrapper#unwrap()}.
+     * obtained by repeatedly calling {@link Wrapper#unwrap_()}.
      *
      * @param wrapper wrapper instance
      * @param <W>     the type of instances that be wrapped
      * @throws NullPointerException  if wrapped argument is null,
-     *                               or any wrapper {@link Wrapper#unwrap()} returns null,
+     *                               or any wrapper {@link Wrapper#unwrap_()} returns null,
      *                               or the adaptee of {@link WrapperAdapter} is null
      * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is an instance of {@link Wrapper}
      *                               or CYCLIC wrapper chain
@@ -193,12 +193,12 @@ public final class Inspector {
      * This method is {@code null}-safe, return {@code null} iff input parameter is {@code null};
      * If input parameter is not a {@link Wrapper} just return input.
      * <p>
-     * A convenience method for {@link Wrapper#unwrap()}
+     * A convenience method for {@link Wrapper#unwrap_()}
      *
      * @param obj wrapper instance
      * @param <W> the type of instances that be wrapped
-     * @throws NullPointerException if {@link Wrapper#unwrap()} returns null
-     * @see Wrapper#unwrap()
+     * @throws NullPointerException if {@link Wrapper#unwrap_()} returns null
+     * @see Wrapper#unwrap_()
      * @see #isWrapper(Object)
      */
     @Nullable
@@ -226,18 +226,18 @@ public final class Inspector {
      * Verifies the compliance of wrapper chain with the specification contracts.
      * <p>
      * The wrapper chain consists of wrapper itself, followed by the wrappers
-     * obtained by repeatedly calling {@link Wrapper#unwrap()}.
+     * obtained by repeatedly calling {@link Wrapper#unwrap_()}.
      * <p>
      * more about the specification contracts see the doc of below methods:
      * <ul>
-     * <li>{@link Wrapper#unwrap()}
-     * <li>{@link WrapperAdapter#adaptee()}
+     * <li>{@link Wrapper#unwrap_()}
+     * <li>{@link WrapperAdapter#adaptee_()}
      * </ul>
      *
      * @param wrapper wrapper instance
      * @param <W>     the type of instances that be wrapped
      * @throws NullPointerException  if wrapped argument is null,
-     *                               or any wrapper {@link Wrapper#unwrap()} returns null,
+     *                               or any wrapper {@link Wrapper#unwrap_()} returns null,
      *                               or the adaptee of {@link WrapperAdapter} is null
      * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is an instance of {@link Wrapper}
      *                               or CYCLIC wrapper chain
@@ -251,18 +251,18 @@ public final class Inspector {
      * and checks all instances on wrapper chain is an instance of the given {@code bizInterface}.
      * <p>
      * The wrapper chain consists of wrapper itself, followed by the wrappers
-     * obtained by repeatedly calling {@link Wrapper#unwrap()}.
+     * obtained by repeatedly calling {@link Wrapper#unwrap_()}.
      * <p>
      * more about the specification contracts see the doc of below methods:
      * <ul>
-     * <li>{@link Wrapper#unwrap()}
-     * <li>{@link WrapperAdapter#adaptee()}
+     * <li>{@link Wrapper#unwrap_()}
+     * <li>{@link WrapperAdapter#adaptee_()}
      * </ul>
      *
      * @param wrapper wrapper instance
      * @param <W>     the type of instances that be wrapped
      * @throws NullPointerException  if any arguments is null,
-     *                               or any wrapper {@link Wrapper#unwrap()} returns null,
+     *                               or any wrapper {@link Wrapper#unwrap_()} returns null,
      *                               or the adaptee of {@link WrapperAdapter} is null
      * @throws IllegalStateException if any instance on the wrapper chain is not an instance of {@code bizInterface},
      *                               or the adaptee of {@link WrapperAdapter} is an instance of {@link Wrapper}
@@ -284,7 +284,7 @@ public final class Inspector {
      * Exceptions thrown by the {@code predicate} are relayed to the caller.
      * <p>
      * The wrapper chain consists of wrapper itself, followed by the wrappers
-     * obtained by repeatedly calling {@link Wrapper#unwrap()}.
+     * obtained by repeatedly calling {@link Wrapper#unwrap_()}.
      *
      * @param wrapper   wrapper instance/wrapper chain
      * @param predicate inspect logic
@@ -292,7 +292,7 @@ public final class Inspector {
      * @return return {@code false} if no wrapper on the wrapper chain satisfy the given {@code predicate},
      * otherwise return {@code true}
      * @throws NullPointerException  if any arguments is null,
-     *                               or any wrapper {@link Wrapper#unwrap()} returns null,
+     *                               or any wrapper {@link Wrapper#unwrap_()} returns null,
      *                               or the adaptee of {@link WrapperAdapter} is null
      * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is an instance of {@link Wrapper}
      *                               or CYCLIC wrapper chain
@@ -312,13 +312,13 @@ public final class Inspector {
      * Exceptions thrown by the {@code action} are relayed to the caller.
      * <p>
      * The wrapper chain consists of wrapper itself, followed by the wrappers
-     * obtained by repeatedly calling {@link Wrapper#unwrap()}.
+     * obtained by repeatedly calling {@link Wrapper#unwrap_()}.
      *
      * @param wrapper wrapper instance/wrapper chain
      * @param action  The action to be performed for each instance
      * @param <W>     the type of instances that be wrapped
      * @throws NullPointerException  if any arguments is null,
-     *                               or any wrapper {@link Wrapper#unwrap()} returns null,
+     *                               or any wrapper {@link Wrapper#unwrap_()} returns null,
      *                               or the adaptee of {@link WrapperAdapter} is null
      * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is an instance of {@link Wrapper}
      *                               or CYCLIC wrapper chain
@@ -340,7 +340,7 @@ public final class Inspector {
      * Exceptions thrown by the process function are relayed to the caller.
      * <p>
      * The wrapper chain consists of wrapper itself, followed by the wrappers
-     * obtained by repeatedly calling {@link Wrapper#unwrap()}.
+     * obtained by repeatedly calling {@link Wrapper#unwrap_()}.
      *
      * @param wrapper wrapper instance
      * @param process process function
@@ -349,7 +349,7 @@ public final class Inspector {
      * @return the first non-empty({@link Optional#empty()}) result of the process function,
      * otherwise returns {@link Optional#empty()}
      * @throws NullPointerException  if any arguments is null,
-     *                               or any wrapper {@link Wrapper#unwrap()} returns null,
+     *                               or any wrapper {@link Wrapper#unwrap_()} returns null,
      *                               or the adaptee of {@link WrapperAdapter} is null
      * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is an instance of {@link Wrapper}
      *                               or CYCLIC wrapper chain
@@ -391,7 +391,7 @@ public final class Inspector {
      */
     @Contract(pure = true)
     private static Object adapteeNonWrapper(final Object wrapper) {
-        final Object adaptee = ((WrapperAdapter<?>) wrapper).adaptee();
+        final Object adaptee = ((WrapperAdapter<?>) wrapper).adaptee_();
 
         Supplier<String> msg = () -> "adaptee of WrapperAdapter(" + wrapper.getClass().getName() + ") is null";
         requireNonNull(adaptee, msg);
@@ -410,7 +410,7 @@ public final class Inspector {
      */
     @Contract(pure = true)
     private static Object unwrapNonNull(final Object wrapper) {
-        Object unwrap = ((Wrapper<?>) wrapper).unwrap();
+        Object unwrap = ((Wrapper<?>) wrapper).unwrap_();
         Supplier<String> msg = () -> "unwrap of Wrapper(" + wrapper.getClass().getName() + ") is null";
         return requireNonNull(unwrap, msg);
     }

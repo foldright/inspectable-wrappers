@@ -32,20 +32,20 @@ public class LazyExecutorWrapper implements Executor, Wrapper<Executor>, Attacha
     }
 
     @Override
-    public Executor unwrap() {
+    public Executor unwrap_() {
         return executor;
     }
 
     private final Attachable<String, String> attachable = new AttachableDelegate<>();
 
     @Override
-    public void setAttachment(String key, String value) {
-        attachable.setAttachment(key, value);
+    public void setAttachment_(String key, String value) {
+        attachable.setAttachment_(key, value);
     }
 
     @Nullable
     @Override
-    public String getAttachment(String key) {
-        return attachable.getAttachment(key);
+    public String getAttachment_(String key) {
+        return attachable.getAttachment_(key);
     }
 }

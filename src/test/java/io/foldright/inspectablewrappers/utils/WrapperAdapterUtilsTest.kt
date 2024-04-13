@@ -31,8 +31,8 @@ class WrapperAdapterUtilsTest : FunSpec({
                 adapter.toString() shouldStartWith "[WrapperAdapter proxy created by WrapperAdapterUtils] "
 
                 val attachable = adapter as Attachable<String, String>
-                attachable.setAttachment(ADAPTED_MSG_KEY, ADAPTED_MSG_VALUE)
-                attachable.getAttachment(ADAPTED_MSG_KEY) shouldBe ADAPTED_MSG_VALUE
+                attachable.setAttachment_(ADAPTED_MSG_KEY, ADAPTED_MSG_VALUE)
+                attachable.getAttachment_(ADAPTED_MSG_KEY) shouldBe ADAPTED_MSG_VALUE
 
                 adapter
             }
@@ -163,8 +163,8 @@ class WrapperAdapterUtilsTest : FunSpec({
 })
 
 class WrongWrapperAdapter(private val executor: Executor) : WrapperAdapter<Executor>, Executor by executor {
-    override fun unwrap(): Executor = executor
-    override fun adaptee(): Executor = executor
+    override fun unwrap_(): Executor = executor
+    override fun adaptee_(): Executor = executor
 }
 
 interface Tag1

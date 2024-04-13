@@ -80,7 +80,7 @@ public class ChattyExecutorWrapper implements Executor, Wrapper<Executor> {
   }
 
   @Override
-  public Executor unwrap() {
+  public Executor unwrap_() {
     return executor;
   }
 }
@@ -102,20 +102,20 @@ public class LazyExecutorWrapper implements Executor, Wrapper<Executor>, Attacha
   }
 
   @Override
-  public Executor unwrap() {
+  public Executor unwrap_() {
     return executor;
   }
 
   private final Attachable<String, String> attachable = new AttachableDelegate<>();
 
   @Override
-  public void setAttachment(String key, String value) {
-    attachable.setAttachment(key, value);
+  public void setAttachment_(String key, String value) {
+    attachable.setAttachment_(key, value);
   }
 
   @Override
-  public String getAttachment(String key) {
-    return attachable.getAttachment(key);
+  public String getAttachment_(String key) {
+    return attachable.getAttachment_(key);
   }
 }
 ```
@@ -154,7 +154,7 @@ public class Demo {
     final Executor base = Runnable::run;
 
     final LazyExecutorWrapper lazy = new LazyExecutorWrapper(base);
-    lazy.setAttachment("busy", "very, very busy!");
+    lazy.setAttachment_("busy", "very, very busy!");
 
     return new ChattyExecutorWrapper(lazy);
   }
@@ -231,7 +231,7 @@ public class IntegrationDemo {
   private static ExistedExecutorWrapperAdapter createExistedExecutorWrapperAdapter(Executor base) {
     final ExistedExecutorWrapper existed = new ExistedExecutorWrapper(base);
     final ExistedExecutorWrapperAdapter adapter = new ExistedExecutorWrapperAdapter(base, existed);
-    adapter.setAttachment("adapted-existed-executor-wrapper-msg", "I'm an adapter of an existed executor which have nothing to do with ~inspectable~wrappers~.");
+    adapter.setAttachment_("adapted-existed-executor-wrapper-msg", "I'm an adapter of an existed executor which have nothing to do with ~inspectable~wrappers~.");
     return adapter;
   }
 
@@ -248,12 +248,12 @@ public class IntegrationDemo {
     }
 
     @Override
-    public Executor unwrap() {
+    public Executor unwrap_() {
       return base;
     }
 
     @Override
-    public Executor adaptee() {
+    public Executor adaptee_() {
       return adaptee;
     }
 
@@ -265,14 +265,14 @@ public class IntegrationDemo {
     private final Attachable<String, String> attachable = new AttachableDelegate<>();
 
     @Override
-    public void setAttachment(String key, String value) {
-      attachable.setAttachment(key, value);
+    public void setAttachment_(String key, String value) {
+      attachable.setAttachment_(key, value);
     }
 
     @Nullable
     @Override
-    public String getAttachment(String key) {
-      return attachable.getAttachment(key);
+    public String getAttachment_(String key) {
+      return attachable.getAttachment_(key);
     }
   }
 }
@@ -329,7 +329,7 @@ public class IntegrationDemoUsingWrapperAdapterUtils {
     final Executor existed = new ExistedExecutorWrapper(base);
 
     Attachable<String, String> attachable = new AttachableDelegate<>();
-    attachable.setAttachment("adapted-existed-executor-wrapper-msg", "I'm an adapter of an existed executor which have nothing to do with ~inspectable~wrappers~.");
+    attachable.setAttachment_("adapted-existed-executor-wrapper-msg", "I'm an adapter of an existed executor which have nothing to do with ~inspectable~wrappers~.");
 
     return WrapperAdapterUtils.createWrapperAdapter(Executor.class, base, existed, attachable);
   }

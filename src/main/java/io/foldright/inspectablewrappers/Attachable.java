@@ -29,7 +29,7 @@ public interface Attachable<K, V> {
      * @param value the attachment value
      * @throws NullPointerException if any arguments is null
      */
-    void setAttachment(@NonNull K key, @NonNull V value);
+    void setAttachment_(@NonNull K key, @NonNull V value);
 
     /**
      * Gets the attachment value for the given key.
@@ -41,5 +41,5 @@ public interface Attachable<K, V> {
      * @see Inspector#getAttachmentFromWrapperChain(Object, Object)
      */
     @Nullable
-    V getAttachment(@NonNull K key);
+    V getAttachment_(@NonNull K key);
 }

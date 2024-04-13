@@ -83,7 +83,7 @@ class SpecificationContractsTest {
         }
 
         @Override
-        public Executor unwrap() {
+        public Executor unwrap_() {
             return instance;
         }
 
@@ -102,12 +102,12 @@ class SpecificationContractsTest {
         }
 
         @Override
-        public Executor unwrap() {
+        public Executor unwrap_() {
             return wrapper;
         }
 
         @Override
-        public Executor adaptee() {
+        public Executor adaptee_() {
             return adaptee;
         }
 
@@ -120,7 +120,7 @@ class SpecificationContractsTest {
         Executor instance;
 
         @Override
-        public Executor unwrap() {
+        public Executor unwrap_() {
             return instance;
         }
 
