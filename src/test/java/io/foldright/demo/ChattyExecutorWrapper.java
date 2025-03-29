@@ -1,5 +1,6 @@
 package io.foldright.demo;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
 import io.foldright.inspectablewrappers.Wrapper;
 
 import java.util.concurrent.Executor;
@@ -19,6 +20,7 @@ public class ChattyExecutorWrapper implements Executor, Wrapper<Executor> {
     }
 
     @Override
+    @NonNull
     public Executor unwrap_() {
         return executor;
     }

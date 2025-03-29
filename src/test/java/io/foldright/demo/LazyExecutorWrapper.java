@@ -1,5 +1,6 @@
 package io.foldright.demo;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import io.foldright.inspectablewrappers.Attachable;
 import io.foldright.inspectablewrappers.Wrapper;
@@ -32,6 +33,7 @@ public class LazyExecutorWrapper implements Executor, Wrapper<Executor>, Attacha
     }
 
     @Override
+    @NonNull
     public Executor unwrap_() {
         return executor;
     }
@@ -39,13 +41,13 @@ public class LazyExecutorWrapper implements Executor, Wrapper<Executor>, Attacha
     private final Attachable<String, String> attachable = new AttachableDelegate<>();
 
     @Override
-    public void setAttachment_(String key, String value) {
+    public void setAttachment_(@NonNull String key, @NonNull String value) {
         attachable.setAttachment_(key, value);
     }
 
     @Nullable
     @Override
-    public String getAttachment_(String key) {
+    public String getAttachment_(@NonNull String key) {
         return attachable.getAttachment_(key);
     }
 }

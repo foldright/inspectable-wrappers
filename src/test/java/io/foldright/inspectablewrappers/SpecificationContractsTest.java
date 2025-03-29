@@ -1,5 +1,6 @@
 package io.foldright.inspectablewrappers;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.Executor;
@@ -83,6 +84,7 @@ class SpecificationContractsTest {
         }
 
         @Override
+        @NonNull
         public Executor unwrap_() {
             return instance;
         }
@@ -102,11 +104,13 @@ class SpecificationContractsTest {
         }
 
         @Override
+        @NonNull
         public Executor unwrap_() {
             return wrapper;
         }
 
         @Override
+        @NonNull
         public Executor adaptee_() {
             return adaptee;
         }
@@ -120,6 +124,7 @@ class SpecificationContractsTest {
         Executor instance;
 
         @Override
+        @NonNull
         public Executor unwrap_() {
             return instance;
         }
