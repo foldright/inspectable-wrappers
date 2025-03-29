@@ -1,5 +1,6 @@
 package io.foldright.demo.integration;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import io.foldright.demo.ChattyExecutorWrapper;
 import io.foldright.inspectablewrappers.Attachable;
@@ -61,11 +62,13 @@ public class IntegrationDemo {
         }
 
         @Override
+        @NonNull
         public Executor unwrap_() {
             return base;
         }
 
         @Override
+        @NonNull
         public Executor adaptee_() {
             return adaptee;
         }
@@ -78,13 +81,13 @@ public class IntegrationDemo {
         private final Attachable<String, String> attachable = new AttachableDelegate<>();
 
         @Override
-        public void setAttachment_(String key, String value) {
+        public void setAttachment_(@NonNull String key, @NonNull String value) {
             attachable.setAttachment_(key, value);
         }
 
         @Nullable
         @Override
-        public String getAttachment_(String key) {
+        public String getAttachment_(@NonNull String key) {
             return attachable.getAttachment_(key);
         }
     }
