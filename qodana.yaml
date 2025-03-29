@@ -1,0 +1,10 @@
+# https://www.jetbrains.com/help/qodana/qodana-yaml.html
+version: "1.0"
+linter: jetbrains/qodana-jvm-community:2024.3
+profile:
+  # https://www.jetbrains.com/help/qodana/inspection-profiles.html
+  name: qodana.recommended
+# https://www.jetbrains.com/help/qodana/qodana-yaml.html#Configure+the+JDK+version
+projectJDK: "21"
+include:
+  - name: CheckDependencyLicenses

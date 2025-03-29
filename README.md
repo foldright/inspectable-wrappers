@@ -1,8 +1,9 @@
 # <div align="center"><a href="#dummy"><img src="https://user-images.githubusercontent.com/1063891/236442451-81509618-a741-4f8a-b958-8947c7025041.png" alt="🪐 Inspectable Wrappers"></a></div>
 
 <p align="center">
-<a href="https://github.com/foldright/inspectable-wrappers/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/foldright/inspectable-wrappers/ci.yml?branch=main&logo=github&logoColor=white" alt="Github Workflow Build Status"></a>
+<a href="https://github.com/foldright/inspectable-wrappers/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/foldright/inspectable-wrappers/ci.yml?branch=main&logo=github&logoColor=white" alt="GH Workflow Build Status"></a>
 <a href="https://app.codecov.io/gh/foldright/inspectable-wrappers/tree/main"><img src="https://img.shields.io/codecov/c/github/foldright/inspectable-wrappers/main?logo=codecov&logoColor=white" alt="Codecov"></a>
+<a href="https://qodana.cloud/projects/Lrg4j"><img src="https://img.shields.io/github/actions/workflow/status/foldright/inspectable-wrappers/qodana_code_quality.yml?branch=main&logo=jetbrains&logoColor=white&label=qodana" alt="Qodana - GH Workflow Build Status"></a>
 <a href="https://openjdk.java.net/"><img src="https://img.shields.io/badge/Java-8+-339933?logo=openjdk&logoColor=white" alt="Java support"></a>
 <a href="https://www.apache.org/licenses/LICENSE-2.0.html"><img src="https://img.shields.io/github/license/foldright/inspectable-wrappers?color=4D7A97&logo=apache" alt="License"></a>
 <a href="https://foldright.io/inspectable-wrappers/apidocs/"><img src="https://img.shields.io/github/release/foldright/inspectable-wrappers?label=javadoc&color=339933&logo=microsoft-academic&logoColor=white" alt="Javadocs"></a>
@@ -11,7 +12,7 @@
 <a href="https://github.com/foldright/inspectable-wrappers/stargazers"><img src="https://img.shields.io/github/stars/foldright/inspectable-wrappers?style=flat" alt="GitHub Stars"></a>
 <a href="https://github.com/foldright/inspectable-wrappers/fork"><img src="https://img.shields.io/github/forks/foldright/inspectable-wrappers?style=flat" alt="GitHub Forks"></a>
 <a href="https://github.com/foldright/inspectable-wrappers/issues"><img src="https://img.shields.io/github/issues/foldright/inspectable-wrappers" alt="GitHub Issues"></a>
-<a href="https://github.com/foldright/cffu/inspectable-wrappers/contributors"><img src="https://img.shields.io/github/contributors/foldright/inspectable-wrappers" alt="GitHub Contributors"></a>
+<a href="https://github.com/foldright/inspectable-wrappers/contributors"><img src="https://img.shields.io/github/contributors/foldright/inspectable-wrappers" alt="GitHub Contributors"></a>
 <a href="https://github.com/foldright/inspectable-wrappers"><img src="https://img.shields.io/github/repo-size/foldright/inspectable-wrappers" alt="GitHub repo size"></a>
 <a href="https://gitpod.io/#https://github.com/foldright/inspectable-wrappers"><img src="https://img.shields.io/badge/Gitpod-ready to code-339933?label=gitpod&logo=gitpod&logoColor=white" alt="gitpod: Ready to Code"></a>
 </p>
