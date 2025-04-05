@@ -419,9 +419,5 @@ public final class Inspector {
         return requireNonNull(unwrap, msg);
     }
 
-    /**
-     * NO need to create instance at all
-     */
-    private Inspector() {
-    }
+    private Inspector() {}
 }

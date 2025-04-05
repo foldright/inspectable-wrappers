@@ -206,11 +206,7 @@ public final class WrapperAdapterUtils {
         return ret;
     }
 
-    /**
-     * NO need to create instance at all
-     */
-    private WrapperAdapterUtils() {
-    }
+    private WrapperAdapterUtils() {}
 }
 
 /**
