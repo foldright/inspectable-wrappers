@@ -6,7 +6,6 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
-import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -354,6 +353,8 @@ public final class Inspector {
      * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is an instance of {@link Wrapper}
      *                               or CYCLIC wrapper chain
      * @see #forEachOnWrapperChain(Object, Consumer)
+     * @see <a href="https://guava.dev/releases/33.4.6-jre/api/docs/com/google/common/base/Throwables.html#getRootCause(java.lang.Throwable)">
+     *     Guava method <code>Throwables#getRootCause(Throwable)</code></a>, the loop detection code using fast and slow pointers is adapted from it
      */
     @NonNull
     @SuppressWarnings("unchecked")
@@ -362,27 +363,30 @@ public final class Inspector {
         requireNonNull(wrapper, "wrapper is null");
         requireNonNull(process, "process is null");
 
-        final IdentityHashMap<Object, ?> history = new IdentityHashMap<>();
-        Object w = wrapper;
+        // keep a slow pointer that slowly walks the wrapper chain.
+        // if the fast pointer ever catches the slower pointer, then there's a loop.
+        Object fastPointer = wrapper, slowPointer = wrapper;
+        boolean advanceSlowPointer = false;
         while (true) {
-            history.put(w, null);
-
             // process the instance on wrapper chain
-            Optional<T> result = process.apply((W) w);
+            Optional<T> result = process.apply((W) fastPointer);
             if (result.isPresent()) return result;
 
             // also process the adaptee for WrapperAdapter
-            if (w instanceof WrapperAdapter) {
-                Optional<T> r = process.apply((W) adapteeNonWrapper(w));
+            if (fastPointer instanceof WrapperAdapter) {
+                Optional<T> r = process.apply((W) adapteeNonWrapper(fastPointer));
                 if (r.isPresent()) return r;
             }
 
-            if (!isWrapper(w)) return Optional.empty();
-            w = unwrapNonNull(w);
-            if (history.containsKey(w)) {
+            if (!isWrapper(fastPointer)) return Optional.empty();
+            fastPointer = unwrapNonNull(fastPointer);
+            if (fastPointer == slowPointer) {
                 throw new IllegalStateException("CYCLIC wrapper chain" +
-                        ", duplicate instance of " + w.getClass().getName());
+                        ", duplicate instance of " + fastPointer.getClass().getName());
             }
+
+            if (advanceSlowPointer) slowPointer = ((Wrapper<?>) slowPointer).unwrap_();
+            advanceSlowPointer = !advanceSlowPointer; // only advance every other iteration
         }
     }
 
