@@ -30,9 +30,7 @@ jobs:
         run: ./mvnw -V --no-transfer-progress clean package spotbugs:check git-commit-id:validateRevision -DperformRelease -P'!enforce-project-version-when-release'
         if: matrix.java == 17
       # https://github.com/marketplace/actions/codecov
-      - uses: codecov/codecov-action@v4
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      - uses: codecov/codecov-action@v5
       - name: Check forbidden classes
         run: scripts/check-forbidden-classes.sh
         # https://docs.github.com/en/actions/learn-github-actions/variables#detecting-the-operating-system
