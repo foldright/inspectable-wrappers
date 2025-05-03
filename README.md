@@ -363,7 +363,7 @@ For `Maven` projects:
 <dependency>
   <groupId>io.foldright</groupId>
   <artifactId>inspectable-wrappers</artifactId>
-  <version>0.5.5</version>
+  <version>0.5.6</version>
 </dependency>
 ```
 
@@ -371,12 +371,12 @@ For `Gradle` projects:
 
 ```groovy
 // Gradle Kotlin DSL
-implementation("io.foldright:inspectable-wrappers:0.5.5")
+implementation("io.foldright:inspectable-wrappers:0.5.6")
 ```
 
 ```groovy
 // Gradle Groovy DSL
-implementation 'io.foldright:inspectable-wrappers:0.5.5'
+implementation 'io.foldright:inspectable-wrappers:0.5.6'
 ```
 
 `inspectable-wrappers` has published to maven central, find the latest version at [central.sonatype.com](https://central.sonatype.com/artifact/io.foldright/inspectable-wrappers/0.3.0/versions).
