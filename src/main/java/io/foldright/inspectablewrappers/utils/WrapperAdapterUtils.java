@@ -163,11 +163,11 @@ public final class WrapperAdapterUtils {
                     " is auto implemented by proxy, not a valid biz interface");
         }
 
-        if (!bizInterface.isAssignableFrom(underlying.getClass())) {
+        if (!bizInterface.isInstance(underlying)) {
             throw new IllegalArgumentException("underlying(" + underlying.getClass().getName() +
                     ") is not an instance of " + bizInterface.getName());
         }
-        if (!bizInterface.isAssignableFrom(adaptee.getClass())) {
+        if (!bizInterface.isInstance(adaptee)) {
             throw new IllegalArgumentException("adaptee(" + adaptee.getClass().getName() +
                     ") is not an instance of " + bizInterface.getName());
         }

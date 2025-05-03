@@ -98,7 +98,7 @@ public final class Inspector {
     }
 
     private static boolean isInstanceOf(final Object o, final Class<?> clazz) {
-        return clazz.isAssignableFrom(o.getClass());
+        return clazz.isInstance(o);
     }
 
     /**
