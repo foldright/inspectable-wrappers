@@ -94,11 +94,7 @@ public final class Inspector {
     public static <W> boolean containsInstanceTypeOnWrapperChain(final W wrapper, final Class<?> instanceType) {
         requireNonNull(wrapper, "wrapper is null");
         requireNonNull(instanceType, "instanceType is null");
-        return testWrapperChain(wrapper, w -> isInstanceOf(w, instanceType));
-    }
-
-    private static boolean isInstanceOf(final Object o, final Class<?> clazz) {
-        return clazz.isInstance(o);
+        return testWrapperChain(wrapper, instanceType::isInstance);
     }
 
     /**
@@ -271,7 +267,7 @@ public final class Inspector {
         requireNonNull(wrapper, "wrapper is null");
         requireNonNull(bizInterface, "bizInterface is null");
         forEachOnWrapperChain(wrapper, w -> {
-            if (!isInstanceOf(w, bizInterface)) {
+            if (!bizInterface.isInstance(w)) {
                 throw new IllegalStateException("the instance(" + w.getClass().getName() +
                         ") on wrapper chain is not an instance of " + bizInterface.getName());
             }
