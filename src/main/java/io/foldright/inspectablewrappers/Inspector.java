@@ -24,12 +24,12 @@ import static java.util.Objects.requireNonNull;
  * <ul>
  * <li>Reports whether any instance on the wrapper chain matches the given type
  *     by static method {@link #containsInstanceTypeOnWrapperChain(Object, Class)}
- * <li>Retrieves the attachment of instance on the wrapper chain
- *     by static method {@link #getAttachmentFromWrapperChain(Object, Object)}
- * <li>Gets the wrapper chain, aka. the list of all instances on the wrapper chain
- *     by static method {@link #getInstancesOfWrapperChain(Object)}
  * <li>Gets the base of the wrapper chain, aka. the last instance of the wrapper chain
  *     by static method {@link #getBaseOfWrapperChain(Object)}
+ * <li>Gets the wrapper chain, aka. the list of all instances on the wrapper chain
+ *     by static method {@link #getInstancesOfWrapperChain(Object)}
+ * <li>Retrieves the attachment of instance on the wrapper chain
+ *     by static method {@link #getAttachmentFromWrapperChain(Object, Object)}
  * <li>Verifies the compliance of wrapper chain with the specification contracts
  *     by static method {@link #verifyWrapperChainContracts(Object)}
  *     or {@link #verifyWrapperChainContracts(Object, Class)}
@@ -73,6 +73,10 @@ import static java.util.Objects.requireNonNull;
  */
 @DefaultAnnotationForParameters(NonNull.class)
 public final class Inspector {
+    ////////////////////////////////////////////////////////////////////////////////
+    // region# Common simple usages
+    ////////////////////////////////////////////////////////////////////////////////
+
     /**
      * Reports whether any instance on the wrapper chain matches the given type.
      * <p>
@@ -95,6 +99,51 @@ public final class Inspector {
         requireNonNull(wrapper, "wrapper is null");
         requireNonNull(instanceType, "instanceType is null");
         return testWrapperChain(wrapper, instanceType::isInstance);
+    }
+
+    /**
+     * Gets the base of the wrapper chain, aka. the last instance of the wrapper chain.
+     * <p>
+     * The wrapper chain consists of wrapper itself, followed by the wrappers
+     * obtained by repeatedly calling {@link Wrapper#unwrap_()}.
+     *
+     * @param wrapper wrapper instance
+     * @param <W>     the type of instances that be wrapped
+     * @throws NullPointerException  if wrapped argument is null,
+     *                               or any wrapper {@link Wrapper#unwrap_()} returns null,
+     *                               or the adaptee of {@link WrapperAdapter} is null
+     * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is an instance of {@link Wrapper}
+     *                               or CYCLIC wrapper chain
+     */
+    @NonNull
+    @Contract(pure = true)
+    @SuppressWarnings("unchecked")
+    public static <W> W getBaseOfWrapperChain(final W wrapper) {
+        Object[] holder = new Object[1];
+        forEachOnWrapperChain(wrapper, w -> holder[0] = w);
+        return (W) holder[0];
+    }
+
+    /**
+     * Gets the wrapper chain, aka. the list of all instances on the wrapper chain.
+     * <p>
+     * The wrapper chain consists of wrapper itself, followed by the wrappers
+     * obtained by repeatedly calling {@link Wrapper#unwrap_()}.
+     *
+     * @param wrapper wrapper instance
+     * @param <W>     the type of instances that be wrapped
+     * @throws NullPointerException  if wrapped argument is null,
+     *                               or any wrapper {@link Wrapper#unwrap_()} returns null,
+     *                               or the adaptee of {@link WrapperAdapter} is null
+     * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is an instance of {@link Wrapper}
+     *                               or CYCLIC wrapper chain
+     */
+    @NonNull
+    @Contract(pure = true)
+    public static <W> List<W> getInstancesOfWrapperChain(final W wrapper) {
+        List<W> ret = new ArrayList<>();
+        forEachOnWrapperChain(wrapper, ret::add);
+        return ret;
     }
 
     /**
@@ -138,86 +187,6 @@ public final class Inspector {
     }
 
     /**
-     * Gets the wrapper chain, aka. the list of all instances on the wrapper chain.
-     * <p>
-     * The wrapper chain consists of wrapper itself, followed by the wrappers
-     * obtained by repeatedly calling {@link Wrapper#unwrap_()}.
-     *
-     * @param wrapper wrapper instance
-     * @param <W>     the type of instances that be wrapped
-     * @throws NullPointerException  if wrapped argument is null,
-     *                               or any wrapper {@link Wrapper#unwrap_()} returns null,
-     *                               or the adaptee of {@link WrapperAdapter} is null
-     * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is an instance of {@link Wrapper}
-     *                               or CYCLIC wrapper chain
-     */
-    @NonNull
-    @Contract(pure = true)
-    public static <W> List<W> getInstancesOfWrapperChain(final W wrapper) {
-        List<W> ret = new ArrayList<>();
-        forEachOnWrapperChain(wrapper, ret::add);
-        return ret;
-    }
-
-    /**
-     * Gets the base of the wrapper chain, aka. the last instance of the wrapper chain.
-     * <p>
-     * The wrapper chain consists of wrapper itself, followed by the wrappers
-     * obtained by repeatedly calling {@link Wrapper#unwrap_()}.
-     *
-     * @param wrapper wrapper instance
-     * @param <W>     the type of instances that be wrapped
-     * @throws NullPointerException  if wrapped argument is null,
-     *                               or any wrapper {@link Wrapper#unwrap_()} returns null,
-     *                               or the adaptee of {@link WrapperAdapter} is null
-     * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is an instance of {@link Wrapper}
-     *                               or CYCLIC wrapper chain
-     */
-    @NonNull
-    @Contract(pure = true)
-    @SuppressWarnings("unchecked")
-    public static <W> W getBaseOfWrapperChain(final W wrapper) {
-        Object[] holder = new Object[1];
-        forEachOnWrapperChain(wrapper, w -> holder[0] = w);
-        return (W) holder[0];
-    }
-
-    /**
-     * Unwraps {@link Wrapper} to the underlying instance if input is a {@link Wrapper} instance.
-     * <p>
-     * This method is {@code null}-safe, return {@code null} iff input parameter is {@code null};
-     * If input parameter is not a {@link Wrapper} just return input.
-     * <p>
-     * A convenience method for {@link Wrapper#unwrap_()}
-     *
-     * @param obj wrapper instance
-     * @param <W> the type of instances that be wrapped
-     * @throws NullPointerException if {@link Wrapper#unwrap_()} returns null
-     * @see Wrapper#unwrap_()
-     * @see #isWrapper(Object)
-     */
-    @Nullable
-    @Contract(value = "null -> null; !null -> !null", pure = true)
-    @SuppressWarnings("unchecked")
-    public static <W> W unwrap(@Nullable final W obj) {
-        if (!isWrapper(obj)) return obj;
-        return (W) unwrapNonNull(obj);
-    }
-
-    /**
-     * Checks the input object is an instance of {@link Wrapper} or not,
-     * return {@code false} if input {@code null}.
-     * <p>
-     * A convenience method for {@link Wrapper} interface.
-     *
-     * @see #unwrap(Object)
-     */
-    @Contract(value = "null -> false", pure = true)
-    public static boolean isWrapper(@Nullable Object obj) {
-        return obj instanceof Wrapper;
-    }
-
-    /**
      * Verifies the compliance of wrapper chain with the specification contracts.
      * <p>
      * The wrapper chain consists of wrapper itself, followed by the wrappers
@@ -231,7 +200,7 @@ public final class Inspector {
      *
      * @param wrapper wrapper instance
      * @param <W>     the type of instances that be wrapped
-     * @throws NullPointerException  if wrapped argument is null,
+     * @throws NullPointerException  if wrapper argument is null,
      *                               or any wrapper {@link Wrapper#unwrap_()} returns null,
      *                               or the adaptee of {@link WrapperAdapter} is null
      * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is an instance of {@link Wrapper}
@@ -273,6 +242,51 @@ public final class Inspector {
             }
         });
     }
+
+    // endregion
+    ////////////////////////////////////////////////////////////////////////////////
+    // region# Convenience methods for Wrapper interface
+    ////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Unwraps {@link Wrapper} to the underlying instance if input is a {@link Wrapper} instance.
+     * <p>
+     * This method is {@code null}-safe, return {@code null} iff input parameter is {@code null};
+     * If input parameter is not a {@link Wrapper} just return input.
+     * <p>
+     * A convenience method for {@link Wrapper#unwrap_()}
+     *
+     * @param obj wrapper instance
+     * @param <W> the type of instances that be wrapped
+     * @throws NullPointerException if {@link Wrapper#unwrap_()} returns null
+     * @see Wrapper#unwrap_()
+     * @see #isWrapper(Object)
+     */
+    @Nullable
+    @Contract(value = "null -> null; !null -> !null", pure = true)
+    @SuppressWarnings("unchecked")
+    public static <W> W unwrap(@Nullable final W obj) {
+        if (!isWrapper(obj)) return obj;
+        return (W) unwrapNonNull(obj);
+    }
+
+    /**
+     * Checks the input object is an instance of {@link Wrapper} or not,
+     * return {@code false} if input {@code null}.
+     * <p>
+     * A convenience method for {@link Wrapper} interface.
+     *
+     * @see #unwrap(Object)
+     */
+    @Contract(value = "null -> false", pure = true)
+    public static boolean isWrapper(@Nullable Object obj) {
+        return obj instanceof Wrapper;
+    }
+
+    // endregion
+    ////////////////////////////////////////////////////////////////////////////////
+    // region# Advanced methods
+    ////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Reports whether any instance on the wrapper chain satisfies the given {@code predicate}.
@@ -350,7 +364,7 @@ public final class Inspector {
      *                               or CYCLIC wrapper chain
      * @see #forEachOnWrapperChain(Object, Consumer)
      * @see <a href="https://guava.dev/releases/33.4.6-jre/api/docs/com/google/common/base/Throwables.html#getRootCause(java.lang.Throwable)">
-     *     Guava method <code>Throwables#getRootCause(Throwable)</code></a>, the loop detection code using fast and slow pointers is adapted from it
+     * Guava method <code>Throwables#getRootCause(Throwable)</code></a>, the loop detection code using fast and slow pointers is adapted from it
      */
     @NonNull
     @SuppressWarnings("unchecked")
