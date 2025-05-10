@@ -86,7 +86,7 @@ public final class Inspector {
      * @param wrapper      wrapper instance/wrapper chain
      * @param instanceType target type
      * @param <W>          the type of instances that be wrapped
-     * @return return {@code false} if no wrapper on the wrapper chain matches the given type,
+     * @return {@code false} if no wrapper on the wrapper chain matches the given type,
      * otherwise return {@code true}
      * @throws NullPointerException  if any arguments is null,
      *                               or any wrapper {@link Wrapper#unwrap_()} returns null,
@@ -99,6 +99,35 @@ public final class Inspector {
         requireNonNull(wrapper, "wrapper is null");
         requireNonNull(instanceType, "instanceType is null");
         return testWrapperChain(wrapper, instanceType::isInstance);
+    }
+
+    /**
+     * Gets the instance on the wrapper chain matches the given type.
+     * <p>
+     * The wrapper chain consists of wrapper itself, followed by the wrappers
+     * obtained by repeatedly calling {@link Wrapper#unwrap_()}.
+     * <p>
+     * If multiple instances matches, outer wrapper instance win.
+     *
+     * @param wrapper      wrapper instance/wrapper chain
+     * @param instanceType target type
+     * @param <W>          the type of instances that be wrapped
+     * @return an {@link Optional} containing the first instance on the wrapper chain that matches the given type,
+     *         or an empty {@code Optional} if no instance matches the given type
+     * @throws NullPointerException  if any arguments is null,
+     *                               or any wrapper {@link Wrapper#unwrap_()} returns null,
+     *                               or the adaptee of {@link WrapperAdapter} is null
+     * @throws IllegalStateException if the adaptee of {@link WrapperAdapter} is an instance of {@link Wrapper}
+     *                               or CYCLIC wrapper chain
+     */
+    @Contract(pure = true)
+    public static <W> Optional<W> getInstanceOfTypeOnWrapperChain(final W wrapper, final Class<?> instanceType) {
+        requireNonNull(wrapper, "wrapper is null");
+        requireNonNull(instanceType, "instanceType is null");
+        return travelWrapperChain(wrapper, w -> {
+            if (instanceType.isInstance(w)) return Optional.of(w);
+            else return Optional.empty();
+        });
     }
 
     /**
@@ -299,7 +328,7 @@ public final class Inspector {
      * @param predicate inspect logic
      * @param <W>       the type of instances that be wrapped
      * @return return {@code false} if no wrapper on the wrapper chain satisfy the given {@code predicate},
-     * otherwise return {@code true}
+     * otherwise {@code true}
      * @throws NullPointerException  if any arguments is null,
      *                               or any wrapper {@link Wrapper#unwrap_()} returns null,
      *                               or the adaptee of {@link WrapperAdapter} is null
@@ -356,7 +385,7 @@ public final class Inspector {
      * @param <W>     the type of instances that be wrapped
      * @param <T>     the return data type of process function
      * @return the first non-empty({@link Optional#empty()}) result of the process function,
-     * otherwise returns {@link Optional#empty()}
+     * otherwise an empty {@code Optional}
      * @throws NullPointerException  if any arguments is null,
      *                               or any wrapper {@link Wrapper#unwrap_()} returns null,
      *                               or the adaptee of {@link WrapperAdapter} is null
