@@ -27,6 +27,7 @@
 			<w>mvnw</w>
 			<w>oldratlee</w>
 			<w>ossrh</w>
+			<w>spotbugs</w>
 			<w>threadsafe</w>
 			<w>throwables</w>
 			<w>wrappee</w>
