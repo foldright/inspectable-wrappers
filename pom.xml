@@ -85,11 +85,11 @@
 		<jsr305.version>3.0.2</jsr305.version>
 		<jetbrains.annotations.version>26.0.2</jetbrains.annotations.version>
 
-		<kotlin.version>2.1.20</kotlin.version>
+		<kotlin.version>2.1.21</kotlin.version>
 		<kotlin.compiler.jvmTarget>${maven.compiler.source}</kotlin.compiler.jvmTarget>
 
 		<!-- testing dependencies versions -->
-		<junit5.version>5.12.2</junit5.version>
+		<junit5.version>5.13.1</junit5.version>
 		<kotest.version>5.9.1</kotest.version>
 	</properties>
 
@@ -311,7 +311,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-clean-plugin</artifactId>
-					<version>3.4.1</version>
+					<version>3.5.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -413,7 +413,7 @@
 				<plugin>
 					<groupId>io.github.git-commit-id</groupId>
 					<artifactId>git-commit-id-maven-plugin</artifactId>
-					<version>9.0.1</version>
+					<version>9.0.2</version>
 				</plugin>
 				<plugin>
 					<groupId>com.github.spotbugs</groupId>
