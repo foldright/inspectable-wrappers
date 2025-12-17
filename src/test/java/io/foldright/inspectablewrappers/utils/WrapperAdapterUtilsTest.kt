@@ -154,6 +154,7 @@ class WrapperAdapterUtilsTest : FunSpec({
         }.message shouldBe "tagInterfaces[2](io.foldright.inspectablewrappers.utils.NonTag) is not a tag interface"
 
         shouldThrow<IllegalArgumentException> {
+            @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
             createWrapperAdapter(
                 Executor::class.java, dummy, ExistedExecutorWrapper(dummy),
                 Tag1::class.java, Integer::class.java

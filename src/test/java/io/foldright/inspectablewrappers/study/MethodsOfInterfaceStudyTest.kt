@@ -64,6 +64,9 @@ interface I12 : I1 {
     fun bar2()
 }
 
-fun Array<Method>.toNames() = map { it.name }
-fun Iterable<Method>.toNames() = map { it.name }
+fun Array<Method>.toNames() = this.toList().toNames()
+
+// "access$*" method is created by kotlin complier
+fun Iterable<Method>.toNames() = map { it.name }.filterNot { it.startsWith("access$") }
+
 val Method.isAbstract get() = Modifier.isAbstract(modifiers)
