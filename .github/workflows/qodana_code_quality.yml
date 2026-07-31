@@ -16,7 +16,7 @@ jobs:
           fetch-depth: 0  # a full history is required for pull request analysis
       - name: 'Qodana Scan'
         # https://www.jetbrains.com.cn/en-us/help/qodana/jvm.html#Run+Qodana
-        uses: JetBrains/qodana-action@v2026.1
+        uses: JetBrains/qodana-action@v2026.1.3
         with:
           pr-mode: false
           args: --linter qodana-jvm-community --within-docker false
