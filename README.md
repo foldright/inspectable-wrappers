@@ -175,6 +175,29 @@ I'm working.
 
 > Runnable demo codes in project: [`Demo.java`](src/test/java/io/foldright/demo/Demo.java)
 
+`containsInstanceTypeOnWrapperChain` reports whether a type is on the chain.
+`getFirstInstanceOfTypeOnWrapperChain` returns that instance as `Optional<W>`,
+where `W` is the type of the chain head (`Executor` in the demo above), not the matched class.
+The chain is walked from the outside in. When more than one instance matches, the `Optional` contains the outer one.
+For a `WrapperAdapter`, the adapter is visited before its adaptee.
+The `Optional` is empty when nothing matches.
+
+```java
+Optional<Executor> lazy =
+    getFirstInstanceOfTypeOnWrapperChain(executor, LazyExecutorWrapper.class);
+// present; the value is the LazyExecutorWrapper under ChattyExecutorWrapper
+
+Optional<Executor> byPredicate = findFirstInstanceOnWrapperChain(
+    executor, w -> w instanceof LazyExecutorWrapper);
+```
+
+`findFirstInstanceOnWrapperChain` stops at the first instance whose predicate returns true
+and relays an exception thrown by the predicate.
+Both methods throw `NullPointerException` when an argument is null, when `unwrap_()` returns null,
+or when a `WrapperAdapter` adaptee is null.
+They throw `IllegalStateException` when an adaptee is itself a `Wrapper`, or when the chain is cyclic.
+Static-import these methods. The names are long because each one says "wrapper chain".
+
 ## 🌰 Integration Demo
 
 Integrate an existed wrapper instance to type `Wrapper` without modifying it.

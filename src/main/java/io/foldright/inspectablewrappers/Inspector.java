@@ -24,6 +24,9 @@ import static java.util.Objects.requireNonNull;
  * <ul>
  * <li>Reports whether any instance on the wrapper chain matches the given type
  *     by static method {@link #containsInstanceTypeOnWrapperChain(Object, Class)}
+ * <li>Gets the first instance on the wrapper chain that matches the given type
+ *     by static method {@link #getFirstInstanceOfTypeOnWrapperChain(Object, Class)}.
+ *     When more than one instance matches, the outer wrapper wins
  * <li>Gets the base of the wrapper chain, aka. the last instance of the wrapper chain
  *     by static method {@link #getBaseOfWrapperChain(Object)}
  * <li>Gets the wrapper chain, aka. the list of all instances on the wrapper chain
@@ -49,6 +52,8 @@ import static java.util.Objects.requireNonNull;
  * <ul>
  * <li>Reports whether any instance on the wrapper chain satisfy the given {@link Predicate}
  *     by static method {@link #testWrapperChain(Object, Predicate)}
+ * <li>Gets the first instance on the wrapper chain that satisfies the given {@link Predicate}
+ *     by static method {@link #findFirstInstanceOnWrapperChain(Object, Predicate)}
  * <li>Performs the given {@code action} for each instance on the wrapper chain
  *     by static method {@link #forEachOnWrapperChain(Object, Consumer)}
  * <li>Traverses the wrapper chain and applies the given {@link Function} to each instance on the wrapper chain
